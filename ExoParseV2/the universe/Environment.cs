@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ExoParseV2
 {
-    class Environment
+    public class Environment
     {
         public Dictionary<string, ILabeled>                NamedItems { get; } = new Dictionary<string, ILabeled>();
         public Dictionary<(string Name, int ArgCount), Function> Functions { get; } = new Dictionary<(string Name, int ArgCount), Function>();

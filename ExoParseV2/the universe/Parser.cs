@@ -12,6 +12,7 @@ using System.ComponentModel;
 
 namespace ExoParseV2
 {
+    #region Item
     internal enum ItemType
     {
         Element,
@@ -132,10 +133,15 @@ namespace ExoParseV2
             return $"[{Text}]";
         }
     }
-    internal class Parser
+    #endregion
+    public class Parser
     {
-        public Operator DefaultOperator { get; set; }
-        internal Parser(SymbolizedIndex si, Environment env)
+        public Operator        DefaultOperator { get; set; }
+        public IElement        DefaultElement { get; set; } = IElement.Void;
+        public SymbolizedIndex SymbolizedIndex { get; set; }
+        public Environment     Environment { get; set; }
+        public IElement        Starter { get; set; }
+        public Parser(SymbolizedIndex si, Environment env)
         {
             SymbolizedIndex = si;
             Environment = env;
@@ -147,8 +153,6 @@ namespace ExoParseV2
 
             stage3Tokenizer = new Tokenizer(Cools.Ems, Cools.Ems, Cools.Ems, Cools.Ems, ParsingProps.OpenBrackets, ParsingProps.CloseBrackets, Cools.Ems, Cools.Ems, true);
         }
-        public SymbolizedIndex SymbolizedIndex { get; set; }
-        public Environment Environment { get; set; }
         
         public bool TryParseBaseElement(String s, out IElement result)
         {
@@ -163,7 +167,7 @@ namespace ExoParseV2
                 result = con;
                 return true;
             }
-            else if (TryParsedLabeled(s, out ILabeled l))
+            else if (TryParseLabeled(s, out ILabeled l))
             {
                 result = l;
                 return true;
@@ -181,7 +185,6 @@ namespace ExoParseV2
                     
         }
 
-        public IElement Starter { get; set; }
 
         public IElement ParseElement(string s)
         {
@@ -725,7 +728,6 @@ namespace ExoParseV2
         }
 
 
-
         private Tokenizer stage1Tokenizer;
         private Tokenizer stage2Tokenizer;
         private Tokenizer stage3Tokenizer;
@@ -749,7 +751,7 @@ namespace ExoParseV2
             return Constant.TryParse(s, out result, containNegPos);
         }
 
-        public bool TryParsedLabeled(String s, out ILabeled result)
+        public bool TryParseLabeled(String s, out ILabeled result)
         {
             if (Environment.NamedItems.TryGetValue(s, out result))
             {
