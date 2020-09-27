@@ -1,0 +1,133 @@
+﻿test expression:
+((50 - 6^6*7/6 + (8 + 7)/5*7^(6/7)/8 - 9/((-8)) + 5*4/(9 + 5)+9/5^4/6.7*8^(5-3+9/45.2+7)*4+8.76/4+98-5^(1/5+9.8))/(1/6)/6+8-5+9-4/5+9)^(((5 - 6^6*7/6 + (8 + 7)/5*7^(6/7)/8 - 9/((-8)) + 5*4/(9 + 5)+9/5^4/6.7*8^(5-3+9/45.2+7)*4+8.76/4+98-5^(1/5+9.8))/(1/6)/6+8-5+9-4/5+9)/((5 - 6^6*7/6 + (8 + 7)/5*7^(6/7)/8 - 9/((-8)) + 5*4/(9 + 5)+9/5^4/6.7*8^(5-3+9/45.2+7)*4+8.76/4+98-5^(1/5+9.8))/(1/6)/6+8-5+9-4/5+9))+((5 - 6^6*7/6 + (8 + 7)/5*7^(6/7)/8 - 9/((-8)) + 5*4/(9 + 5)+9/5^4/6.7*8^(5-3+9/45.2+7)*4+8.76/4+98-5^(1/5+9.8))/(1/6)/6+8-5+9-4/5+9)^(((5 - 6^6*7/6 + (8 + 7)/5*7^(6/7)/8 - 9/((-8)) + 5*4/(9 + 5)+9/5^4/6.7*8^(5-3+9/45.2+7)*4+8.76/4+98-5^(1/5+9.8))/(1/6)/6+8-5+9-4/5+9)/((5 - 6^6*7/6 + (8 + 7)/5*7^(6/7)/8 - 9/((-8)) + 5*4/(9 + 5)+9/5^4/6.7*8^(5-3+9/45.2+7)*4+8.76/4+98-5^(1/5+9.8))/(1/6)/6+8-5+9-4/5+9))+((5 - 6^6*7/6 + (8 + 7)/5*7^(6/7)/8 - 9/((-8)) + 5*4/(9 + 5)+9/5^4/6.7*8^(5-3+9/45.2+7)*4+8.76/4+98-5^(1/5+9.8))/(1/6)/6+8-5+9-4/5+9)^(((5 - 6^6*7/6 + (8 + 7)/5*7^(6/7)/8 - 9/((-8)) + 5*4/(9 + 5)+9/5^4/6.7*8^(5-3+9/45.2+7)*4+8.76/4+98-5^(1/5+9.8))/(1/6)/6+8-5+9-4/5+9)/((5 - 6^6*7/6 + (8 + 7)/5*7^(6/7)/8 - 9/((-8)) + 5*4/(9 + 5)+9/5^4/6.7*8^(5-3+9/45.2+7)*4+8.76/4+98-5^(1/5+9.8))/(1/6)/6+8-5+9-4/5+9))+((5 - 6^6*7/6 + (8 + 7)/5*7^(6/7)/8 - 9/((-8)) + 5*4/(9 + 5)+9/5^4/6.7*8^(5-3+9/45.2+7)*4+8.76/4+98-5^(1/5+9.8))/(1/6)/6+8-5+9-4/5+9)^(((5 - 6^6*7/6 + (8 + 7)/5*7^(6/7)/8 - 9/((-8)) + 5*4/(9 + 5)+9/5^4/6.7*8^(5-3+9/45.2+7)*4+8.76/4+98-5^(1/5+9.8))/(1/6)/6+8-5+9-4/5+9)/((5 - 6^6*7/6 + (8 + 7)/5*7^(6/7)/8 - 9/((-8)) + 5*4/(9 + 5)+9/5^4/6.7*8^(5-3+9/45.2+7)*4+8.76/4+98-5^(1/5+9.8))/(1/6)/6+8-5+9-4/5+9))+((5 - 6^6*7/6 + (8 + 7)/5*7^(6/7)/8 - 9/((-8)) + 5*4/(9 + 5)+9/5^4/6.7*8^(5-3+9/45.2+7)*4+8.76/4+98-5^(1/5+9.8))/(1/6)/6+8-5+9-4/5+9)^(((5 - 6^6*7/6 + (8 + 7)/5*7^(6/7)/8 - 9/((-8)) + 5*4/(9 + 5)+9/5^4/6.7*8^(5-3+9/45.2+7)*4+8.76/4+98-5^(1/5+9.8))/(1/6)/6+8-5+9-4/5+9)/((5 - 6^6*7/6 + (8 + 7)/5*7^(6/7)/8 - 9/((-8)) + 5*4/(9 + 5)+9/5^4/6.7*8^(5-3+9/45.2+7)*4+8.76/4+98-5^(1/5+9.8))/(1/6)/6+8-5+9-4/5+9))+((5 - 6^6*7/6 + (8 + 7)/5*7^(6/7)/8 - 9/((-8)) + 5*4/(9 + 5)+9/5^4/6.7*8^(5-3+9/45.2+7)*4+8.76/4+98-5^(1/5+9.8))/(1/6)/6+8-5+9-4/5+9)^(((5 - 6^6*7/6 + (8 + 7)/5*7^(6/7)/8 - 9/((-8)) + 5*4/(9 + 5)+9/5^4/6.7*8^(5-3+9/45.2+7)*4+8.76/4+98-5^(1/5+9.8))/(1/6)/6+8-5+9-4/5+9)/((5 - 6^6*7/6 + (8 + 7)/5*7^(6/7)/8 - 9/((-8)) + 5*4/(9 + 5)+9/5^4/6.7*8^(5-3+9/45.2+7)*4+8.76/4+98-5^(1/5+9.8))/(1/6)/6+8-5+9-4/5+9))+((5 - 6^6*7/6 + (8 + 7)/5*7^(6/7)/8 - 9/((-8)) + 5*4/(9 + 5)+9/5^4/6.7*8^(5-3+9/45.2+7)*4+8.76/4+98-5^(1/5+9.8))/(1/6)/6+8-5+9-4/5+9)^(((5 - 6^6*7/6 + (8 + 7)/5*7^(6/7)/8 - 9/((-8)) + 5*4/(9 + 5)+9/5^4/6.7*8^(5-3+9/45.2+7)*4+8.76/4+98-5^(1/5+9.8))/(1/6)/6+8-5+9-4/5+9)/((5 - 6^6*7/6 + (8 + 7)/5*7^(6/7)/8 - 9/((-8)) + 5*4/(9 + 5)+9/5^4/6.7*8^(5-3+9/45.2+7)*4+8.76/4+98-5^(1/5+9.8))/(1/6)/6+8-5+9-4/5+9))+((5 - 6^6*7/6 + (8 + 7)/5*7^(6/7)/8 - 9/((-8)) + 5*4/(9 + 5)+9/5^4/6.7*8^(5-3+9/45.2+7)*4+8.76/4+98-5^(1/5+9.8))/(1/6)/6+8-5+9-4/5+9)^(((5 - 6^6*7/6 + (8 + 7)/5*7^(6/7)/8 - 9/((-8)) + 5*4/(9 + 5)+9/5^4/6.7*8^(5-3+9/45.2+7)*4+8.76/4+98-5^(1/5+9.8))/(1/6)/6+8-5+9-4/5+9)/((5 - 6^6*7/6 + (8 + 7)/5*7^(6/7)/8 - 9/((-8)) + 5*4/(9 + 5)+9/5^4/6.7*8^(5-3+9/45.2+7)*4+8.76/4+98-5^(1/5+9.8))/(1/6)/6+8-5+9-4/5+9))+((5 - 6^6*7/6 + (8 + 7)/5*7^(6/7)/8 - 9/((-8)) + 5*4/(9 + 5)+9/5^4/6.7*8^(5-3+9/45.2+7)*4+8.76/4+98-5^(1/5+9.8))/(1/6)/6+8-5+9-4/5+9)^(((5 - 6^6*7/6 + (8 + 7)/5*7^(6/7)/8 - 9/((-8)) + 5*4/(9 + 5)+9/5^4/6.7*8^(5-3+9/45.2+7)*4+8.76/4+98-5^(1/5+9.8))/(1/6)/6+8-5+9-4/5+9)/((5 - 6^6*7/6 + (8 + 7)/5*7^(6/7)/8 - 9/((-8)) + 5*4/(9 + 5)+9/5^4/6.7*8^(5-3+9/45.2+7)*4+8.76/4+98-5^(1/5+9.8))/(1/6)/6+8-5+9-4/5+9))+((5 - 6^6*7/6 + (8 + 7)/5*7^(6/7)/8 - 9/((-8)) + 5*4/(9 + 5)+9/5^4/6.7*8^(5-3+9/45.2+7)*4+8.76/4+98-5^(1/5+9.8))/(1/6)/6+8-5+9-4/5+9)^(((5 - 6^6*7/6 + (8 + 7)/5*7^(6/7)/8 - 9/((-8)) + 5*4/(9 + 5)+9/5^4/6.7*8^(5-3+9/45.2+7)*4+8.76/4+98-5^(1/5+9.8))/(1/6)/6+8-5+9-4/5+9)/((5 - 6^6*7/6 + (8 + 7)/5*7^(6/7)/8 - 9/((-8)) + 5*4/(9 + 5)+9/5^4/6.7*8^(5-3+9/45.2+7)*4+8.76/4+98-5^(1/5+9.8))/(1/6)/6+8-5+9-4/5+9))+9+9+8+7+8+9+6+7+8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8
+
+
+
+
+
+
+
+
+//env.Operators_Add(new Addition());
+            //env.Operators_Add(new Subtraction());
+            //env.Operators_Add(new Multiplication());
+            //env.Operators_Add(new Division());
+            //env.Operators_Add(new Modulus());
+            //env.Operators_Add(new FloorDivision());
+            //env.Operators_Add(new Exponentiation());
+
+            //env.Operators_Add(new SetEqual());
+            //env.Operators_Add(new SetDefinition());
+            //env.Operators_Add(new SetAsDefinition());
+
+            //env.Operators_Add(new CheckEqual());
+            //env.Operators_Add(new CheckNotEqual());
+
+            //env.Operators_Add(new CheckDef());
+            //env.Operators_Add(new CheckNotDef());
+
+            //env.Operators_Add(new PlusEquals());
+            //env.Operators_Add(new MinusEquals());
+            //env.Operators_Add(new TimesEquals());
+            //env.Operators_Add(new DivEquals());
+            //env.Operators_Add(new FloorDivEquals());
+            //env.Operators_Add(new ExponentiateEquals());
+            //env.Operators_Add(new ModulusEquals());
+
+            //env.Operators_Add(new GreaterThen());
+            //env.Operators_Add(new Lessthen());
+            //env.Operators_Add(new LessthenEqualto());
+            //env.Operators_Add(new GreaterThenEqualTo());
+
+            //env.Operators_Add(new And());
+            //env.Operators_Add(new ConditionalAnd());
+            //env.Operators_Add(new Or());
+            //env.Operators_Add(new ConditionalOr());
+            //env.Operators_Add(new Xor());
+
+            //env.Operators_Add(new NullCoalesecer());
+            //env.Operators_Add(new NullcoalescingSetEquals());
+            //env.Operators_Add(new NullCoalescingSetDefinition());
+            //env.Operators_Add(new NullCoalescingSetAsDefinition());
+
+            //env.Operators_Add(new TernaryStatement());
+            //env.Operators_Add(new TernarySeperator());
+            //env.Commands_Add(new ListVars());
+            //env.Commands_Add(new DeleteAllVariables());
+            //env.Commands_Add(new DeleteVar());
+            //env.Commands_Add(new DefineFunc());
+            //env.Commands_Add(new DeleteFunc());
+            //env.Commands_Add(new ListFuncs());
+
+
+            //env.Modifiers_Add(new Deref());
+
+            //env.Modifiers_Add(new Not());
+            //env.Modifiers_Add(new Neg());
+            //env.Modifiers_Add(new Pos());
+            //env.Modifiers_Add(new DecrementAfter());
+            //env.Modifiers_Add(new DecrementBefore());
+            //env.Modifiers_Add(new IncrementAfter());
+            //env.Modifiers_Add(new IncrementBefore());
+            //env.Modifiers_Add(new GetValue());
+            //env.Modifiers_Add(new Factorial());
+
+            //env.AddFunction(new Pi());
+            //env.AddFunction(new E());
+            //env.AddFunction(new Sin());
+            //env.AddFunction(new Cos());
+            //env.AddFunction(new Tan());
+            //env.AddFunction(new ASin());
+            //env.AddFunction(new ACos());
+            //env.AddFunction(new ATan());
+            //env.AddFunction(new Abs());
+            //env.AddFunction(new Sign());
+            //env.AddFunction(new Floor());
+            //env.AddFunction(new Ceiling());
+            //env.AddFunction(new Round());
+            //env.AddFunction(new Round2());
+            //env.AddFunction(new Log());
+            //env.AddFunction(new Min());
+            //env.AddFunction(new True());
+            //env.AddFunction(new False());
+            //env.AddFunction(new Null());
+            //env.AddFunction(new Void());
+            //env.AddFunction(new Log2());
+            //env.AddFunction(new NaturalLog());
+            //env.AddFunction(new ToRadians());
+            //env.AddFunction(new ToDegrees());
+            //env.AddFunction(new GravitationalConstant());
+
+
+
+
+            //env.Parser.StarterElement = new FunctionHolder(ANS);
+
+            //while (true)
+            //{
+            //    //Console.Write("> ");
+            //    //string input = Console.ReadLine();
+
+            //    //try
+            //    //{
+            //    //    Valuable ex = env.Parser.ParseExpression(input);
+            //    //    Valuable ans = ex?.Execute();
+
+            //    //    ANS.Value = ans;
+            //    //    Console.WriteLine($" {ex.NullableToString("void")}");
+            //    //    Console.WriteLine($" {ans.NullableToString("void")}");
+            //    //    Console.WriteLine();
+            //    //}
+            //    //catch (Exception e)
+            //    //{
+            //    //    Console.WriteLine(e.Message);
+            //    //}
+
+
+
+
+            //    env.RunStatement();
+
+            //    //if (ex is Defined) { Console.WriteLine($" := {((Defined)ex).Definition.NullableToString("void")}"); }
+            //    //Console.WriteLine($" =  {ans.NullableToString() ?? "void"}\n");
+            //}

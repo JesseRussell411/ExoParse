@@ -1,0 +1,55 @@
+﻿system name
+	program name(args)
+		notes
+----------
+
+Sin_func
+	sin(x)
+
+Cos_func
+	cos(x)
+
+Tan_func
+	tan(x)
+
+ArcSin_func
+	arcsin(x)
+
+ArcCos_func
+	arccos(x)
+
+ArcTan_func
+	arctan(x)
+
+ToDegrees_func
+	deg(r)
+
+ToRadians_func
+	rad(d)
+
+Sign_func
+	sign(x)
+
+AbsoluteValue_func
+	abs(x)
+
+Floor_func
+	floor(x)
+
+Ceiling_func
+	ceil(x)
+
+Min_func
+	min(a, b)
+
+Max_func
+	max(a, b)
+
+Log_func
+	log(base, x)
+
+Log10_func
+	log10(x)
+
+NaturalLog_func
+	ln(x)

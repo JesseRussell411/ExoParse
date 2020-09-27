@@ -1,0 +1,115 @@
+﻿Operators:
+
+system name
+	symbol
+		notes
+------------
+
+And_op
+	&
+Or_op
+	|
+Xor_op
+	^^
+		the symbol, '^', was taken by exponentiation
+																						# conditional and,or: the right side is not executed if the left side determines the outcome
+ConditionalAnd_op
+	&&
+		the rightside is only executed if the left evaluates to true. Returns result of left & right.
+ConditionalOr_op
+	||
+		The rightside is only executed if the left evaluates to false. Returns result of left | right
+	  
+CheckEqual_op
+	==
+ChechNotEqual_op
+	!=
+GreaterThan_op
+	>
+LessThen_op
+	<
+GreaterThenEqual_op
+	>=
+LessThenEqual_op
+	<=
+	  
+
+PlusEqual_op
+	+=
+MinusEqual_op
+	-=
+TimesEqual_op
+	*=
+DivEqual_op
+	/=
+FloorDivEqual_op
+	//=
+PowerEqual_op
+	^=
+ModEqual_op
+	%=
+SetEqual_op
+	=
+SetDefinition_op
+	:=
+		sets definition of left to right
+SetAsDefinition_op
+	:=$
+		sets definition of left to definition of right
+
+Addition_op
+	+
+Subtraction_op
+	-
+Multiplication_op
+	*
+Division_op
+	/
+FloorDivision_op
+	//
+Modulus_op
+	%
+Exponentiation_op
+	^
+
+NullCoalescing_op
+	??
+
+---------------------------
+Modifiers:
+system name
+	symbol() -- preModifier
+	()symbol -- postModifier
+		notes
+----------------------------
+
+Negative_mod
+	-()
+Positive_mod
+	+()
+
+Dereference_mod 
+	$()
+		returns the definition of the item
+
+IncrementAfter_mod
+	()++
+
+DecrementAfter_mod
+	()--
+
+IncrementBefore_mod
+	++()
+
+DecrementBefore_mod
+	--()
+
+
+Not_mod
+	!()
+
+Factorial_mod
+	()!
+
+EqualsNot_mod
+	()=!
