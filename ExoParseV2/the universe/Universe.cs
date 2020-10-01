@@ -140,7 +140,7 @@ namespace ExoParseV2.the_universe
                 PrintFunction(p.NullableToString(ParsingProps.VoidLabel) + "\n");
                 if (!dontExecute) 
                 {
-                    ex = e.Execute();
+                    ex = p?.Execute();
                     PrintFunction($"\t{ex}\n");
                     ans_var.Definition = ex.ToElement();
                 }

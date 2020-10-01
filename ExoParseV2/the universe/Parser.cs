@@ -640,7 +640,7 @@ namespace ExoParseV2
                     }
                     else
                     {
-                        throw new FormatException($"Element expected before post modifier: {currentNode.Value.PostModifier}");
+                        throw new ParsingException($"Element expected before post modifier: {currentNode.Value.PostModifier}");
                     }
                     items.Remove(currentNode.Previous);
                     currentNode.Value = new Item(new Modification(mod, element));
@@ -664,7 +664,7 @@ namespace ExoParseV2
                     }
                     else
                     {
-                        throw new FormatException($"Element expected after pre modifier: {currentNode.Value.PreModifier}");
+                        throw new ParsingException($"Element expected after pre modifier: {currentNode.Value.PreModifier}");
                     }
                 }
             } while ((currentNode = currentNode.Next) != null);
