@@ -51,6 +51,8 @@ namespace ExoParseV2
 
             Addition_op addition = new Addition_op();
             Multiplication_op multiplication = new Multiplication_op();
+            Division_op division = new Division_op();
+            Negative_mod neg = new Negative_mod();
 
             SymbolizedIndex si = new SymbolizedIndex(
                 new ISymbolized[][]
@@ -66,8 +68,8 @@ namespace ExoParseV2
                     new ISymbolized[] {new ConditionalAnd_op(), new ConditionalOr_op()},
                     new ISymbolized[] {new And_op(), new Or_op(), new Xor_op()},
                     new ISymbolized[] {addition, new Subtraction_op() },
-                    new ISymbolized[] {multiplication, new Division_op(), new FloorDivision_op(), new Modulus_op()},
-                    new ISymbolized[] {new Negative_mod(), new Positive_mod()},
+                    new ISymbolized[] {multiplication, division, new FloorDivision_op(), new Modulus_op()},
+                    new ISymbolized[] {neg, new Positive_mod()},
                     new ISymbolized[] {new Exponentiation_op()},
                     new ISymbolized[] {new Factorial_mod()},
                     new ISymbolized[] {new Not_mod() },
@@ -118,6 +120,15 @@ namespace ExoParseV2
             parser.Starter = ans;
             Stopwatch s = new Stopwatch();
             IElement el;
+
+            //IElement expression = new Operation(addition, new Constant(4), new Operation(multiplication, new Operation(division, 4, 5), new Modification(neg, new Constant(2))));
+
+            //Console.WriteLine(expression.ToString(si, null));
+            //Console.WriteLine(expression.Execute());
+
+
+
+
             while (true)
             {
                 Console.Write("> ");
@@ -130,15 +141,20 @@ namespace ExoParseV2
                     el = parser.InternalParseElement(input);
                     s.Stop();
 
-                    IElement p = el.Pass();
-                    double? ex = el?.Execute();
-                    ans_var.Definition = ex.ToElement();
+                    double? ex = null;
+                    IElement p = el.Pass(out bool dontExecute);
+                    if (!dontExecute)
+                    {
+
+                        ex = el?.Execute();
+                        ans_var.Definition = ex.ToElement();
+                    }
 
                     Console.WriteLine($"{el?.ToString(si, null)} := {p.NullableToString(ParsingProps.NullLabel) }\n");
-                    Console.WriteLine($"{el?.ToString(si, null)} = {ex.NullableToString(ParsingProps.NullLabel) }\n");
+                    if (!dontExecute) Console.WriteLine($"{el?.ToString(si, null)} = {ex.NullableToString(ParsingProps.NullLabel) }\n");
                     Console.WriteLine($"Parse time (milliseconds): {(s.ElapsedMilliseconds)}");
                 }
-                catch(MessageException me)
+                catch (MessageException me)
                 {
                     Console.WriteLine(me.Message);
                 }

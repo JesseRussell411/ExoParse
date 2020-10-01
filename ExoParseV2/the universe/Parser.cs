@@ -191,6 +191,7 @@ namespace ExoParseV2
             return InternalParseElement(s, Starter);
         }
 
+        #region parse element/ expression
         internal IElement InternalParseElement(string s, IElement starter = null)
         {
             bool startsWithWhitespace = s.Length > 0 && s[0].IsWhiteSpace();
@@ -413,6 +414,7 @@ namespace ExoParseV2
             return items_ll.First?.Value?.Element;
         }
 
+        // group operators/ modifiers/ and elements apropriately
         private LinkedList<Item> Stage5(LinkedList<Item> items, int? op_lp, int? prem_lp, int? pom_lp)
         {
             if (items.First == null) { return null; }
@@ -422,6 +424,8 @@ namespace ExoParseV2
             int? rec_prem_lp = null;
             int? rec_pom_lp = null;
 
+
+            #region local methods
             void getRecLp(Item item)
             {
                 int p;
@@ -460,9 +464,10 @@ namespace ExoParseV2
                         break;
                 }
             }
+            #endregion
 
 
-
+            // Group pre-modifiers
             LinkedListNode<Item> currentNode = items.First;
             #region Group by pre-modifiers
             if (prem_lp != null)
@@ -600,7 +605,7 @@ namespace ExoParseV2
             return items;
         }
 
-        // Convert subItems to elements
+        // Convert subItems to elements/ finishing stages
         private IElement Stage6(LinkedList<Item> items)
         {
             if (items.First == null) { return null; }
@@ -726,6 +731,7 @@ namespace ExoParseV2
 
             return items.First?.Value?.Element;
         }
+        #endregion
 
 
         private Tokenizer stage1Tokenizer;

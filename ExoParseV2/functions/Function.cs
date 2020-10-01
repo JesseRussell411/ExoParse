@@ -9,9 +9,9 @@ namespace ExoParseV2
     public abstract class Function
     {
         public abstract string Name { get; }
-        public abstract string[] Arguments { get; }
-        public virtual int ArgCount { get { return Arguments.Length; } }
-        public (string name, int argCount) Id { get { return (name: Name, argCount: ArgCount); } }
+        public abstract string[] Parameters { get; }
+        public virtual int ParamCount { get { return Parameters.Length; } }
+        public (string name, int paramCount) Id { get { return (name: Name, paramCount: ParamCount); } }
 
         public IElement Calculate(params double?[] args)
         {
@@ -19,7 +19,7 @@ namespace ExoParseV2
         }
         public virtual IElement Calculate(params IElement[] args)
         {
-            if (args.Length != ArgCount)
+            if (args.Length != ParamCount)
             {
                 return IElement.Void;
             }
@@ -46,14 +46,14 @@ namespace ExoParseV2
             if (delim == null) { delim = ParsingProps.Delims[0]; }
             if (openingBracket == null) { openingBracket = ParsingProps.OpenBrackets[0]; }
             if (closingBracket == null) { closingBracket = ParsingProps.CloseBrackets[0]; }
-            return $"{Name}{Arguments.ToDelimString($"{delim} ").Wrap(openingBracket, closingBracket)}";
+            return $"{Name}{Parameters.ToDelimString($"{delim} ").Wrap(openingBracket, closingBracket)}";
         }
     }
 
     public class CustomFunction : Function
     {
         public override string Name { get; }
-        public override String[] Arguments { get; }
+        public override String[] Parameters { get; }
         public IElement Definition { get; }
         public Variable[] ArgVars { get; }
         
@@ -62,7 +62,7 @@ namespace ExoParseV2
             Name = name;
             Definition = definition;
             ArgVars = arguments;
-            Arguments = ArgVars.Select(v => v.Name).ToArray();
+            Parameters = ArgVars.Select(v => v.Name).ToArray();
         }
 
         protected override IElement calc(IElement[] args)

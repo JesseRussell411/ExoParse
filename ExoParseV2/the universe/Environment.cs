@@ -7,7 +7,7 @@ namespace ExoParseV2
     public class Environment
     {
         public Dictionary<string, ILabeled>                NamedItems { get; } = new Dictionary<string, ILabeled>();
-        public Dictionary<(string Name, int ArgCount), Function> Functions { get; } = new Dictionary<(string Name, int ArgCount), Function>();
+        public Dictionary<(string name, int paramCount), Function> Functions { get; } = new Dictionary<(string name, int paramCount), Function>();
 
         public bool AddFunction(Function f)
         {

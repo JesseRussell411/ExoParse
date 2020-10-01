@@ -31,6 +31,16 @@ namespace ExoParseV2
             return new Constant(self);
         }
 
+        public static IElement ToElement(this long self)
+        {
+            return new Constant(self);
+        }
+
+        public static IElement ToElement(this long? self)
+        {
+            return new Constant(self);
+        }
+
         public static IElement ToElement(this bool? self)
         {
             return new Constant(

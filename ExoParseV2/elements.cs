@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
+using System.Transactions;
 
 namespace ExoParseV2
 {
@@ -11,12 +12,19 @@ namespace ExoParseV2
     {
         public double? Execute();
         public IElement Pass();
+        public IElement Pass(out bool dontExecute_flag)
+        {
+            dontExecute_flag = DontExecute_flag;
+            return Pass();
+        }
+        public virtual bool DontExecute_flag { get { return false; } }
         public IElement Definition { get; }
 
         public static IElement Null { get { return new Constant(null); } }
 
         public static IElement Void { get { return null; } }
         public string ToString(SymbolizedIndex si, IExpressionComponent parent);
+        
     }
 
     public interface IDefinable
@@ -145,7 +153,23 @@ namespace ExoParseV2
         public IElement B { get; set; }
         public Operator Operator { get; set; }
         public IElement Definition { get { return this; } }
+        public bool DontExecute_flag
+        {
+            get
+            {
+                return Operator is SetDefinition_op ||
+                    Operator is SetAsDefinition_op;
+            }
+        }
 
+
+        public Operation(Operator op, double? a, double? b) 
+            : this(op, a.ToElement(), b.ToElement()) { }
+
+        public Operation(Operator op, long? a, long? b)
+            : this(op, a.ToElement(), b.ToElement()) { }
+
+        
         public Operation(Operator op, IElement a, IElement b)
         {
             Operator = op;
@@ -161,7 +185,6 @@ namespace ExoParseV2
         {
             return Operator?.Execute(A, B);
         }
-
 
         public override string ToString()
         {
@@ -210,6 +233,13 @@ namespace ExoParseV2
         public Modifier Modifier { get; set; }
 
         public IElement Definition { get { return this; } }
+        public bool DontExecute_flag
+        {
+            get
+            {
+                return Modifier is Dereference_mod;
+            }
+        }
 
         public double? Execute()
         {
@@ -298,7 +328,7 @@ namespace ExoParseV2
             set
             {
                 func = value;
-                Arguments = new IElement[func?.ArgCount ?? 0];
+                Arguments = new IElement[func?.ParamCount ?? 0];
             }
         }
         public string OpeningBracket { get; set; }
