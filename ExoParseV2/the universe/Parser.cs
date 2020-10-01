@@ -188,14 +188,16 @@ namespace ExoParseV2
 
         public IElement ParseElement(string s)
         {
-            return InternalParseElement(s, Starter);
+            bool startsWithWhitespace = s.Length > 0 && s[0].IsWhiteSpace();
+            s = s.Trim();
+            if (s.Length == 0) { return null; } // give up if line is empty
+
+            return InternalParseElement(s, Starter, startsWithWhitespace);
         }
 
         #region parse element/ expression
-        internal IElement InternalParseElement(string s, IElement starter = null)
+        private IElement InternalParseElement(string s, IElement starter = null, bool startsWithWhitespace = false)
         {
-            bool startsWithWhitespace = s.Length > 0 && s[0].IsWhiteSpace();
-
             #region internal function definitions
             /// AKA: this code gets run later.
             bool TryParseBaseElementFromItem(Item i, out IElement result)

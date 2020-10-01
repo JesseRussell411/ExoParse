@@ -15,7 +15,7 @@ namespace ExoParseV2
             constants.Add(new FinalVariable("true", LogicUtils.True_double));
             constants.Add(new FinalVariable("false", LogicUtils.False_double));
             constants.Add(new FinalVariable(ParsingProps.NullLabel, ElementUtils.NullElement));
-            constants.Add(new FinalVariable("void", ElementUtils.VoidElement));
+            constants.Add(new FinalVariable(ParsingProps.VoidLabel, ElementUtils.VoidElement));
             constants.Add(new FinalVariable("theMeaningOfLife", new Constant(42)));
 
             return constants;

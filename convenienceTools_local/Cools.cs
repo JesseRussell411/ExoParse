@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.PortableExecutable;
 using System.Text;
 
 namespace ConvenienceTools
@@ -35,5 +36,20 @@ namespace ConvenienceTools
         public static bool InBounds<T>(this T[] arr, int index) => index < arr.Length && index >= 0;
         public static bool InBounds<T>(this List<T> arr, int index) => index < arr.Count && index >= 0;
         public static bool InBounds(this string arr, int index) => index < arr.Length && index >= 0;
+
+        /// <summary>
+        /// Returns a substring contained by start inclusively and end exclusiely. Entering -1 for end represents the string's length.
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <returns></returns>
+        public static string rng(this string s, int start, int end)
+        {
+            if (end < 0 || end >= s.Length) { end = s.Length; }
+            if (start < 0) { start = 0; }
+
+            return s.Substring(start, end - start);
+        }
     }
 }

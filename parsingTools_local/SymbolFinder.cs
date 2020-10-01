@@ -24,7 +24,7 @@ namespace ParsingTools
     ///     symb = finder.Find(c, next);
     /// }
     /// </summary>
-    class SymbolFinder
+    public class SymbolFinder
     {
         public SymbolFinder(IEnumerable<string> symbols)
         {

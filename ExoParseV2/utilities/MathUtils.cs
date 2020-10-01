@@ -31,6 +31,10 @@ namespace ExoParseV2
             }
 
             BigInteger n_BigInteger = new BigInteger((double)n);
+            if (n_BigInteger > 170)
+            {
+                return double.PositiveInfinity;
+            }
 
             BigInteger fact = n_BigInteger;
             n_BigInteger--;
@@ -199,6 +203,31 @@ namespace ExoParseV2
             else
             {
                 return Math.Max((double)a, (double)b);
+            }
+        }
+
+        public static double? Round(double? d)
+        {
+            if (d == null)
+            {
+                return null;
+            }
+            else
+            {
+                return Math.Round((double)d);
+            }
+        }
+        public static double? Round(double? d, double? decimals)
+        {
+            if (d == null || decimals == null || decimals != Floor(decimals))
+            {
+                return null;
+            }
+            else
+            {
+                if (decimals > 15) { decimals = 15; }
+                if (decimals < 0) { decimals = 0; }
+                return Math.Round((double)d, (int)decimals);
             }
         }
     }

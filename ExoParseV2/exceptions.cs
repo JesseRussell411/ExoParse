@@ -26,4 +26,10 @@ namespace ExoParseV2
             Item = item;
         }
     }
+
+    class GenericCommandException : MessageException
+    {
+        public GenericCommandException(string message)
+            : base(message) { }
+    }
 }

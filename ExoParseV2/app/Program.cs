@@ -3,6 +3,9 @@ using ParsingTools;
 using System.Linq;
 using ExoParseV2.Functions;
 using System.Diagnostics;
+using ExoParseV2.the_universe;
+using ExoParseV2.the_universe.Commands;
+using ExoParseV2.utilities;
 
 namespace ExoParseV2
 {
@@ -98,11 +101,16 @@ namespace ExoParseV2
             env.AddFunction(new Log_func());
             env.AddFunction(new Log10_func());
             env.AddFunction(new NaturalLog_func());
+            env.AddFunction(new Round_func());
+            env.AddFunction(new Round2_func());
 
 
 
             Parser parser = new Parser(si, env);
             parser.DefaultOperator = multiplication;
+            UniverseFactory uf = new UniverseFactory();
+            env.AddLabeled(uf.CreateConstants());
+            
 
             //IElement el = parser.ParseElement("log(log(4, 16), log(2, 16))^-2");
 
@@ -112,21 +120,31 @@ namespace ExoParseV2
 
             //Console.WriteLine($"{str} = {dob}");
 
-            UniverseFactory uf = new UniverseFactory();
-            env.AddLabeled(uf.CreateConstants());
-            Variable ans_var = new Variable("system_Ans_var");
-            FinalVariable ans = new FinalVariable("ans", ans_var);
-            env.AddLabeled(ans);
-            parser.Starter = ans;
             Stopwatch s = new Stopwatch();
             IElement el;
+            Universe universe = new Universe();
+            env.AddLabeled(universe.Ans);
+            {
+                Command cmd = new Help_cmd();
+                universe.Commands.Add(cmd.Name, cmd);
+                cmd = new ListVars_cmd();
+                universe.Commands.Add(cmd.Name, cmd);
+                cmd = new Exit_cmd();
+                universe.Commands.Add(cmd.Name, cmd);
+            }
+
+            universe.Environment = env;
+            universe.Parser = parser;
+            parser.Starter = universe.Ans;
+            universe.SymbolizedIndex = si;
+            universe.PrintFunction = Console.Write;
+            universe.ReadFunction = Console.ReadLine;
+            
 
             //IElement expression = new Operation(addition, new Constant(4), new Operation(multiplication, new Operation(division, 4, 5), new Modification(neg, new Constant(2))));
 
             //Console.WriteLine(expression.ToString(si, null));
             //Console.WriteLine(expression.Execute());
-
-
 
 
             while (true)
@@ -136,23 +154,27 @@ namespace ExoParseV2
 
                 try
                 {
-                    s.Reset();
-                    s.Start();
-                    el = parser.InternalParseElement(input);
-                    s.Stop();
+                    universe.TakeLine(input);
 
-                    double? ex = null;
-                    IElement p = el.Pass(out bool dontExecute);
-                    if (!dontExecute)
-                    {
+                    //s.Reset();
+                    //s.Start();
+                    //el = parser.InternalParseElement(input);
+                    //s.Stop();
 
-                        ex = el?.Execute();
-                        ans_var.Definition = ex.ToElement();
-                    }
+                    //double? ex = null;
+                    //IElement p = el.Pass(out bool dontExecute);
+                    //if (!dontExecute)
+                    //{
 
-                    Console.WriteLine($"{el?.ToString(si, null)} := {p.NullableToString(ParsingProps.NullLabel) }\n");
-                    if (!dontExecute) Console.WriteLine($"{el?.ToString(si, null)} = {ex.NullableToString(ParsingProps.NullLabel) }\n");
-                    Console.WriteLine($"Parse time (milliseconds): {(s.ElapsedMilliseconds)}");
+                    //    ex = el?.Execute();
+                    //    ans_var.Definition = ex.ToElement();
+                    //}
+
+                    //Console.WriteLine($"{el?.ToString(si, null)} := {p.NullableToString(ParsingProps.NullLabel) }\n");
+                    //if (!dontExecute) Console.WriteLine($"{el?.ToString(si, null)} = {ex.NullableToString(ParsingProps.NullLabel) }\n");
+                    //Console.WriteLine($"Parse time (milliseconds): {(s.ElapsedMilliseconds)}");
+
+
                 }
                 catch (MessageException me)
                 {

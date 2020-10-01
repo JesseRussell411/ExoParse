@@ -9,6 +9,11 @@ namespace ExoParseV2.the_universe.Commands
     {
         public string Name { get { return name.ToLower(); } }
         protected abstract string name { get; }
+        public abstract string Definition { get; }
+        public virtual string Manual
+        {
+            get { return Definition; }
+        }
         public void Execute(string args, Universe universe)
         {
             exec(args, universe);

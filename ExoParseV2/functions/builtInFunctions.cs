@@ -174,6 +174,31 @@ namespace ExoParseV2.Functions
             return MathUtils.Ceiling(args[0].Execute()).ToElement();
         }
     }
+
+    public class Round_func : BuiltInFunction
+    {
+        public override string Name { get; } = "round";
+        public override string[] Parameters { get; } = { "x" };
+        protected override IElement calc(IElement[] args)
+        {
+            return MathUtils.Round(args[0].Execute()).ToElement();
+        }
+    }
+
+    public class Round2_func : BuiltInFunction
+    {
+        public override string Name { get; } = "round";
+        public override string[] Parameters { get; } = { "x", "decimals" };
+        protected override IElement calc(IElement[] args)
+        {
+            double? args1_execute = args[1].Execute();
+            if (args1_execute != MathUtils.Floor(args1_execute))
+            {
+                throw new MessageException($"Incorrect ussage of {this}. Decimals must be an integer");
+            }
+            return MathUtils.Round(args[0].Execute(), args[1].Execute()).ToElement();
+        }
+    }
     #endregion
     #region misc
     public class Min_func : BuiltInFunction
