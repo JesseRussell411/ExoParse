@@ -1,4 +1,5 @@
-﻿using ParsingTools;
+﻿using ConvenienceTools;
+using ParsingTools;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -19,6 +20,6 @@ namespace ExoParseV2.the_universe.Commands
             exec(args, universe);
         }
         protected abstract void exec(string args, Universe universe);
-        protected Tokenizer argSplitter { get; } = new Tokenizer() { BreakOnWhiteSpace = true, IncludeEmpty = false };
+        protected Tokenizer argSplitter { get; } = new Tokenizer(new string[0], "\"".MakeArray(), new string[0], new string[0], new string[0], new string[0], "\"".MakeArray(), new string[0]) { BreakOnWhiteSpace = true, IncludeEmpty = false };
     }
 }

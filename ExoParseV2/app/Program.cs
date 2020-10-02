@@ -123,7 +123,6 @@ namespace ExoParseV2
 
             //Console.WriteLine($"{str} = {dob}");
 
-            Stopwatch s = new Stopwatch();
             IElement el;
             Universe universe = new Universe();
             env.AddLabeled(universe.Ans);
@@ -142,19 +141,19 @@ namespace ExoParseV2
             universe.SymbolizedIndex = si;
             universe.PrintFunction = Console.Write;
             universe.ReadFunction = Console.ReadLine;
-            
+
 
             //IElement expression = new Operation(addition, new Constant(4), new Operation(multiplication, new Operation(division, 4, 5), new Modification(neg, new Constant(2))));
 
             //Console.WriteLine(expression.ToString(si, null));
             //Console.WriteLine(expression.Execute());
-
-
+            Stopwatch s = new Stopwatch();
             while (true)
             {
                 Console.Write("> ");
                 string input = Console.ReadLine();
-
+                s.Reset();
+                s.Start();
                 try
                 {
                     universe.TakeLine(input);
@@ -183,6 +182,8 @@ namespace ExoParseV2
                 {
                     Console.WriteLine(me.Message);
                 }
+                s.Stop();
+                Console.WriteLine($"                   Total time taken: {s.ElapsedMilliseconds}");
             }
         }
     }

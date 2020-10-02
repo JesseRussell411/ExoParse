@@ -38,11 +38,14 @@ namespace ParsingTools
             //Console.WriteLine(statement.UnWrap());
 
             Tokenizer tok = new Tokenizer(new String[] { "+", "+=" }, new String[] { "," }, ParsingUtils.OpenBrackets_stan, ParsingUtils.CloseBrackets_stan, ParsingUtils.OpenBrackets_stan, ParsingUtils.CloseBrackets_stan, ParsingUtils.Barriers_stan, new string[0]);
-            
+
             Console.WriteLine(tok.Tokenize("a+b+c    b+=a(d+(e+8))b+a\"u+9\"a").Aggregate((a, b) => $"{a},{b}"));
             tok.BreakOnWhiteSpace = true;
             Console.WriteLine(tok.Tokenize("1+2 = 4").Aggregate((a, b) => $"{a},{b}"));
-            
+
+            Tokenizer argSplitter = new Tokenizer(new string[0], new string[] { "\"" }, new string[0], new string[0], new string[0], new string[0], new string[] { "\"" }, new string[0]) { BreakOnWhiteSpace = true, IncludeEmpty = false };
+
+            Console.WriteLine(argSplitter.Tokenize("abc \"a b    c\" abc 123   \"b o b\".").Aggregate((a, b) => $"{a}, {b}"));
         }
     }
 }

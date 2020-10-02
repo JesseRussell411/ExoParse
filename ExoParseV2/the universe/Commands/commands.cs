@@ -78,8 +78,29 @@ namespace ExoParseV2.the_universe.Commands
         protected override string name { get; } = "listvars";
         protected override void exec(string args, Universe universe)
         {
-            Func<string> read = universe.ReadFunction;
-            Action<string> print = universe.PrintFunction;
+            Action<object> print = o => universe.PrintFunction(o.ToString());
+            Action<object> println = o => print($"{o} \n");
+
+            foreach (var g in universe.Environment.NamedItems.Select(p => p.Value).GroupBy(l => l is FinalVariable))
+            {
+                if (g.Key)
+                {
+                    println("Constant Variables:");
+                    println("-------------------");
+                }
+                else
+                {
+                    println("Variables:");
+                    println("----------");
+                }
+
+                foreach(var l in g)
+                {
+                    println($"{l.ToString(universe.SymbolizedIndex, null)} := {l.Definition?.ToString(universe.SymbolizedIndex, null) ?? ParsingProps.VoidLabel}");
+                }
+                
+                println("");
+            }
         }
     }
 }
