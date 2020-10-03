@@ -39,7 +39,7 @@ namespace ExoParseV2
 
         public override string ToString()
         {
-            return ToString();
+            return ToString(null,null,null);
         }
         public string ToString(string delim = null, string openingBracket = null, string closingBracket = null)
         {
