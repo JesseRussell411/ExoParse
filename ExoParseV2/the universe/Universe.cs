@@ -30,7 +30,7 @@ namespace ExoParseV2.the_universe
         internal SymbolFinder commentOpFinder;
         public Dictionary<string, Command> Commands { get; }
         private Variable ans_var { get; } = new Variable("previousAnswer");
-        public FinalVariable Ans { get; }
+        public Constant Ans { get; }
 
         private void RunCommand(string statement)
         {
@@ -94,7 +94,7 @@ namespace ExoParseV2.the_universe
         {
             commentOpFinder = new SymbolFinder(CommentOperator);
             Commands = new Dictionary<string, Command>();
-            Ans = new FinalVariable("ans", ans_var);
+            Ans = new Constant("ans", ans_var);
         }
 
         public void TakeLine(string statement)

@@ -157,7 +157,7 @@ namespace ExoParseV2
         public bool TryParseBaseElement(String s, out IElement result)
         {
 
-            if (TryParseConstant(s, out Constant c))
+            if (TryParseConstant(s, out Literal c))
             {
                 result = c;
                 return true;
@@ -769,9 +769,9 @@ namespace ExoParseV2
             }
         }
 
-        public bool TryParseConstant(String s, out Constant result, bool containNegPos = false)
+        public bool TryParseConstant(String s, out Literal result, bool containNegPos = false)
         {
-            return Constant.TryParse(s, out result, containNegPos);
+            return Literal.TryParse(s, out result, containNegPos);
         }
 
         public bool TryParseLabeled(String s, out ILabeled result)

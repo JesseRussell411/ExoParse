@@ -6,17 +6,17 @@ namespace ExoParseV2
 {
     class UniverseFactory
     {
-        public List<FinalVariable> CreateConstants()
+        public List<Constant> CreateConstants()
         {
-            List<FinalVariable> constants = new List<FinalVariable>();
+            List<Constant> constants = new List<Constant>();
 
-            constants.Add(new FinalVariable("pi", Math.PI));
-            constants.Add(new FinalVariable("e", Math.E));
-            constants.Add(new FinalVariable("true", LogicUtils.True_double));
-            constants.Add(new FinalVariable("false", LogicUtils.False_double));
-            constants.Add(new FinalVariable(ParsingProps.NullLabel, ElementUtils.NullElement));
-            constants.Add(new FinalVariable(ParsingProps.VoidLabel, ElementUtils.VoidElement));
-            constants.Add(new FinalVariable("theMeaningOfLife", new Constant(42)));
+            constants.Add(new Constant("pi", Math.PI));
+            constants.Add(new Constant("e", Math.E));
+            constants.Add(new Constant("true", LogicUtils.True_double));
+            constants.Add(new Constant("false", LogicUtils.False_double));
+            constants.Add(new Constant(ParsingProps.NullLabel, ElementUtils.NullElement));
+            constants.Add(new Constant("void", ElementUtils.VoidElement));
+            constants.Add(new Constant("theMeaningOfLife", new Literal(42)));
 
             return constants;
         }

@@ -14,43 +14,44 @@ namespace ExoParseV2
         #region conversion
         public static IElement ToElement(this double? self)
         {
-            return new Constant(self);
+            return new Literal(self);
         }
         public static IElement ToElement(this double self)
         {
-            return new Constant(self);
+            return new Literal(self);
         }
 
         public static IElement ToElement(this int self)
         {
-            return new Constant(self);
+            return new Literal(self);
         }
 
         public static IElement ToElement(this int? self)
         {
-            return new Constant(self);
+            return new Literal(self);
         }
 
         public static IElement ToElement(this long self)
         {
-            return new Constant(self);
+            return new Literal(self);
         }
 
         public static IElement ToElement(this long? self)
         {
-            return new Constant(self);
+            return new Literal(self);
         }
 
         public static IElement ToElement(this bool? self)
         {
-            return new Constant(
+            return new Literal(
                 self.ToDouble());
         }
         public static IElement ToElement(this bool self)
         {
-            return new Constant(
+            return new Literal(
                 self.ToDouble());
         }
+        
         #endregion
 
         public static IElement TrySetDefinition(this IElement self, IElement other)

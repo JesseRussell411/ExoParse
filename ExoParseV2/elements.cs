@@ -20,7 +20,7 @@ namespace ExoParseV2
         public virtual bool DontExecute_flag { get { return false; } }
         public IElement Definition { get; }
 
-        public static IElement Null { get { return new Constant(null); } }
+        public static IElement Null { get { return new Literal(null); } }
 
         public static IElement Void { get { return null; } }
         public string ToString(SymbolizedIndex si, IExpressionComponent parent);
@@ -42,10 +42,10 @@ namespace ExoParseV2
         public int GetPriority(SymbolizedIndex si);
     }
 
-    public struct Constant : IElement
+    public struct Literal : IElement
     {
         public readonly double? Value;
-        public Constant(double? value)
+        public Literal(double? value)
         {
             Value = value;
         }
@@ -67,10 +67,10 @@ namespace ExoParseV2
         }
 
         #region static
-        public static Constant Null { get { return new Constant(null); } }
-        public static Constant Parse(String s, bool containNegPos = false)
+        public static Literal Null { get { return new Literal(null); } }
+        public static Literal Parse(String s, bool containNegPos = false)
         {
-            if (TryParse(s, out Constant result, containNegPos))
+            if (TryParse(s, out Literal result, containNegPos))
             {
                 return result;
             }
@@ -80,19 +80,19 @@ namespace ExoParseV2
             }
 
         }
-        public static bool TryParse(String s, out Constant result, bool containNegPos = false)
+        public static bool TryParse(String s, out Literal result, bool containNegPos = false)
         {
-            if (s.Length == 0) { result = Constant.Null; return false; }
-            if (!containNegPos && (s[0] == '-' || s[0] == '+')) { result = Constant.Null; return false; }
-            if (s == ParsingProps.NullLabel) { result = Constant.Null; return true; }
+            if (s.Length == 0) { result = Literal.Null; return false; }
+            if (!containNegPos && (s[0] == '-' || s[0] == '+')) { result = Literal.Null; return false; }
+            if (s == ParsingProps.NullLabel) { result = Literal.Null; return true; }
             if (double.TryParse(s, out double d))
             {
-                result = new Constant(d);
+                result = new Literal(d);
                 return true;
             }
             else
             {
-                result = Constant.Null;
+                result = Literal.Null;
                 return false; //--(FAIL)--
             }
         }
@@ -100,18 +100,18 @@ namespace ExoParseV2
         #endregion
     }
     
-    public class FinalVariable : ILabeled
+    public class Constant : ILabeled
     {
         public string Name { get; }
         public IElement Definition { get; }
         public double? Execute() { return Definition?.Execute(); }
         public IElement Pass() { return Definition; }
-        public FinalVariable(String name, IElement definition)
+        public Constant(String name, IElement definition)
         {
             Definition = definition;
             Name = name;
         }
-        public FinalVariable(string name, double? value)
+        public Constant(string name, double? value)
         {
             Definition = value.ToElement();
             Name = name;

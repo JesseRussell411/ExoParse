@@ -81,12 +81,12 @@ namespace ExoParseV2.the_universe.Commands
             Action<object> print = o => universe.PrintFunction(o.ToString());
             Action<object> println = o => print($"{o} \n");
 
-            foreach (var g in universe.Environment.NamedItems.Select(p => p.Value).GroupBy(l => l is FinalVariable))
+            foreach (var g in universe.Environment.NamedItems.Select(p => p.Value).GroupBy(l => l is Constant))
             {
                 if (g.Key)
                 {
-                    println("Constant Variables:");
-                    println("-------------------");
+                    println("Constant:");
+                    println("---------");
                 }
                 else
                 {
