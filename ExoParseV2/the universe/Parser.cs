@@ -322,7 +322,7 @@ namespace ExoParseV2
             #region stage 4
             // Finalize Element and Operator items.
 
-            // This means that after this stage the items are definitely elements and they are definitely not: operators, modifiers, or ItemContainers. Or vise/versa, etc. etc. for operators and pre/post modifiers.
+            // This means that after this stage the items are definitely elements or they are definitely not: operators, modifiers, or ItemContainers. Or vise/versa, etc. etc. for operators and pre/post modifiers.
             
 
             LinkedListNode<Item> currentNode = items_ll.First;
@@ -416,6 +416,10 @@ namespace ExoParseV2
             return items_ll.First?.Value?.Element;
         }
 
+
+
+
+
         // group operators/ modifiers/ and elements apropriately
         private LinkedList<Item> Stage5(LinkedList<Item> items, int? op_lp, int? prem_lp, int? pom_lp)
         {
@@ -480,9 +484,6 @@ namespace ExoParseV2
 
                 do
                 {
-                    rec_op_lp = null;
-                    rec_prem_lp = null;
-                    rec_pom_lp = null;
                     Item current = currentNode.Value;
 
 
@@ -491,7 +492,9 @@ namespace ExoParseV2
                         subNode = currentNode;
                         subNodes = new LinkedList<Item>();
 
-
+                        rec_op_lp = null;
+                        rec_prem_lp = null;
+                        rec_pom_lp = null;
                         while ((subNode = currentNode.Next) != null && ((!(subNode.Value.DefiningObject is PostModifier) && !(subNode.Value.DefiningObject is Operator)) || subNode.Value.GetPriority(SymbolizedIndex) >= prem_lp))
                         {
                             getRecLp(subNode.Value);
@@ -518,19 +521,19 @@ namespace ExoParseV2
                 op_lp = null;
                 prem_lp = null;
                 //pom_lp = null;
-
                 currentNode = items.Last;
                 do
                 {
-                    rec_op_lp = null;
-                    rec_prem_lp = null;
-                    rec_pom_lp = null;
                     Item current = currentNode.Value;
 
                     if (current.DefiningObject is PostModifier && current.GetPriority(SymbolizedIndex) == pom_lp)
                     {
                         subNode = currentNode;
                         subNodes = new LinkedList<Item>();
+
+                        rec_op_lp = null;
+                        rec_prem_lp = null;
+                        rec_pom_lp = null;
                         while ((subNode = currentNode.Previous) != null && ((!(subNode.Value.DefiningObject is PreModifier) && !(subNode.Value.DefiningObject is Operator)) || subNode.Value.GetPriority(SymbolizedIndex) >= pom_lp))
                         {
                             getRecLp(subNode.Value);
@@ -561,15 +564,21 @@ namespace ExoParseV2
 
                 currentNode = items.First;
                 LinkedListNode<Item> currentNode_Next = null;
+                // This section works in two stages, collectLeft and !collectLeft
+                // collectLeft:
+                // 1+8*7
+                // | |
+                // collect this stuff here
+                // !collectLeft:
+                // 1+8*7
+                //    | - operator found
                 bool collectLeft = true;
                 do
                 {
-                    rec_op_lp = null;
-                    rec_prem_lp = null;
-                    rec_pom_lp = null;
                     Item current = currentNode.Value;
                     if (current.DefiningObject is Operator && current.GetPriority(SymbolizedIndex) == op_lp)
                     {
+                        // The item is an operator that we are trying to look for, so lets group the items to the left are right accordingly
                         Item i;
                         if (collectLeft && subNodes.First != null)
                         {
@@ -581,22 +590,28 @@ namespace ExoParseV2
                         subNode = currentNode;
                         subNodes = new LinkedList<Item>();
 
+                        rec_op_lp = null;
+                        rec_prem_lp = null;
+                        rec_pom_lp = null;
                         while ((subNode = currentNode.Next) != null && (!(subNode.Value.DefiningObject is Operator) || subNode.Value.GetPriority(SymbolizedIndex) > op_lp))
                         {
-                            getRecLp(subNode.Value);
+                            getRecLp(subNode?.Value);
 
                             subNodes.AddLast(subNode.Value);
                             items.Remove(subNode);
                         }
+
                         if (subNodes.First != null)
                         {
                             i = subNodes.First.Next == null ? subNodes.First.Value : new Item(Stage5(subNodes, rec_op_lp, rec_prem_lp, rec_pom_lp));
                             items.AddAfter(currentNode, i);
                         }
                     }
+                    
                     currentNode_Next = currentNode.Next;
                     if (collectLeft)
                     {
+                        getRecLp(current);
                         subNodes.AddLast(current);
                         items.Remove(currentNode);
                     }
@@ -607,7 +622,7 @@ namespace ExoParseV2
             return items;
         }
 
-        // Convert subItems to elements/ finishing stages
+        // Convert subItems to elements / finishing stages
         private IElement Stage6(LinkedList<Item> items)
         {
             if (items.First == null) { return null; }
