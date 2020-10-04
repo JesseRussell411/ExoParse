@@ -149,7 +149,7 @@ namespace ExoParseV2
 
     public class CheckNotEqual_op : LeftToRightOperator
     {
-        public override string Symbol { get; } = "==";
+        public override string Symbol { get; } = "!=";
         protected override IElement calc(IElement a, IElement b)
         {
             return (a.Execute() != b.Execute()).ToElement();

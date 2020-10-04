@@ -147,6 +147,10 @@ namespace ExoParseV2
 
             //Console.WriteLine(expression.ToString(si, null));
             //Console.WriteLine(expression.Execute());
+
+
+            
+
             Stopwatch s = new Stopwatch();
             while (true)
             {
