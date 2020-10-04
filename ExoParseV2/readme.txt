@@ -16,4 +16,4 @@ Operators: 1 + 2   4 * 7
 
 Modfiers: -2   5!
 
-At the moment, ExoParse is set up as a command line tool (found in app.program). However, there's no reason this system couldn't be used for the backend or in other use interface components. Blender has a similar system for instance, which allows the user to end an expression into text fields expecting numbers.
+At the moment, ExoParse is set up as a command line tool (found in app.program). However, there's no reason this system couldn't be used for the backend or in other use interface components. Blender has a similar system for instance, which allows the user to enter an expression into text fields expecting numbers.
