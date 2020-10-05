@@ -16,21 +16,18 @@ namespace ExoParseV2
             starter = uni.Ans;
             defaultElement = ElementUtils.VoidElement;
 
-
             SymbolizedIndex si = CreateSymbolizedIndex();
 
-            Environment env = CreateEnvironment();
-            env.AddFunctions(CreateBuiltInFunctions());
-            env.AddLabeled(CreateConstants());
+            uni.AddFunctions(CreateBuiltInFunctions());
+            uni.AddLabeled(CreateConstants());
 
-            Parser pars = new Parser(si, env);
+            Parser pars = new Parser(si, uni);
 
             pars.Starter = starter;
             pars.DefaultOperator = multiplication;
             pars.DefaultElement = defaultElement;
 
             uni.SymbolizedIndex = si;
-            uni.Environment = env;
             uni.Parser = pars;
             uni.AddCommands(CreateCommands());
             uni.PrintFunction = Console.Write;
@@ -99,9 +96,9 @@ namespace ExoParseV2
             return si;
         }
 
-        private Environment CreateEnvironment()
+        private Universe CreateUniverse()
         {
-            Environment env = new Environment();
+            Universe env = new Universe();
             //env.AddFunction(new Sin_func());
             //env.AddFunction(new Cos_func());
             //env.AddFunction(new Tan_func());

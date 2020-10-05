@@ -20,7 +20,6 @@ namespace ExoParseV2.the_universe
         public bool Debug { get; set; } = false;
         public Action<string> PrintFunction { get; set; }
         public Func<string> ReadFunction { get; set; }
-        public Environment Environment { get; set; }
         public SymbolizedIndex SymbolizedIndex { get; set; }
         public Parser Parser { get; set; }
         public string CommandOperator { get; set; } = ":"; // The symbol to go before commands.
@@ -41,7 +40,7 @@ namespace ExoParseV2.the_universe
 
         private void RunCommand(string statement)
         {
-            int? nameEnd   = null;
+            int? nameEnd = null;
             int? argsBegin = null;
             if (statement.Trim().Length == 0)
             {
@@ -80,7 +79,7 @@ namespace ExoParseV2.the_universe
 
 
             // Get name.
-            string name = statement.rng(0, (int) nameEnd);
+            string name = statement.rng(0, (int)nameEnd);
             //
 
 
@@ -97,10 +96,12 @@ namespace ExoParseV2.the_universe
             //
         }
 
+
         public bool AddCommand(Command cmd)
         {
             return Commands.TryAdd(cmd.Name, cmd);
         }
+
         public bool AddCommands(IEnumerable<Command> commands)
         {
             bool fullSuccessfull = true;
@@ -113,6 +114,7 @@ namespace ExoParseV2.the_universe
 
         public void TakeLine(string statement)
         {
+            // Remove comments.
             #region remove comments
             {
                 char c;
@@ -131,8 +133,11 @@ namespace ExoParseV2.the_universe
                 }
             }
             #endregion
-            
+
+            // Ignore if blank
             if (statement.Trim().Length == 0) { return; } // ignore blank lines and pure comments
+
+            // Is this a command or an expression?
             if (statement.Length >= CommandOperator.Length && statement.Substring(0, CommandOperator.Length) == CommandOperator)
             {
                 // This is a command.
@@ -141,25 +146,78 @@ namespace ExoParseV2.the_universe
             else
             {
                 // Nothing else this can be, must be an expression.
+
+                // Parse the expression
                 IElement e = Parser.ParseElement(statement);
+
+                // If the expression was null...
                 if (e == null)
                 {
                     PrintFunction(ParsingProps.VoidLabel + "\n");
                     return;
                 }
 
+                // Run the expression but don't execute it yet.
                 IElement p = e.Pass(out bool dontExecute);
                 double? ex = null;
+
+                // Print the parsed expression to show the user what was inturpreted by the parser.
                 PrintFunction(e.ToString(SymbolizedIndex, null) + "\n");
+
+                // Print the expression after it has been ran.
                 PrintFunction(p.NullableToString(ParsingProps.VoidLabel) + "\n");
-                if (!dontExecute) 
+
+                // Execute the expression unless the don't execuse flag was true.
+                if (!dontExecute)
                 {
+                    // Execute
                     ex = p?.Execute();
+
+                    // Print the value from the execution
                     PrintFunction($"\t{ex}\n");
+
+                    // Set the previos answer variable to the new previouse answer.
                     ans_var.Definition = ex.ToElement();
                 }
+
+                // Decorative line break.
                 PrintFunction("\n");
             }
         }
+
+        #region vars and functions
+        public Dictionary<(string name, int paramCount), Function> Functions { get; } = new Dictionary<(string name, int paramCount), Function>();
+        public Dictionary<string, ILabeled> NamedItems { get; } = new Dictionary<string, ILabeled>();
+
+
+        public bool AddFunction(Function function)
+        {
+            return Functions.TryAdd(function.Id, function);
+        }
+        public bool AddFunctions(IEnumerable<Function> functions)
+        {
+            bool fullSuccess = true;
+            foreach (Function f in functions)
+            {
+                if (!AddFunction(f)) { fullSuccess = false; }
+            }
+            return fullSuccess;
+        }
+
+
+        public bool AddLabeled(IEnumerable<ILabeled> labeled)
+        {
+            bool success = true;
+            foreach (ILabeled l in labeled)
+            {
+                if (!NamedItems.TryAdd(l.Name, l)) { success = false; }
+            }
+            return success;
+        }
+        public bool AddLabeled(ILabeled labeled)
+        {
+            return NamedItems.TryAdd(labeled.Name, labeled);
+        }
+        #endregion
     }
 }
