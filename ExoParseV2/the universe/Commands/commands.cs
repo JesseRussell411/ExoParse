@@ -8,7 +8,10 @@ namespace ExoParseV2.the_universe.Commands
     public class Exit_cmd : Command
     {
         public override string Definition { get; } = "Terminates the session.";
-        protected override string name { get; } = "exit";
+        public Exit_cmd()
+        {
+            Name = "exit";
+        }
 
         protected override void exec(string args, Universe universe)
         {
@@ -25,7 +28,10 @@ namespace ExoParseV2.the_universe.Commands
     public class Help_cmd : Command
     {
         public override string Definition { get; } = "Lists all commands and their deffinition. If a specific command is given as an argument, then that commands manual is displayed.";
-        protected override string name { get; } = "help";
+        public Help_cmd()
+        {
+            Name = "help";
+        }
         protected override void exec(string args, Universe universe)
         {
             // get print function
@@ -75,7 +81,10 @@ namespace ExoParseV2.the_universe.Commands
     public class ListVars_cmd : Command
     {
         public override string Definition { get; } = "Lists all of the variables defined in the environment.";
-        protected override string name { get; } = "listvars";
+        public ListVars_cmd()
+        {
+            Name = "listvars";
+        }
         protected override void exec(string args, Universe universe)
         {
             Action<object> print = o => universe.PrintFunction(o.ToString());
@@ -101,6 +110,21 @@ namespace ExoParseV2.the_universe.Commands
                 
                 println("");
             }
+        }
+
+    }
+    public class Debug_cmd : Command
+    {
+        public override string Definition { get; } = "Toggles debug mode.";
+        public Debug_cmd()
+        {
+            Name = "debug";
+        }
+            
+        protected override void exec(string args, Universe universe)
+        {
+            universe.Debug = !universe.Debug;
+            universe.PrintFunction($"Debug mode is {(universe.Debug ? "on" : "off" )}.\n\n");
         }
     }
 }

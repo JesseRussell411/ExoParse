@@ -8,8 +8,15 @@ namespace ExoParseV2.the_universe.Commands
 {
     public abstract class Command
     {
-        public string Name { get { return name.ToLower(); } }
-        protected abstract string name { get; }
+        private string name;
+        public string Name
+        {
+            get { return name; }
+            protected set
+            {
+                name = value.ToLower();
+            }
+        }
         public abstract string Definition { get; }
         public virtual string Manual
         {

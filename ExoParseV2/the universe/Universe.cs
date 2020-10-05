@@ -10,7 +10,14 @@ namespace ExoParseV2.the_universe
 {
     public class Universe
     {
+        public Universe()
+        {
+            commentOpFinder = new SymbolFinder(CommentOperator);
+            Commands = new Dictionary<string, Command>();
+            Ans = new Constant("ans", ans_var);
+        }
 
+        public bool Debug { get; set; } = false;
         public Action<string> PrintFunction { get; set; }
         public Func<string> ReadFunction { get; set; }
         public Environment Environment { get; set; }
@@ -90,11 +97,18 @@ namespace ExoParseV2.the_universe
             //
         }
 
-        public Universe()
+        public bool AddCommand(Command cmd)
         {
-            commentOpFinder = new SymbolFinder(CommentOperator);
-            Commands = new Dictionary<string, Command>();
-            Ans = new Constant("ans", ans_var);
+            return Commands.TryAdd(cmd.Name, cmd);
+        }
+        public bool AddCommands(IEnumerable<Command> commands)
+        {
+            bool fullSuccessfull = true;
+            foreach (var cmd in commands)
+            {
+                if (!AddCommand(cmd)) { fullSuccessfull = false; }
+            }
+            return fullSuccessfull;
         }
 
         public void TakeLine(string statement)
