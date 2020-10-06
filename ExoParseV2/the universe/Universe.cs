@@ -12,17 +12,29 @@ namespace ExoParseV2.the_universe
     {
         public Universe()
         {
-            commentOpFinder = new SymbolFinder(CommentOperator);
+            CommentOperator = StringProps.CommentOperator;
+            CommandOperator = StringProps.CommandOperator;
             Commands = new Dictionary<string, Command>();
             Ans = new Constant("ans", ans_var);
         }
 
+        #region flags
         public bool Debug { get; set; } = false;
+        #endregion
+        #region io
         public Action<string> PrintFunction { get; set; }
         public Func<string> ReadFunction { get; set; }
+        #endregion
+        #region symbols
         public SymbolizedIndex SymbolizedIndex { get; set; }
         public Parser Parser { get; set; }
-        public string CommandOperator { get; set; } = ":"; // The symbol to go before commands.
+        /// <summary>
+        /// The symbol to go before commands.
+        /// </summary>
+        public string CommandOperator { get; set; }
+        /// <summary>
+        /// The symbol to go before comments.
+        /// </summary>
         public string CommentOperator
         {
             get { return commentOperator; }
@@ -32,11 +44,63 @@ namespace ExoParseV2.the_universe
                 commentOpFinder = new SymbolFinder(CommentOperator);
             }
         }
-        private string commentOperator = "#";
+        private string commentOperator;
         internal SymbolFinder commentOpFinder;
+        #endregion
+        #region environment
+        #region vars and functions
+        public Dictionary<(string name, int paramCount), Function> Functions { get; } = new Dictionary<(string name, int paramCount), Function>();
+        public Dictionary<string, ILabeled> NamedItems { get; } = new Dictionary<string, ILabeled>();
+
+
+        public bool AddFunction(Function function)
+        {
+            return Functions.TryAdd(function.Id, function);
+        }
+        public bool AddFunctions(IEnumerable<Function> functions)
+        {
+            bool fullSuccess = true;
+            foreach (Function f in functions)
+            {
+                if (!AddFunction(f)) { fullSuccess = false; }
+            }
+            return fullSuccess;
+        }
+
+
+        public bool AddLabeled(IEnumerable<ILabeled> labeled)
+        {
+            bool success = true;
+            foreach (ILabeled l in labeled)
+            {
+                if (!NamedItems.TryAdd(l.Name, l)) { success = false; }
+            }
+            return success;
+        }
+        public bool AddLabeled(ILabeled labeled)
+        {
+            return NamedItems.TryAdd(labeled.Name, labeled);
+        }
+        #endregion
         public Dictionary<string, Command> Commands { get; }
+        public bool AddCommand(Command cmd)
+        {
+            return Commands.TryAdd(cmd.Name, cmd);
+        }
+        public bool AddCommands(IEnumerable<Command> commands)
+        {
+            bool fullSuccessfull = true;
+            foreach (var cmd in commands)
+            {
+                if (!AddCommand(cmd)) { fullSuccessfull = false; }
+            }
+            return fullSuccessfull;
+        }
+        #endregion
+        #region ans
         private Variable ans_var { get; } = new Variable("previousAnswer");
         public Constant Ans { get; }
+        #endregion
 
         private void RunCommand(string statement)
         {
@@ -69,12 +133,13 @@ namespace ExoParseV2.the_universe
                     }
                 }
 
-                if (nameEnd == null && argsBegin == null)
+                if (nameEnd == null)
                 {
-                    nameEnd = -1;
+                    nameEnd = statement.Length;
                 }
             }
-            //
+
+
 
 
 
@@ -87,7 +152,7 @@ namespace ExoParseV2.the_universe
             // Find command and execute.
             if (Commands.TryGetValue(name.ToLower(), out Command cmd))
             {
-                cmd.Execute(argsBegin == null ? "" : statement.rng((int)argsBegin, -1), this);
+                cmd.Execute(statement.rng((int)nameEnd, statement.Length), this);
             }
             else
             {
@@ -96,21 +161,6 @@ namespace ExoParseV2.the_universe
             //
         }
 
-
-        public bool AddCommand(Command cmd)
-        {
-            return Commands.TryAdd(cmd.Name, cmd);
-        }
-
-        public bool AddCommands(IEnumerable<Command> commands)
-        {
-            bool fullSuccessfull = true;
-            foreach (var cmd in commands)
-            {
-                if (!AddCommand(cmd)) { fullSuccessfull = false; }
-            }
-            return fullSuccessfull;
-        }
 
         public void TakeLine(string statement)
         {
@@ -153,7 +203,7 @@ namespace ExoParseV2.the_universe
                 // If the expression was null...
                 if (e == null)
                 {
-                    PrintFunction(ParsingProps.VoidLabel + "\n");
+                    PrintFunction(StringProps.VoidLabel + "\n");
                     return;
                 }
 
@@ -165,7 +215,7 @@ namespace ExoParseV2.the_universe
                 PrintFunction(e.ToString(SymbolizedIndex, null) + "\n");
 
                 // Print the expression after it has been ran.
-                PrintFunction(p.NullableToString(ParsingProps.VoidLabel) + "\n");
+                PrintFunction(p.NullableToString(StringProps.VoidLabel) + "\n");
 
                 // Execute the expression unless the don't execuse flag was true.
                 if (!dontExecute)
@@ -185,39 +235,5 @@ namespace ExoParseV2.the_universe
             }
         }
 
-        #region vars and functions
-        public Dictionary<(string name, int paramCount), Function> Functions { get; } = new Dictionary<(string name, int paramCount), Function>();
-        public Dictionary<string, ILabeled> NamedItems { get; } = new Dictionary<string, ILabeled>();
-
-
-        public bool AddFunction(Function function)
-        {
-            return Functions.TryAdd(function.Id, function);
-        }
-        public bool AddFunctions(IEnumerable<Function> functions)
-        {
-            bool fullSuccess = true;
-            foreach (Function f in functions)
-            {
-                if (!AddFunction(f)) { fullSuccess = false; }
-            }
-            return fullSuccess;
-        }
-
-
-        public bool AddLabeled(IEnumerable<ILabeled> labeled)
-        {
-            bool success = true;
-            foreach (ILabeled l in labeled)
-            {
-                if (!NamedItems.TryAdd(l.Name, l)) { success = false; }
-            }
-            return success;
-        }
-        public bool AddLabeled(ILabeled labeled)
-        {
-            return NamedItems.TryAdd(labeled.Name, labeled);
-        }
-        #endregion
     }
 }

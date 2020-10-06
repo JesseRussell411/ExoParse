@@ -84,7 +84,7 @@ namespace ExoParseV2
         }
         public static string ToDelimString(this IEnumerable<IElement> self, SymbolizedIndex si, IExpressionComponent parent)
         {
-            return self.ToDelimString(si, parent, ParsingProps.Delims[0]);
+            return self.ToDelimString(si, parent, StringProps.Delims[0]);
         }
         public static string ToDelimString(this IEnumerable<IElement> self, SymbolizedIndex si, string delim)
         {

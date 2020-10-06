@@ -33,6 +33,8 @@ namespace ExoParseV2
             uni.PrintFunction = Console.Write;
             uni.ReadFunction = Console.ReadLine;
 
+            uni.AddLabeled(uni.Ans);
+
 
             return uni;
         }
@@ -46,6 +48,7 @@ namespace ExoParseV2
             commands.Add(new Help_cmd());
             commands.Add(new Exit_cmd());
             commands.Add(new Debug_cmd());
+            commands.Add(new ListFuncs_cmd());
             return commands;
         }
 
@@ -57,7 +60,7 @@ namespace ExoParseV2
             constants.Add(new Constant("e", Math.E));
             constants.Add(new Constant("true", LogicUtils.True_double));
             constants.Add(new Constant("false", LogicUtils.False_double));
-            constants.Add(new Constant(ParsingProps.NullLabel, ElementUtils.NullElement));
+            constants.Add(new Constant(StringProps.NullLabel, ElementUtils.NullElement));
             constants.Add(new Constant("void", ElementUtils.VoidElement));
             constants.Add(new Constant("theMeaningOfLife", new Literal(42)));
 
@@ -94,32 +97,6 @@ namespace ExoParseV2
                 );
 
             return si;
-        }
-
-        private Universe CreateUniverse()
-        {
-            Universe env = new Universe();
-            //env.AddFunction(new Sin_func());
-            //env.AddFunction(new Cos_func());
-            //env.AddFunction(new Tan_func());
-            //env.AddFunction(new ArcSin_func());
-            //env.AddFunction(new ArcCos_func());
-            //env.AddFunction(new ArcTan_func());
-            //env.AddFunction(new ToDegrees_func());
-            //env.AddFunction(new ToRadians_func());
-            //env.AddFunction(new Sign_func());
-            //env.AddFunction(new AbsoluteValue_func());
-            //env.AddFunction(new Floor_func());
-            //env.AddFunction(new Ceiling_func());
-            //env.AddFunction(new Min_func());
-            //env.AddFunction(new Max_func());
-            //env.AddFunction(new Log_func());
-            //env.AddFunction(new Log10_func());
-            //env.AddFunction(new NaturalLog_func());
-            //env.AddFunction(new Round_func());
-            //env.AddFunction(new Round2_func());
-            return env;
-            
         }
         private List<BuiltInFunction> CreateBuiltInFunctions()
         {

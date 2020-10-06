@@ -54,7 +54,7 @@ namespace ExoParseV2
         public IElement Definition { get { return this; } }
         public override string ToString()
         {
-            if (Value == null) { return ParsingProps.NullLabel; }
+            if (Value == null) { return StringProps.NullLabel; }
 
             string s = Value.ToString();
 
@@ -84,7 +84,7 @@ namespace ExoParseV2
         {
             if (s.Length == 0) { result = Literal.Null; return false; }
             if (!containNegPos && (s[0] == '-' || s[0] == '+')) { result = Literal.Null; return false; }
-            if (s == ParsingProps.NullLabel) { result = Literal.Null; return true; }
+            if (s == StringProps.NullLabel) { result = Literal.Null; return true; }
             if (double.TryParse(s, out double d))
             {
                 result = new Literal(d);
@@ -188,8 +188,8 @@ namespace ExoParseV2
 
         public override string ToString()
         {
-            string A_string = A is IExpressionComponent ? A?.ToString()?.Wrap(ParsingProps.OpenBrackets[0], ParsingProps.CloseBrackets[0]) ?? ParsingProps.VoidLabel : A?.ToString() ?? ParsingProps.VoidLabel;
-            string B_string = B is IExpressionComponent ? B?.ToString()?.Wrap(ParsingProps.OpenBrackets[0], ParsingProps.CloseBrackets[0]) ?? ParsingProps.VoidLabel : B?.ToString() ?? ParsingProps.VoidLabel;
+            string A_string = A is IExpressionComponent ? A?.ToString()?.Wrap(StringProps.OpenBrackets[0], StringProps.CloseBrackets[0]) ?? StringProps.VoidLabel : A?.ToString() ?? StringProps.VoidLabel;
+            string B_string = B is IExpressionComponent ? B?.ToString()?.Wrap(StringProps.OpenBrackets[0], StringProps.CloseBrackets[0]) ?? StringProps.VoidLabel : B?.ToString() ?? StringProps.VoidLabel;
             return $"{A_string}{Operator}{B_string}";
         }
 
@@ -204,8 +204,8 @@ namespace ExoParseV2
 
             string returnString, A_string, B_string;
 
-            A_string = A?.ToString(si, this) ?? ParsingProps.VoidLabel;
-            B_string = B?.ToString(si, this) ?? ParsingProps.VoidLabel;
+            A_string = A?.ToString(si, this) ?? StringProps.VoidLabel;
+            B_string = B?.ToString(si, this) ?? StringProps.VoidLabel;
             //A_string = A == null ? "" : (A is IExpressionComponent a ? a.ToString(si, this) : A.ToString());
             //B_string = B == null ? "" : (B is IExpressionComponent b ? b.ToString(si, this) : B.ToString());
 
@@ -213,7 +213,7 @@ namespace ExoParseV2
 
             if (toWrap)
             {
-                return returnString.Wrap(ParsingProps.OpenBrackets[0], ParsingProps.CloseBrackets[0]);
+                return returnString.Wrap(StringProps.OpenBrackets[0], StringProps.CloseBrackets[0]);
             }
             else
             {
@@ -252,7 +252,7 @@ namespace ExoParseV2
         public override string ToString()
         {
             String itemString;
-            itemString = (Item is IExpressionComponent) ? Item.ToString().Wrap(ParsingProps.OpenBrackets[0], ParsingProps.CloseBrackets[0]) : Item.ToString();
+            itemString = (Item is IExpressionComponent) ? Item.ToString().Wrap(StringProps.OpenBrackets[0], StringProps.CloseBrackets[0]) : Item.ToString();
 
 
             if (Modifier is PreModifier)
@@ -297,7 +297,7 @@ namespace ExoParseV2
             }
             string Item_string = Item.ToString(si, this);
             //string Item_string = Item is IExpressionComponent component ? component.ToString(si, this) : Item.ToString();
-            return Modifier is PreModifier ? $"{Modifier}{Item_string}" : $"{Item_string}{Modifier}".Wrap(ParsingProps.OpenBrackets[0], ParsingProps.CloseBrackets[0]);
+            return Modifier is PreModifier ? $"{Modifier}{Item_string}" : $"{Item_string}{Modifier}".Wrap(StringProps.OpenBrackets[0], StringProps.CloseBrackets[0]);
         }
     }
 
@@ -307,9 +307,9 @@ namespace ExoParseV2
             : this(function, arguments, null, null) { }
         public Execution(Function function, IElement[] arguments, string openingBracket = null, string closingBracket = null, string delim = null)
         {
-            if (openingBracket == null) { openingBracket = ParsingProps.OpenBrackets[0]; }
-            if (closingBracket == null) { closingBracket = ParsingProps.CloseBrackets[0]; }
-            if (delim == null) { delim = ParsingProps.Delims[0]; }
+            if (openingBracket == null) { openingBracket = StringProps.OpenBrackets[0]; }
+            if (closingBracket == null) { closingBracket = StringProps.CloseBrackets[0]; }
+            if (delim == null) { delim = StringProps.Delims[0]; }
             OpeningBracket = openingBracket;
             ClosingBracket = closingBracket;
             Delim = delim;
@@ -353,7 +353,7 @@ namespace ExoParseV2
 
         public string ToString(SymbolizedIndex si = null, IExpressionComponent parent = null)
         {
-            if (func == null) { return $"{ParsingProps.VoidLabel}{OpeningBracket}{ClosingBracket}"; }
+            if (func == null) { return $"{StringProps.VoidLabel}{OpeningBracket}{ClosingBracket}"; }
             Func<IElement[], string> ds;
             if (si == null)
             {
@@ -372,7 +372,7 @@ namespace ExoParseV2
         private Function func;
     }
 
-    public class Container : IElement, IDefinable
+    public class Container : IElement
     {
         public Container(IElement item, string openBracket, string closeBracket)
         {
@@ -381,7 +381,7 @@ namespace ExoParseV2
             CloseBracket = closeBracket;
         }
         public Container(IElement item)
-            : this(item, ParsingProps.OpenBrackets[0], ParsingProps.CloseBrackets[0])
+            : this(item, StringProps.OpenBrackets[0], StringProps.CloseBrackets[0])
         {
         }
         public IElement Item { get; set; }
@@ -409,11 +409,11 @@ namespace ExoParseV2
         public override string ToString()
         {
             //return Definition.NullableToString(ParsingProps.VoidLabel).Wrap(ParsingProps.OpenBrackets[0], ParsingProps.CloseBrackets[0]);
-            return Item?.ToString()?.Wrap(OpenBracket, CloseBracket) ?? ParsingProps.VoidLabel;
+            return Item?.ToString()?.Wrap(OpenBracket, CloseBracket) ?? StringProps.VoidLabel;
         }
         public string ToString(SymbolizedIndex si, IExpressionComponent parent)
         {
-            return Item?.ToString(si, null)?.Wrap(OpenBracket, CloseBracket) ?? ParsingProps.VoidLabel;
+            return Item?.ToString(si, null)?.Wrap(OpenBracket, CloseBracket) ?? StringProps.VoidLabel;
         }
     }
 

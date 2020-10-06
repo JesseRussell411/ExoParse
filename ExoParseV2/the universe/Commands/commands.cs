@@ -80,7 +80,7 @@ namespace ExoParseV2.the_universe.Commands
     
     public class ListVars_cmd : Command
     {
-        public override string Definition { get; } = "Lists all of the variables defined in the environment.";
+        public override string Definition { get; } = "Lists all of the constants and variables defined in the environment.";
         public ListVars_cmd()
         {
             Name = "listvars";
@@ -90,22 +90,22 @@ namespace ExoParseV2.the_universe.Commands
             Action<object> print = o => universe.PrintFunction(o.ToString());
             Action<object> println = o => print($"{o} \n");
 
-            foreach (var g in universe.Environment.NamedItems.Select(p => p.Value).GroupBy(l => l is Constant))
+            foreach (var g in universe.NamedItems.Select(p => p.Value).GroupBy(l => l is Variable))
             {
                 if (g.Key)
-                {
-                    println("Constant:");
-                    println("---------");
-                }
-                else
                 {
                     println("Variables:");
                     println("----------");
                 }
+                else
+                {
+                    println("Constant:");
+                    println("---------");
+                }
 
                 foreach(var l in g)
                 {
-                    println($"{l.ToString(universe.SymbolizedIndex, null)} := {l.Definition?.ToString(universe.SymbolizedIndex, null) ?? ParsingProps.VoidLabel}");
+                    println($"{l.ToString(universe.SymbolizedIndex, null)} := {l.Definition?.ToString(universe.SymbolizedIndex, null) ?? StringProps.VoidLabel}");
                 }
                 
                 println("");
@@ -126,5 +126,58 @@ namespace ExoParseV2.the_universe.Commands
             universe.Debug = !universe.Debug;
             universe.PrintFunction($"Debug mode is {(universe.Debug ? "on" : "off" )}.\n\n");
         }
+    }
+    public class ListFuncs_cmd : Command
+    {
+        public override string Definition { get; } = "Lists all registered functions.";
+        public ListFuncs_cmd()
+        {
+            Name = "listfuncs";
+        }
+
+        protected override void exec(string args, Universe universe)
+        {
+            var print = universe.PrintFunction;
+            Action<string> println = s => print(s + "\n");
+            foreach(var g in universe.Functions.Select(p => p.Value).GroupBy(f => f is CustomFunction))
+            {
+                if (g.Key)
+                {
+                    println("custom functions:");
+                    println("-----------------");
+                }
+                else
+                {
+                    println("built-in functions:");
+                    println("-------------------");
+                }
+
+                foreach (var f in g)
+                {
+                    println($"{f}");
+                    if (g.Key)
+                    {
+                        println($" = { ((CustomFunction)f).Behavior.ToString(universe.SymbolizedIndex, null) }");
+                    }
+                }
+
+                println("");
+            }
+        }
+
+        //public class Def_cmd : Command
+        //{
+        //    public override string Definition { get; } = "Defines a function or constant.";
+
+        //    public Def_cmd()
+        //    {
+        //        Name = "def";
+        //    }
+
+        //    protected override void exec(string args, Universe universe)
+        //    {
+        //        args.
+        //    }
+        //}
     }
 }

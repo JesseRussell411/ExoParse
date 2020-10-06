@@ -61,9 +61,9 @@ namespace ExoParseV2
         }
         public string ToString(string delim = null, string openingBracket = null, string closingBracket = null)
         {
-            if (delim == null) { delim = ParsingProps.Delims[0]; }
-            if (openingBracket == null) { openingBracket = ParsingProps.OpenBrackets[0]; }
-            if (closingBracket == null) { closingBracket = ParsingProps.CloseBrackets[0]; }
+            if (delim == null) { delim = StringProps.Delims[0]; }
+            if (openingBracket == null) { openingBracket = StringProps.OpenBrackets[0]; }
+            if (closingBracket == null) { closingBracket = StringProps.CloseBrackets[0]; }
             return $"{Name}{Parameters.ToDelimString($"{delim} ").Wrap(openingBracket, closingBracket)}";
         }
     }

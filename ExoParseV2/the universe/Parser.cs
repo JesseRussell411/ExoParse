@@ -9,6 +9,7 @@ using System.Collections.Immutable;
 using Microsoft.VisualBasic.CompilerServices;
 using System.Runtime.InteropServices;
 using System.ComponentModel;
+using ExoParseV2.the_universe;
 
 namespace ExoParseV2
 {
@@ -139,19 +140,19 @@ namespace ExoParseV2
         public Operator        DefaultOperator { get; set; }
         public IElement        DefaultElement { get; set; } = IElement.Void;
         public SymbolizedIndex SymbolizedIndex { get; set; }
-        public Environment     Environment { get; set; }
+        public Universe        Universe { get; set; }
         public IElement        Starter { get; set; }
-        public Parser(SymbolizedIndex si, Environment env)
+        public Parser(SymbolizedIndex si, Universe universe)
         {
             SymbolizedIndex = si;
-            Environment = env;
+            Universe = universe;
 
-            stage1Tokenizer = new Tokenizer(Cools.Ems, Cools.Ems, Cools.Ems, Cools.Ems, ParsingProps.OpenBrackets, ParsingProps.CloseBrackets, Cools.Ems, Cools.Ems)
+            stage1Tokenizer = new Tokenizer(Cools.Ems, Cools.Ems, Cools.Ems, Cools.Ems, StringProps.OpenBrackets, StringProps.CloseBrackets, Cools.Ems, Cools.Ems)
                 { BreakOnWhiteSpace = true };
 
-            stage2Tokenizer = new Tokenizer(si.AllSymbols, Cools.Ems, Cools.Ems, Cools.Ems, ParsingProps.OpenBrackets, ParsingProps.CloseBrackets, Cools.Ems, Cools.Ems);
+            stage2Tokenizer = new Tokenizer(si.AllSymbols, Cools.Ems, Cools.Ems, Cools.Ems, StringProps.OpenBrackets, StringProps.CloseBrackets, Cools.Ems, Cools.Ems);
 
-            stage3Tokenizer = new Tokenizer(Cools.Ems, Cools.Ems, Cools.Ems, Cools.Ems, ParsingProps.OpenBrackets, ParsingProps.CloseBrackets, Cools.Ems, Cools.Ems, true);
+            stage3Tokenizer = new Tokenizer(Cools.Ems, Cools.Ems, Cools.Ems, Cools.Ems, StringProps.OpenBrackets, StringProps.CloseBrackets, Cools.Ems, Cools.Ems, true);
         }
         
         public bool TryParseBaseElement(String s, out IElement result)
@@ -277,7 +278,7 @@ namespace ExoParseV2
             #endregion
 
 
-            #region stage 3
+            #region stage 3 + convert to linked list
             // Break on brackets.
 
             items = items
@@ -757,9 +758,9 @@ namespace ExoParseV2
 
         public bool TryParseContainer(String s, out Container result)
         {
-            if (s.IsWrapped(ParsingProps.OpenBrackets, ParsingProps.CloseBrackets, out string opening, out string closing))
+            if (s.IsWrapped(StringProps.OpenBrackets, StringProps.CloseBrackets, out string opening, out string closing))
             {
-                result = new Container(InternalParseElement(s.UnWrap(ParsingProps.OpenBrackets, ParsingProps.CloseBrackets)), opening, closing);
+                result = new Container(InternalParseElement(s.UnWrap(StringProps.OpenBrackets, StringProps.CloseBrackets)), opening, closing);
                 return true;
             }
             else
@@ -776,7 +777,7 @@ namespace ExoParseV2
 
         public bool TryParseLabeled(String s, out ILabeled result)
         {
-            if (Environment.NamedItems.TryGetValue(s, out result))
+            if (Universe.NamedItems.TryGetValue(s, out result))
             {
                 return true;
             }
@@ -785,7 +786,7 @@ namespace ExoParseV2
                 if (this.IsLabel(s))
                 {
                     result = new Variable(s);
-                    Environment.NamedItems.Add(result.Name, result);
+                    Universe.NamedItems.Add(result.Name, result);
                     return true;
                 }
                 else
@@ -813,7 +814,7 @@ namespace ExoParseV2
         {
             (string name, int argCount) id = (partParsed.name, partParsed.args.Count);
             Function f;
-            if (Environment.Functions.TryGetValue(id, out f))
+            if (Universe.Functions.TryGetValue(id, out f))
             {
                 result = new Execution(f, partParsed.args.Select(a => InternalParseElement(a)).ToArray(), openingBracket, closingBracket);
                 return true;
@@ -909,7 +910,7 @@ namespace ExoParseV2
             sl = IsFunction_BracketTokenizer.Tokenize(s);
             if (sl.Count == 2)
             {
-                if (IsLabel(sl[0]) && sl[1].IsWrapped(ParsingProps.OpenBrackets, ParsingProps.CloseBrackets, out openingBracket, out closingBracket))
+                if (IsLabel(sl[0]) && sl[1].IsWrapped(StringProps.OpenBrackets, StringProps.CloseBrackets, out openingBracket, out closingBracket))
                 {
                     partParsed = (sl[0], IsFunction_DelimTokenizer.Tokenize(sl[1].UnWrap(openingBracket, closingBracket)));
                     return true; //--(PASS)--
@@ -922,8 +923,8 @@ namespace ExoParseV2
             return false; //--(FAIl)--
 
         }
-        public static Tokenizer IsFunction_BracketTokenizer = new Tokenizer(Cools.Ems, Cools.Ems, Cools.Ems, Cools.Ems, ParsingProps.OpenBrackets, ParsingProps.CloseBrackets, Cools.Ems, Cools.Ems, true);
-        public static Tokenizer IsFunction_DelimTokenizer = new Tokenizer(Cools.Ems, ParsingProps.Delims, Cools.Ems, Cools.Ems, ParsingProps.OpenBrackets, ParsingProps.CloseBrackets, Cools.Ems, Cools.Ems, false);
+        public static Tokenizer IsFunction_BracketTokenizer = new Tokenizer(Cools.Ems, Cools.Ems, Cools.Ems, Cools.Ems, StringProps.OpenBrackets, StringProps.CloseBrackets, Cools.Ems, Cools.Ems, true);
+        public static Tokenizer IsFunction_DelimTokenizer = new Tokenizer(Cools.Ems, StringProps.Delims, Cools.Ems, Cools.Ems, StringProps.OpenBrackets, StringProps.CloseBrackets, Cools.Ems, Cools.Ems, false);
         #endregion
         #endregion
     }
