@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 
 namespace ExoParseV2.the_universe.Commands
@@ -154,30 +155,123 @@ namespace ExoParseV2.the_universe.Commands
 
                 foreach (var f in g)
                 {
-                    println($"{f}");
+                    print($"{f}");
                     if (g.Key)
                     {
-                        println($" = { ((CustomFunction)f).Behavior.ToString(universe.SymbolizedIndex, null) }");
+                        print($" = { ((CustomFunction)f).Behavior.ToString(universe.SymbolizedIndex, null) }");
                     }
+                    println("");
                 }
 
                 println("");
             }
         }
 
-        //public class Def_cmd : Command
-        //{
-        //    public override string Definition { get; } = "Defines a function or constant.";
+    }
+    public class Def_cmd : Command
+    {
+        public override string Definition { get; } = "Defines a function or constant.";
 
-        //    public Def_cmd()
-        //    {
-        //        Name = "def";
-        //    }
+        public Def_cmd()
+        {
+            Name = "def";
+        }
 
-        //    protected override void exec(string args, Universe universe)
-        //    {
-        //        args.
-        //    }
-        //}
+        protected override void exec(string args, Universe universe)
+        {
+            Action thro = () => throw new GenericCommandException("Invalid arguments.");
+            string[] args_split = args.Split("=", 2).Select(s => s.Trim()).ToArray();
+            if (args_split.Length != 2) { thro(); }
+
+            if (universe.Parser.IsFunction(args_split[0].Trim(), out (string name, List<string> @params) partParsed))
+            {
+                var @params = new Dictionary<string, ILabeled>();
+                foreach (var param in partParsed.@params)
+                {
+                    string param_trim = param.Trim();
+                    @params.Add(param_trim, new Variable(param_trim));
+                }
+
+                CustomFunction f = new CustomFunction(partParsed.name, universe.Parser.ParseElement(args_split[1], @params), @params.Values.Select(p => (Variable)p).ToArray());
+
+                if (universe.Functions.ContainsKey(f.Id))
+                {
+                    throw new GenericCommandException($"{f} already exists.");
+                }
+                else
+                {
+                    universe.AddFunction(f);
+                    return;
+                }
+            }
+            else if (universe.Parser.IsLabel(args_split[0]))
+            {
+                Constant con = new Constant(args_split[0], universe.Parser.ParseElement(args_split[1]));
+                if (universe.NamedItems.ContainsKey(con.Name))
+                {
+                    throw new GenericCommandException($"{con} already exists.");
+                }
+                else
+                {
+                    universe.AddLabeled(con);
+                    return;
+                }
+            }
+            else
+            {
+                thro();
+            }
+        }
+    }
+    public class Delete_cmd : Command
+    {
+        public override string Definition { get; } = "Deletes a function or constant.";
+
+        public Delete_cmd()
+        {
+            Name = "delete";
+        }
+
+        protected override void exec(string args, Universe universe)
+        {
+            List<string> argList = argSplitter.Tokenize(args);
+            if (argList.Count == 2)
+            {
+                // Function
+                if (int.TryParse(argList[1], out int i))
+                {
+                    if (universe.Functions.TryGetValue((argList[0], i), out Function f))
+                    {
+                        universe.Functions.Remove(f.Id);
+                        universe.PrintFunction($"{f} has been deleted.\n");
+                    }
+                    else
+                    {
+                        throw new GenericCommandException($"Function not found.");
+                    }
+                }
+                else
+                {
+                    throw new GenericCommandException($"{argList[1]} is not a vallid integer. This argument should represent the functions parameter count.");
+                }
+            }
+            else if (argList.Count == 1)
+            {
+                // Constant
+                if (universe.NamedItems.TryGetValue(argList[0], out ILabeled l) && l is Constant)
+                {
+                    universe.NamedItems.Remove(l.Name);
+                    universe.PrintFunction($"{l} has been deleted.\n");
+                }
+                else
+                {
+                    throw new GenericCommandException($"{argList[0]} not found.");
+                }
+            }
+            else
+            {
+                throw new GenericCommandException("Invalid input.");
+            }
+        }
     }
 }

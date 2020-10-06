@@ -155,7 +155,7 @@ namespace ExoParseV2
             stage3Tokenizer = new Tokenizer(Cools.Ems, Cools.Ems, Cools.Ems, Cools.Ems, StringProps.OpenBrackets, StringProps.CloseBrackets, Cools.Ems, Cools.Ems, true);
         }
         
-        public bool TryParseBaseElement(String s, out IElement result)
+        public bool TryParseBaseElement(String s, out IElement result, Dictionary<string, ILabeled> localLabeled = null)
         {
 
             if (TryParseConstant(s, out Literal c))
@@ -168,7 +168,7 @@ namespace ExoParseV2
                 result = con;
                 return true;
             }
-            else if (TryParseLabeled(s, out ILabeled l))
+            else if (TryParseLabeled(s, out ILabeled l, localLabeled))
             {
                 result = l;
                 return true;
@@ -187,17 +187,17 @@ namespace ExoParseV2
         }
 
 
-        public IElement ParseElement(string s)
+        public IElement ParseElement(string s, Dictionary<string, ILabeled> localLabeled = null)
         {
             bool startsWithWhitespace = s.Length > 0 && s[0].IsWhiteSpace();
             s = s.Trim();
             if (s.Length == 0) { return null; } // give up if line is empty
 
-            return InternalParseElement(s, Starter, startsWithWhitespace);
+            return InternalParseElement(s, Starter, startsWithWhitespace, localLabeled);
         }
 
         #region parse element/ expression
-        private IElement InternalParseElement(string s, IElement starter = null, bool startsWithWhitespace = false)
+        private IElement InternalParseElement(string s, IElement starter = null, bool startsWithWhitespace = false, Dictionary<string, ILabeled> localLabeled = null)
         {
             #region internal function definitions
             /// AKA: this code gets run later.
@@ -206,7 +206,7 @@ namespace ExoParseV2
                 if (i.TriedParsingElement) { result = null; return false; } // The point of this internal method is to check this property and give up if the item has already been tried(as in tryParseBaseElement).
 
                 i.TriedParsingElement = true; // Don't forget to mark it for later. The whole point of this method is optimization.
-                return TryParseBaseElement(i.Text, out result); // If the item hasn't already been tried, then try.
+                return TryParseBaseElement(i.Text, out result, localLabeled); // If the item hasn't already been tried, then try.
             }
             #endregion
 
@@ -775,8 +775,13 @@ namespace ExoParseV2
             return Literal.TryParse(s, out result, containNegPos);
         }
 
-        public bool TryParseLabeled(String s, out ILabeled result)
+        public bool TryParseLabeled(String s, out ILabeled result, Dictionary<string, ILabeled> localLabeled)
         {
+            if (localLabeled != null && localLabeled.TryGetValue(s, out result))
+            {
+                return true;
+            }
+
             if (Universe.NamedItems.TryGetValue(s, out result))
             {
                 return true;

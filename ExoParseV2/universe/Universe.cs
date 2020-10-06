@@ -110,7 +110,7 @@ namespace ExoParseV2.the_universe
             {
                 throw new MessageException("A command was expected but no command was given.");
             }
-
+            
 
 
             // Find name and args.
@@ -159,6 +159,8 @@ namespace ExoParseV2.the_universe
                 throw new MessageException($"Command not found: {name}");
             }
             //
+
+            PrintFunction("\n");
         }
 
 
