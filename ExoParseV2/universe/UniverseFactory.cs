@@ -76,7 +76,6 @@ namespace ExoParseV2
             SymbolizedIndex si = new SymbolizedIndex(
                 new ISymbolized[][]
                 {
-                    new ISymbolized[] {new Dereference_mod()},
                     new ISymbolized[] {new NullCoalescing_op()},
                     new ISymbolized[] {new SetDefinition_op(), new SetAsDefinition_op()},
                     new ISymbolized[] {new CheckEqual_op(),new CheckNotEqual_op(), new GreaterThan_op(), new GreaterThanEqualTo_op(), new LessThan_op(), new LessThanEqualTo_op()},
@@ -96,6 +95,7 @@ namespace ExoParseV2
                     new ISymbolized[] {new IncrementBefore_mod(), new DecrementBefore_mod()},
                     new ISymbolized[] {new Factorial_mod() },
                     new ISymbolized[] {new EqualsNot_mod()},
+                    new ISymbolized[] {new Dereference_mod()},
                 }
                 );
 

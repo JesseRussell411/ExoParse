@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace ExoParseV2
@@ -7,7 +8,7 @@ namespace ExoParseV2
     public class Negative_mod : PreModifier
     {
         public override string Symbol { get { return "-"; } }
-        public override IElement calc(IElement item)
+        protected override IElement calc(IElement item)
         {
             return (-item.Execute()).ToElement();
         }
@@ -15,7 +16,7 @@ namespace ExoParseV2
     public class Positive_mod : PreModifier
     {
         public override string Symbol { get { return "+"; } }
-        public override IElement calc(IElement item)
+        protected override IElement calc(IElement item)
         {
             return item.Execute().ToElement();
         }
@@ -23,7 +24,7 @@ namespace ExoParseV2
     public class Not_mod : PreModifier
     {
         public override string Symbol { get { return "!"; } }
-        public override IElement calc(IElement item)
+        protected override IElement calc(IElement item)
         {
             return LogicUtils.Not(item.Execute()).ToElement();
         }
@@ -32,7 +33,7 @@ namespace ExoParseV2
     public class Dereference_mod : PreModifier
     {
         public override string Symbol { get { return "$"; } }
-        public override IElement calc(IElement item)
+        protected override IElement calc(IElement item)
         {
             return item.Definition;
         }
@@ -40,7 +41,7 @@ namespace ExoParseV2
     public class IncrementAfter_mod : PostModifier
     {
         public override string Symbol { get { return "++"; } }
-        public override IElement calc(IElement item)
+        protected override IElement calc(IElement item)
         {
             if (item is IDefinable)
             {
@@ -53,19 +54,27 @@ namespace ExoParseV2
                 throw new NotDefinableException(item);
             }
         }
+        protected override IElement pass(IElement item, Modification parent)
+        {
+            return parent;
+        }
     }
     public class IncrementBefore_mod : PreModifier
     {
         public override string Symbol { get { return "++"; } }
-        public override IElement calc(IElement item)
+        protected override IElement calc(IElement item)
         {
             return item.TryChangeDefinition(self => (self.Execute() + 1).ToElement());
+        }
+        protected override IElement pass(IElement item, Modification parent)
+        {
+            return parent;
         }
     }
     public class DecrementAfter_mod : PostModifier
     {
         public override string Symbol { get { return "--"; } }
-        public override IElement calc(IElement item)
+        protected override IElement calc(IElement item)
         {
             if (item is IDefinable)
             {
@@ -78,20 +87,28 @@ namespace ExoParseV2
                 throw new NotDefinableException(item);
             }
         }
+        protected override IElement pass(IElement item, Modification parent)
+        {
+            return parent;
+        }
     }
     public class DecrementBefore_mod : PreModifier
     {
         public override string Symbol { get { return "--"; } }
-        public override IElement calc(IElement item)
+        protected override IElement calc(IElement item)
         {
             return item.TryChangeDefinition(self => (self.Execute() - 1).ToElement());
+        }
+        protected override IElement pass(IElement item, Modification parent)
+        {
+            return parent;
         }
     }
 
     public class Factorial_mod : PostModifier
     {
         public override string Symbol { get { return "!"; } }
-        public override IElement calc(IElement item)
+        protected override IElement calc(IElement item)
         {
             return MathUtils.Factorial(item.Execute()).ToElement();
         }
@@ -100,10 +117,14 @@ namespace ExoParseV2
     public class EqualsNot_mod : PostModifier
     {
         public override string Symbol { get { return "=!"; } }
-        public override IElement calc(IElement item)
+        protected override IElement calc(IElement item)
         {
             item.TryChangeDefinition(self => LogicUtils.Not(self.Execute()).ToElement());
             return item;
+        }
+        protected override IElement pass(IElement item, Modification parent)
+        {
+            return parent;
         }
     }
 }

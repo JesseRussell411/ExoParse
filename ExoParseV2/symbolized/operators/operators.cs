@@ -199,6 +199,10 @@ namespace ExoParseV2
         {
             return a.TrySetDefinition(b, other => other.Execute().ToElement());
         }
+        protected override IElement pass(IElement a, IElement b, Operation parent)
+        {
+            return parent;
+        }
     }
 
     public class PlusEqual_op : RightToLeftOperator
@@ -208,6 +212,10 @@ namespace ExoParseV2
         {
             return a.TrySetDefinition(b, (self, other) => (self.Execute() + other.Execute()).ToElement());
         }
+        protected override IElement pass(IElement a, IElement b, Operation parent)
+        {
+            return parent;
+        }
     }
     public class MinusEqual_op : RightToLeftOperator
     {
@@ -215,6 +223,10 @@ namespace ExoParseV2
         protected override IElement calc(IElement a, IElement b)
         {
             return a.TrySetDefinition(b, (self, other) => (self.Execute() - other.Execute()).ToElement());
+        }
+        protected override IElement pass(IElement a, IElement b, Operation parent)
+        {
+            return parent;
         }
     }
     public class TimesEqual_op : RightToLeftOperator
@@ -224,6 +236,10 @@ namespace ExoParseV2
         {
             return a.TrySetDefinition(b, (self, other) => (self.Execute() * other.Execute()).ToElement());
         }
+        protected override IElement pass(IElement a, IElement b, Operation parent)
+        {
+            return parent;
+        }
     }
     public class DivEqual_op : RightToLeftOperator
     {
@@ -231,6 +247,10 @@ namespace ExoParseV2
         protected override IElement calc(IElement a, IElement b)
         {
             return a.TrySetDefinition(b, (self, other) => (self.Execute() / other.Execute()).ToElement());
+        }
+        protected override IElement pass(IElement a, IElement b, Operation parent)
+        {
+            return parent;
         }
     }
     public class FloorDivsEqual_op : RightToLeftOperator
@@ -240,6 +260,10 @@ namespace ExoParseV2
         {
             return a.TrySetDefinition(b, (self, other) => MathUtils.Floor(self.Execute() / other.Execute()).ToElement());
         }
+        protected override IElement pass(IElement a, IElement b, Operation parent)
+        {
+            return parent;
+        }
     }
     public class PowerEqual_op : RightToLeftOperator
     {
@@ -248,6 +272,10 @@ namespace ExoParseV2
         {
             return a.TrySetDefinition(b, (self, other) => MathUtils.Power(self.Execute(), other.Execute()).ToElement());
         }
+        protected override IElement pass(IElement a, IElement b, Operation parent)
+        {
+            return parent;
+        }
     }
     public class ModEqual_op : RightToLeftOperator
     {
@@ -255,6 +283,10 @@ namespace ExoParseV2
         protected override IElement calc(IElement a, IElement b)
         {
             return a.TrySetDefinition(b, (self, other) => (self.Execute() % other.Execute()).ToElement());
+        }
+        protected override IElement pass(IElement a, IElement b, Operation parent)
+        {
+            return parent;
         }
     }
     #endregion

@@ -171,6 +171,21 @@ namespace ExoParseV2.the_universe.Commands
     public class Def_cmd : Command
     {
         public override string Definition { get; } = "Defines a function or constant.";
+        public override string Manual { get; } =
+            "Defines a new funcion or constant.\n" +
+            "\n" +
+            "The item to be defined is placed to the left of the \"=\" symbol.\n" +
+            "Whether the item is constant or function is based on the syntax for both.\n" +
+            "Constants follow the same naming rules as variables, while functions always end in parenthesis like this: func().\n" +
+            "The function's parameters are included inside these parenthesis like this: fun(param1, param2).\n" +
+            "This function and it's parametes can be named anything, of course. Like this: sum(a, b).\n" +
+            "\n" +
+            "The value of the item being defined is placed to the right of the \"=\" symbol like this: sum(a, b) = a + b. Or: nine = 9.\n" +
+            "\n" +
+            "Examples:\n" +
+            ":def nine = 9\n" +
+            ":def sum(a, b) = a + b\n" +
+            ":def sinOfPi = sin(pi)\n";
 
         public Def_cmd()
         {

@@ -12,7 +12,16 @@ namespace ExoParseV2
             if (item == IElement.Void) { return IElement.Void; }
             return calc(item);
         }
-        public abstract IElement calc(IElement item);
+        public virtual IElement Pass(IElement item, Modification parent)
+        {
+            if (item == IElement.Void || parent == null) { return IElement.Void; }
+            return pass(item, parent);
+        }
+        protected abstract IElement calc(IElement item);
+        protected virtual IElement pass(IElement item, Modification parent)
+        {
+            return calc(item);
+        }
 
         public override string ToString()
         {
