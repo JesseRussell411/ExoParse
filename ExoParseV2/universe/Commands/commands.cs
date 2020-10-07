@@ -240,7 +240,24 @@ namespace ExoParseV2.the_universe.Commands
     }
     public class Delete_cmd : Command
     {
-        public override string Definition { get; } = "Deletes a function or constant.";
+        public override string Definition { get; } = "Deletes a function, constant, or variable.";
+        public override string Manual { get; } =
+            "Deletes a function, constant, or variable.\n" +
+            "\n" +
+            "The functions, constant, or variable to be deleted is specified as an arguement.\n" +
+            "If a constant or variable is to be deleted, the name should be provided.\n" +
+            "If a functions is to be deleted, the functions name should be given as well as the number of parameters the functions takes.\n" +
+            "If the functions takes zero parametes enter 0" +
+            "For example, To delete the round(x) function: :delete round 1\n" +
+            "To delete the true constant, enter: :delete true\n" +
+            "\n" +
+            "Examples:\n" +
+            ":delete nine\n" +
+            ":delete sum 2\n" +
+            ":delete true\n" +
+            ":delete pi\n" +
+            ":delete sin 1\n" +
+            ":delete func 0\n";
 
         public Delete_cmd()
         {
@@ -273,7 +290,7 @@ namespace ExoParseV2.the_universe.Commands
             else if (argList.Count == 1)
             {
                 // Constant
-                if (universe.NamedItems.TryGetValue(argList[0], out ILabeled l) && l is Constant)
+                if (universe.NamedItems.TryGetValue(argList[0], out ILabeled l))
                 {
                     universe.NamedItems.Remove(l.Name);
                     universe.PrintFunction($"{l} has been deleted.\n");
