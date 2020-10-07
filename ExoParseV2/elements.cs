@@ -38,7 +38,7 @@ namespace ExoParseV2
         
     }
 
-    public interface IDefinable
+    public interface IRedefinable
     {
         public IElement Definition { set; }
     }
@@ -138,7 +138,7 @@ namespace ExoParseV2
         }
     }
 
-    public class Variable : IDefinable, ILabeled
+    public class Variable : IRedefinable, ILabeled
     {
         public string Name { get; }
         public IElement Definition { get; set; }

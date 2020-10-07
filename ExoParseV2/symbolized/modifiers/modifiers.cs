@@ -43,15 +43,15 @@ namespace ExoParseV2
         public override string Symbol { get { return "++"; } }
         protected override IElement calc(IElement item)
         {
-            if (item is IDefinable)
+            if (item is IRedefinable)
             {
                 double? item_Execute = item.Execute();
-                ((IDefinable)item).Definition = (item_Execute + 1).ToElement();
+                ((IRedefinable)item).Definition = (item_Execute + 1).ToElement();
                 return item_Execute.ToElement();
             }
             else
             {
-                throw new NotDefinableException(item);
+                throw new NotRedefinableException(item);
             }
         }
         protected override IElement pass(IElement item, Modification parent)
@@ -76,15 +76,15 @@ namespace ExoParseV2
         public override string Symbol { get { return "--"; } }
         protected override IElement calc(IElement item)
         {
-            if (item is IDefinable)
+            if (item is IRedefinable)
             {
                 double? item_Execute = item.Execute();
-                ((IDefinable)item).Definition = (item_Execute - 1).ToElement();
+                ((IRedefinable)item).Definition = (item_Execute - 1).ToElement();
                 return item_Execute.ToElement();
             }
             else
             {
-                throw new NotDefinableException(item);
+                throw new NotRedefinableException(item);
             }
         }
         protected override IElement pass(IElement item, Modification parent)

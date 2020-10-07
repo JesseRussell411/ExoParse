@@ -68,14 +68,14 @@ namespace ExoParseV2
         }
         public static IElement TrySetDefinition(this IElement self, IElement other, Func<IElement, IElement, IElement> mod)
         {
-            if (self is IDefinable)
+            if (self is IRedefinable)
             {
 
-                return ((IDefinable)self).Definition = mod(self, other);
+                return ((IRedefinable)self).Definition = mod(self, other);
             }
             else
             {
-                throw new NotDefinableException(self);
+                throw new NotRedefinableException(self);
             }
         }
         public static string ToDelimString(this IEnumerable<IElement> self, SymbolizedIndex si)

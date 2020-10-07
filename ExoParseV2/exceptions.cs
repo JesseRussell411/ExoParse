@@ -18,10 +18,10 @@ namespace ExoParseV2
     {
         public ExecutionException(string message) : base(message) { }
     }
-    class NotDefinableException : ExecutionException
+    class NotRedefinableException : ExecutionException
     {
         public IElement Item { get; }
-        public NotDefinableException(IElement item) : base($"{item} is not definable.")
+        public NotRedefinableException(IElement item) : base($"{item} is not redefinable.")
         {
             Item = item;
         }
