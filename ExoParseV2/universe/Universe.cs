@@ -113,7 +113,7 @@ namespace ExoParseV2.the_universe
             
 
 
-            // Find name and args.
+            // Find name and args:
             {
                 char c;
                 for (int i = 0; i < statement.Length; i++)
@@ -137,8 +137,13 @@ namespace ExoParseV2.the_universe
                 {
                     nameEnd = statement.Length;
                 }
-            }
 
+                if (argsBegin == null)
+                {
+                    argsBegin = nameEnd;
+                }
+            }
+            //
 
 
 
@@ -152,7 +157,7 @@ namespace ExoParseV2.the_universe
             // Find command and execute.
             if (Commands.TryGetValue(name.ToLower(), out Command cmd))
             {
-                cmd.Execute(statement.rng((int)nameEnd, statement.Length), this);
+                cmd.Execute(statement.rng((int)argsBegin, statement.Length), this);
             }
             else
             {

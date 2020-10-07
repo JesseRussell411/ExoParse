@@ -274,4 +274,17 @@ namespace ExoParseV2.the_universe.Commands
             }
         }
     }
+    public class Echo_cmd : Command
+    {
+        public override string Definition { get; } = "Prints the argument.";
+        public Echo_cmd()
+        {
+            Name = "echo";
+        }
+
+        protected override void exec(string args, Universe universe)
+        {
+            universe.PrintFunction(args);
+        }
+    }
 }
