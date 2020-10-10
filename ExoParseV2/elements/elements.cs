@@ -4,55 +4,9 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
-using System.Transactions;
 
-namespace ExoParseV2
+namespace ExoParseV2.elements
 {
-    public interface IElement
-    {
-        //There are three "levels of agression" for getting an element's value:
-        //Execute
-        public double? Execute();
-        //Pass
-        public IElement Pass();
-        public IElement Pass(out bool dontExecute_flag)
-        {
-            dontExecute_flag = DontExecute_flag;
-            return Pass();
-        }
-        //Definition
-        public IElement Definition { get; }
-
-
-        //Execute: Returns the lements numeric value, if the elments involves actions that mutate variables, these actions will take place. Such as a++ for example.
-        //Pass: Returns the elements base value, this is usually just the element itself like in the case of variables or literals or constants, but in the case of Operations, Modifiers, or Containers, Something more is given.
-
-
-
-        public virtual bool DontExecute_flag { get { return false; } }
-
-        public static IElement Null { get { return new Literal(null); } }
-
-        public static IElement Void { get { return null; } }
-        public string ToString(SymbolizedIndex si, IExpressionComponent parent);
-        
-    }
-
-    public interface IRedefinable
-    {
-        public IElement Definition { set; }
-    }
-
-    public interface ILabeled : IElement
-    {
-        public string Name { get; }
-    }
-
-    public interface IExpressionComponent : IElement
-    {
-        public int GetPriority(SymbolizedIndex si);
-    }
-
     public struct Literal : IElement
     {
         public readonly double? Value;
@@ -72,7 +26,7 @@ namespace ExoParseV2
             return s.Contains('E') ? $" {s} " : s;
         }
 
-        public string ToString(SymbolizedIndex si, IExpressionComponent parent)
+        public string ToSiString(SymbolizedIndex si, IExpressionComponent parent)
         {
             return ToString();
         }
@@ -107,10 +61,10 @@ namespace ExoParseV2
                 return false; //--(FAIL)--
             }
         }
-        
+
         #endregion
     }
-    
+
     public class Constant : ILabeled
     {
         public string Name { get; }
@@ -132,7 +86,7 @@ namespace ExoParseV2
         {
             return Name;
         }
-        public string ToString(SymbolizedIndex si, IExpressionComponent parent)
+        public string ToSiString(SymbolizedIndex si, IExpressionComponent parent)
         {
             return ToString();
         }
@@ -152,7 +106,7 @@ namespace ExoParseV2
         {
             return Name;
         }
-        public string ToString(SymbolizedIndex si, IExpressionComponent parent)
+        public string ToSiString(SymbolizedIndex si, IExpressionComponent parent)
         {
             return ToString();
         }
@@ -174,13 +128,13 @@ namespace ExoParseV2
         }
 
 
-        public Operation(Operator op, double? a, double? b) 
+        public Operation(Operator op, double? a, double? b)
             : this(op, a.ToElement(), b.ToElement()) { }
 
         public Operation(Operator op, long? a, long? b)
             : this(op, a.ToElement(), b.ToElement()) { }
 
-        
+
         public Operation(Operator op, IElement a, IElement b)
         {
             Operator = op;
@@ -211,7 +165,7 @@ namespace ExoParseV2
             return si.GetPriority(Operator);
         }
 
-        public string ToString(SymbolizedIndex si, IExpressionComponent parent)
+        public string ToSiString(SymbolizedIndex si, IExpressionComponent parent)
         {
             bool toWrap = parent != null && parent.GetPriority(si) > ((IExpressionComponent)this).GetPriority(si);
 
@@ -285,7 +239,7 @@ namespace ExoParseV2
             return si.GetPriority(Modifier);
         }
 
-        public string ToString(SymbolizedIndex si, IExpressionComponent parent)
+        public string ToSiString(SymbolizedIndex si, IExpressionComponent parent)
         {
             bool toWrap = true;
             if (parent == null)
@@ -363,10 +317,10 @@ namespace ExoParseV2
 
         public override string ToString()
         {
-            return ToString(null);
+            return ToSiString(null);
         }
 
-        public string ToString(SymbolizedIndex si = null, IExpressionComponent parent = null)
+        public string ToSiString(SymbolizedIndex si = null, IExpressionComponent parent = null)
         {
             if (func == null) { return $"{StringProps.VoidLabel}{OpeningBracket}{ClosingBracket}"; }
             Func<IElement[], string> ds;
@@ -381,7 +335,7 @@ namespace ExoParseV2
             return $"{func.Name}{ds(Arguments).Wrap(OpeningBracket, ClosingBracket)}";
         }
 
-        
+
 
 
         private Function func;
@@ -426,23 +380,17 @@ namespace ExoParseV2
             //return Definition.NullableToString(ParsingProps.VoidLabel).Wrap(ParsingProps.OpenBrackets[0], ParsingProps.CloseBrackets[0]);
             return Item?.ToString()?.Wrap(OpenBracket, CloseBracket) ?? StringProps.VoidLabel;
         }
-        public string ToString(SymbolizedIndex si, IExpressionComponent parent)
+        public string ToSiString(SymbolizedIndex si, IExpressionComponent parent)
         {
             return Item?.ToString(si, null)?.Wrap(OpenBracket, CloseBracket) ?? StringProps.VoidLabel;
         }
     }
 
     #region special elements
-    public enum MessageType
-    {
-        Ternary
-    }
-
     public class Messenger : IElement
     {
-        public readonly MessageType? Type;
         public readonly object From;
-        public readonly ImmutableArray<object> Contents;
+        public readonly IList<object> Contents;
 
         public IElement Definition { get { return ElementUtils.NullElement; } }
 
@@ -455,16 +403,20 @@ namespace ExoParseV2
             return this;
         }
 
-        public Messenger(object from, ImmutableArray<object> contents, MessageType? type)
+        public Messenger(object from, IList<object> contents)
         {
             From = from;
             Contents = contents;
-            Type = type;
         }
-        public string ToString(SymbolizedIndex si, IExpressionComponent parent)
+        public string ToSiString(SymbolizedIndex si, IExpressionComponent parent)
         {
             return ToString();
         }
+    }
+    public class TernaryMessenger : Messenger
+    {
+        public TernaryMessenger(object from, IList<object> contents)
+            : base(from, contents) { }
     }
     #endregion
 }

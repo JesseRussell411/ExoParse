@@ -14,18 +14,18 @@ namespace ConvenienceTools
         /// <typeparam name="T"></typeparam>
         /// <param name="item"></param>
         /// <returns></returns>
-        public static T[] MakeArray<T>(this T item) => new T[] { item };
+        public static T[] Mkarr<T>(this T item) => new T[] { item };
         /// <summary>
         /// Convert a single item to a new list containing only that item.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="item"></param>
         /// <returns></returns>
-        public static List<T> MakeList<T>(this T item) => new List<T> { item };
+        public static List<T> Mklst<T>(this T item) => new List<T> { item };
 
-        public static T[] MakeArray<T>(params T[] items) => items;
+        public static T[] Mkarr<T>(params T[] items) => items;
 
-        public static List<T> MakeList<T>(params T[] items) => items.ToList();
+        public static List<T> Mklst<T>(params T[] items) => items.ToList();
 
         public static bool IsWhiteSpace(this char c) => char.IsWhiteSpace(c);
 

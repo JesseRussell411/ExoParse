@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using ExoParseV2.elements;
 
 namespace ExoParseV2
 {
@@ -21,7 +22,7 @@ namespace ExoParseV2
         protected abstract IElement calc(IElement a, IElement b);
         protected virtual IElement pass(IElement a, IElement b, Operation parent)
         {
-            return calc(a, b);
+            return parent;
         }
 
         public override string ToString()

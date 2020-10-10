@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ExoParseV2.the_universe.Commands
+namespace ExoParseV2.theUniverse.Commands
 {
     public abstract class Command
     {

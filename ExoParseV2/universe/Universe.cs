@@ -1,12 +1,13 @@
-﻿using ExoParseV2.the_universe.Commands;
+﻿using ExoParseV2.theUniverse.Commands;
 using System;
 using System.Collections.Generic;
 using ParsingTools;
 using System.Text;
 using System.Runtime.CompilerServices;
 using ConvenienceTools;
+using ExoParseV2.elements;
 
-namespace ExoParseV2.the_universe
+namespace ExoParseV2.theUniverse
 {
     public class Universe
     {
@@ -98,149 +99,110 @@ namespace ExoParseV2.the_universe
         }
         #endregion
         #region ans
-        private Variable ans_var { get; } = new Variable("previousAnswer");
+        public Variable ans_var { get; } = new Variable("previousAnswer");
         public Constant Ans { get; }
+        public double? PreviouseAnswer
+        {
+            get
+            {
+                return ans_var.Execute();
+            }
+            set
+            {
+                ans_var.Definition = value.ToElement();
+            }
+        }
         #endregion
 
-        private void RunCommand(string statement)
+        
+
+
+        public IElement ParseLine(string statement)
         {
-            int? nameEnd = null;
-            int? argsBegin = null;
-            if (statement.Trim().Length == 0)
-            {
-                throw new MessageException("A command was expected but no command was given.");
-            }
-            
-
-
-            // Find name and args:
-            {
-                char c;
-                for (int i = 0; i < statement.Length; i++)
-                {
-                    c = statement[i];
-                    if (nameEnd == null)
-                    {
-                        if (c.IsWhiteSpace())
-                        {
-                            nameEnd = i;
-                        }
-                    }
-                    else if (argsBegin == null && !c.IsWhiteSpace())
-                    {
-                        argsBegin = i;
-                        break;
-                    }
-                }
-
-                if (nameEnd == null)
-                {
-                    nameEnd = statement.Length;
-                }
-
-                if (argsBegin == null)
-                {
-                    argsBegin = nameEnd;
-                }
-            }
-            //
-
-
-
-
-            // Get name.
-            string name = statement.rng(0, (int)nameEnd);
-            //
-
-
-
-            // Find command and execute.
-            if (Commands.TryGetValue(name.ToLower(), out Command cmd))
-            {
-                cmd.Execute(statement.rng((int)argsBegin, statement.Length), this);
-            }
-            else
-            {
-                throw new MessageException($"Command not found: {name}");
-            }
-            //
-
-            PrintFunction("\n");
-        }
-
-
-        public void TakeLine(string statement)
-        {
-            // Remove comments.
-            #region remove comments
-            {
-                char c;
-                char? next;
-                for (int i = 0; i < statement.Length; i++)
-                {
-                    c = statement[i];
-                    next = i == statement.Length - 1 ? null : (char?)statement[i + 1];
-                    if (commentOpFinder.Found(c, next))
-                    {
-                        //statement = statement.Substring(0, i - commentOperator.Length);// remove comment from statement.
-                        statement = statement.rng(0, i);
-                        commentOpFinder.Reset();// don't forget to reset the opfinder.
-                        break;// no point in finnishing the loop.
-                    }
-                }
-            }
-            #endregion
+            // Ignore if null
+            if (statement == null) { return null; }
 
             // Ignore if blank
-            if (statement.Trim().Length == 0) { return; } // ignore blank lines and pure comments
+            if (statement.Trim().Length == 0) { return null; }
 
-            // Is this a command or an expression?
-            if (statement.Length >= CommandOperator.Length && statement.Substring(0, CommandOperator.Length) == CommandOperator)
-            {
-                // This is a command.
-                RunCommand(statement.rng(CommandOperator.Length, -1));
-            }
-            else
-            {
-                // Nothing else this can be, must be an expression.
-
-                // Parse the expression
-                IElement e = Parser.ParseElement(statement);
-
-                // If the expression was null...
-                if (e == null)
-                {
-                    PrintFunction(StringProps.VoidLabel + "\n");
-                    return;
-                }
-
-                // Run the expression but don't execute it yet.
-                IElement p = e.Pass(out bool dontExecute);
-                double? ex = null;
-
-                // Print the parsed expression to show the user what was inturpreted by the parser.
-                PrintFunction(e.ToString(SymbolizedIndex, null) + "\n");
-
-                // Print the expression after it has been ran.
-                PrintFunction(p.NullableToString(StringProps.VoidLabel) + "\n");
-
-                // Execute the expression unless the don't execuse flag was true.
-                if (!dontExecute)
-                {
-                    // Execute
-                    ex = p?.Execute();
-
-                    // Print the value from the execution
-                    PrintFunction($"\t{ex}\n");
-
-                    // Set the previos answer variable to the new previouse answer.
-                    ans_var.Definition = ex.ToElement();
-                }
-
-                // Decorative line break.
-                PrintFunction("\n");
-            }
+            // Parse the expression
+            return Parser.ParseElement(statement);
         }
+        //public IElement ParseLine(string statement)
+        //{
+        //    // Ignore if null
+        //    if (statement == null) { return; }
+
+        //    // Remove comments.
+        //    #region remove comments
+        //    {
+        //        char c;
+        //        char? next;
+        //        for (int i = 0; i < statement.Length; i++)
+        //        {
+        //            c = statement[i];
+        //            next = i == statement.Length - 1 ? null : (char?)statement[i + 1];
+        //            if (commentOpFinder.Found(c, next))
+        //            {
+        //                //statement = statement.Substring(0, i - commentOperator.Length);// remove comment from statement.
+        //                statement = statement.rng(0, i);
+        //                commentOpFinder.Reset();// don't forget to reset the opfinder.
+        //                break;// no point in finnishing the loop.
+        //            }
+        //        }
+        //    }
+        //    #endregion
+
+        //    // Ignore if blank
+        //    if (statement.Trim().Length == 0) { return; } // ignore blank lines and pure comments
+
+        //    // Is this a command or an expression?
+        //    if (statement.Length >= CommandOperator.Length && statement.Substring(0, CommandOperator.Length) == CommandOperator)
+        //    {
+        //        // This is a command.
+        //        RunCommand(statement.rng(CommandOperator.Length, -1));
+        //    }
+        //    else
+        //    {
+        //        // Nothing else this can be, must be an expression.
+
+        //        // Parse the expression
+        //        IElement e = Parser.ParseElement(statement);
+
+        //        // If the expression was null...
+        //        if (e == null)
+        //        {
+        //            PrintFunction(StringProps.VoidLabel + "\n");
+        //            return;
+        //        }
+
+        //        // Run the expression but don't execute it yet.
+        //        IElement p = e.Pass(out bool dontExecute);
+        //        double? ex = null;
+
+        //        // Print the parsed expression to show the user what was inturpreted by the parser.
+        //        PrintFunction(e.ToString(SymbolizedIndex, null) + "\n");
+
+        //        // Print the expression after it has been ran.
+        //        PrintFunction(p.NullableToString(StringProps.VoidLabel) + "\n");
+
+        //        // Execute the expression unless the don't execute flag was true.
+        //        if (!dontExecute)
+        //        {
+        //            // Execute
+        //            ex = p?.Execute();
+
+        //            // Print the value from the execution
+        //            PrintFunction($"\t{ex}\n");
+
+        //            // Set the previos answer variable to the new previouse answer.
+        //            ans_var.Definition = ex.ToElement();
+        //        }
+
+        //        // Decorative line break.
+        //        PrintFunction("\n");
+        //    }
+        //}
 
     }
 }

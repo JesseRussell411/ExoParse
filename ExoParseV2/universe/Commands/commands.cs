@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using ExoParseV2.elements;
 
-namespace ExoParseV2.the_universe.Commands
+namespace ExoParseV2.theUniverse.Commands
 {
     public class Exit_cmd : Command
     {

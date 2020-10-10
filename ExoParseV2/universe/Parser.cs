@@ -8,8 +8,8 @@ using System.Linq;
 using System.Collections.Immutable;
 using Microsoft.VisualBasic.CompilerServices;
 using System.Runtime.InteropServices;
-using System.ComponentModel;
-using ExoParseV2.the_universe;
+using ExoParseV2.theUniverse;
+using ExoParseV2.elements;
 
 namespace ExoParseV2
 {
@@ -244,7 +244,7 @@ namespace ExoParseV2
             items = items
                 .Select(i => 
                     (tokens: i.Unparsed ? stage2Tokenizer.Tokenize(i.Text) : new List<string>(), item: i)) //   Tokenize each item that hasn't been discovered to be element or operator or modifier
-                .Select(t => t.tokens.Count == 0 ? t.item.MakeArray() : t.tokens.Select(to => new Item(to))) // Itemize the tokens
+                .Select(t => t.tokens.Count == 0 ? t.item.Mkarr() : t.tokens.Select(to => new Item(to))) // Itemize the tokens
                 .SelectMany(m => m).ToList(); // flatten the 2d item list
 
             foreach (Item item in items)
@@ -284,7 +284,7 @@ namespace ExoParseV2
             items = items
                 .Select(i =>
                     (tokens: i.Unparsed ? stage3Tokenizer.Tokenize(i.Text) : new List<string>(), item: i)) //   Tokenize each item that hasn't been discovered to be element or operator or modifier
-                .Select(t => t.tokens.Count == 0 ? t.item.MakeArray() : t.tokens.Select(to => new Item(to))) // Itemize the tokens
+                .Select(t => t.tokens.Count == 0 ? t.item.Mkarr() : t.tokens.Select(to => new Item(to))) // Itemize the tokens
                 .SelectMany(m => m).ToList(); // flatten the 2d item list
 
 
@@ -398,6 +398,10 @@ namespace ExoParseV2
                     pom_lp = pom_lp == null ? p : Math.Min(p, (int)pom_lp);
                 }
 
+                if (current.Type == null)
+                {
+                    throw new ParsingException($"Unkown item: {current.Text}");
+                }
             } while ((currentNode = currentNode.Next) != null);
             #endregion
 

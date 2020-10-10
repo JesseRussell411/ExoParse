@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ExoParseV2.elements;
 
 namespace ExoParseV2
 {
@@ -93,6 +94,10 @@ namespace ExoParseV2
         public static string ToDelimString(this IEnumerable<IElement> self, SymbolizedIndex si, IExpressionComponent parent, string delim)
         {
             return self.Select(s => s.ToString(si, parent)).ToDelimString(delim);
+        }
+        public static string ToString(this IElement self,SymbolizedIndex si, IExpressionComponent parent)
+        {
+            return self?.ToSiString(si, parent) ?? StringProps.VoidLabel;
         }
     }
 }

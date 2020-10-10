@@ -3,12 +3,10 @@ using ParsingTools;
 using System.Linq;
 using ExoParseV2.Functions;
 using System.Diagnostics;
-using ExoParseV2.the_universe;
-using ExoParseV2.the_universe.Commands;
+using ExoParseV2.theUniverse;
+using ExoParseV2.theUniverse.Commands;
 using ExoParseV2.utilities;
-
-
-
+using ExoParseV2.universe;
 
 namespace ExoParseV2
 {
@@ -16,19 +14,19 @@ namespace ExoParseV2
     {
         static void Main(string[] args)
         {
-            
-            
             UniverseFactory uf = new UniverseFactory();
+            theUniverse.Universe un = uf.CreateUniverse();
+            UserInterface ui = new UserInterface(un);
 
 
-            the_universe.Universe universe = uf.CreateUniverse();
+
 
             Stopwatch s = new Stopwatch();
             while (true)
             {
                 Console.Write("> ");
                 string input = Console.ReadLine();
-                if (universe.Debug)
+                if (un.Debug)
                 {
                     s.Reset();
                     s.Start();
@@ -36,14 +34,15 @@ namespace ExoParseV2
 
                 try
                 {
-                    universe.TakeLine(input);
+                    ui.RunLine(input);
+                    //un.TakeLine(input);
                 }
                 catch (MessageException me)
                 {
                     Console.WriteLine(me.Message);
                 }
 
-                if (universe.Debug)
+                if (un.Debug)
                 {
                     s.Stop();
                     Console.WriteLine($"                   Total time taken: {s.ElapsedMilliseconds}");

@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 using ExoParseV2.Functions;
-using ExoParseV2.the_universe;
-using ExoParseV2.the_universe.Commands;
+using ExoParseV2.theUniverse;
+using ExoParseV2.theUniverse.Commands;
+using ExoParseV2.elements;
 
 namespace ExoParseV2
 {
