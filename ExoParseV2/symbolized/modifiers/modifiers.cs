@@ -115,6 +115,7 @@ namespace ExoParseV2
         }
     }
 
+    // kinda just for fun, it toggles a boolean. a is true; a=!; a is now false
     public class EqualsNot_mod : PostModifier
     {
         public override string Symbol { get { return "=!"; } }

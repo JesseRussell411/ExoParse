@@ -7,6 +7,9 @@ using System.Text;
 
 namespace ExoParseV2.elements
 {
+    /// <summary>
+    /// The simplest element. Contains a read-only property for the double? value and nothing else.
+    /// </summary>
     public struct Literal : IElement
     {
         public readonly double? Value;
@@ -23,7 +26,7 @@ namespace ExoParseV2.elements
 
             string s = Value.ToString();
 
-            return s.Contains('E') ? $" {s} " : s;
+            return s.Contains('E') ? $" {s} " : s; // *add extra padding around scientific notation to make sure the output can be parsed.
         }
 
         public string ToSiString(SymbolizedIndex si, IExpressionComponent parent)
@@ -33,9 +36,10 @@ namespace ExoParseV2.elements
 
         #region static
         public static Literal Null { get { return new Literal(null); } }
-        public static Literal Parse(String s, bool containNegPos = false)
+
+        public static Literal Parse(String s, bool trapNegPos = false)
         {
-            if (TryParse(s, out Literal result, containNegPos))
+            if (TryParse(s, out Literal result, trapNegPos))
             {
                 return result;
             }
@@ -45,15 +49,16 @@ namespace ExoParseV2.elements
             }
 
         }
-        public static bool TryParse(String s, out Literal result, bool containNegPos = false)
+        public static bool TryParse(String s, out Literal result, bool trapNegPos = false)
         {
-            if (s.Length == 0) { result = Literal.Null; return false; }
-            if (!containNegPos && (s[0] == '-' || s[0] == '+')) { result = Literal.Null; return false; }
-            if (s == StringProps.NullLabel) { result = Literal.Null; return true; }
+            if (s.Length == 0) { result = Literal.Null; return false; }//--(FAIL)--
+            if (!trapNegPos && (s[0] == '-' || s[0] == '+')) { result = Literal.Null; return false; }//--(FAIL)--
+            if (s == StringProps.NullLabel) { result = Literal.Null; return true; }//--(PASS)--
+
             if (double.TryParse(s, out double d))
             {
                 result = new Literal(d);
-                return true;
+                return true;//--(PASS)--
             }
             else
             {
@@ -415,8 +420,14 @@ namespace ExoParseV2.elements
     }
     public class TernaryMessenger : Messenger
     {
+        public IElement A { get => (IElement) Contents[0]; }
+        public IElement B { get => (IElement) Contents[1]; }
+        
+
         public TernaryMessenger(object from, IList<object> contents)
             : base(from, contents) { }
+        public TernaryMessenger(object from, IElement A, IElement B)
+            : base(from, new IElement[] { A, B }) { }
     }
     #endregion
 }

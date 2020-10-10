@@ -147,10 +147,10 @@ namespace ExoParseV2.universe
                 double? ex = null;
 
                 // Print the parsed expression to show the user what was inturpreted by the parser.
-                println(e.ToString(un.SymbolizedIndex, null));
+                println(e.ToString(un.SymbolizedIndex));
 
                 // Print the expression after it has been ran.
-                println(p.NullableToString(StringProps.VoidLabel));
+                println(p.ToString(un.SymbolizedIndex));
 
                 // Execute the expression unless the don't-execuse flag was true.
                 if (!dontExecute)
@@ -159,7 +159,7 @@ namespace ExoParseV2.universe
                     ex = p?.Execute();
 
                     // Print the value from the execution
-                    println($"\t{ex}");
+                    println($"\t{ex.ElementExecuteToString()}");
 
                     // Set the previos answer variable to the new previouse answer.
                     un.PreviouseAnswer= ex;

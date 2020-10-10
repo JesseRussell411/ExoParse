@@ -6,6 +6,7 @@ using System.Text;
 
 namespace ExoParseV2
 {
+    #region mathematical operations
     public class Addition_op : LeftToRightOperator
     {
         public override string Symbol { get; } = "+";
@@ -67,6 +68,7 @@ namespace ExoParseV2
             return MathUtils.Power(a.Execute(), b.Execute()).ToElement();
         }
     }
+    #endregion
 
     #region boolean logic
     public class And_op : LeftToRightOperator
@@ -192,7 +194,6 @@ namespace ExoParseV2
     }
     #endregion
 
-
     #region mutation and modification
     public class SetEqual_op : RightToLeftOperator
     {
@@ -288,6 +289,7 @@ namespace ExoParseV2
     }
     #endregion
 
+    #region misc
     public class NullCoalescing_op : LeftToRightOperator
     {
         public override string Symbol { get; } = "??";
@@ -303,14 +305,32 @@ namespace ExoParseV2
             }
         }
     }
-
     #region ternary
     public class Ternary_op : RightToLeftOperator
     {
         public override string Symbol { get; } = "?";
         protected override IElement calc(IElement a, IElement b)
         {
-            throw new NotImplementedException();
+            if (b is TernaryMessenger tm)
+            {
+                double? a_Execute = a.Execute();
+                if (a_Execute == LogicUtils.True_double)
+                {
+                    return tm.A;
+                }
+                else if (a_Execute == LogicUtils.False_double)
+                {
+                    return tm.B;
+                }
+                else
+                {
+                    return ElementUtils.NullElement;
+                }
+            }
+            else
+            {
+                throw new ExecutionException($"Improper use of a ternary statement; Are you missing a set of parenthesis?");
+            }
         }
     }
 
@@ -319,8 +339,14 @@ namespace ExoParseV2
         public override string Symbol { get; } = ":";
         protected override IElement calc(IElement a, IElement b)
         {
-            return new TernaryMessenger(this, Cools.Mkarr(a, b));
+            return new TernaryMessenger(this, a, b);
+        }
+        protected override IElement pass(IElement a, IElement b, Operation parent)
+        {
+            return calc(a, b);
         }
     }
     #endregion
+    #endregion
+
 }

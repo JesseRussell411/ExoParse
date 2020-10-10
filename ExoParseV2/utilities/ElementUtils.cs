@@ -99,5 +99,13 @@ namespace ExoParseV2
         {
             return self?.ToSiString(si, parent) ?? StringProps.VoidLabel;
         }
+        public static string ToString(this IElement self, SymbolizedIndex si)
+        {
+            return self.ToString(si, null);
+        }
+        public static string ElementExecuteToString(this double? self)
+        {
+            return self.NullableToString(StringProps.NullLabel);
+        }
     }
 }

@@ -20,9 +20,9 @@ namespace ExoParseV2
 
 
 
-
+            bool stop = false;
             Stopwatch s = new Stopwatch();
-            while (true)
+            while (!stop)
             {
                 Console.Write("> ");
                 string input = Console.ReadLine();

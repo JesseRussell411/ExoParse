@@ -12,7 +12,7 @@ Or_op
 Xor_op
 	^^
 		the symbol, '^', was taken by exponentiation
-																						# conditional and,or: the right side is not executed if the left side determines the outcome
+
 ConditionalAnd_op
 	&&
 		the rightside is only executed if the left evaluates to true. Returns result of left & right.

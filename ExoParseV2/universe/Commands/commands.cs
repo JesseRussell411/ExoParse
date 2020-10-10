@@ -29,7 +29,7 @@ namespace ExoParseV2.theUniverse.Commands
     }
     public class Help_cmd : Command
     {
-        public override string Definition { get; } = "Lists all commands and their deffinition. If a specific command is given as an argument, then that commands manual is displayed.";
+        public override string Definition { get; } = "Lists all commands and their definition. If a specific command is given as an argument, then that command's manual is displayed unless the command has no manual, then its definition will be displayed.";
         public Help_cmd()
         {
             Name = "help";
@@ -173,13 +173,13 @@ namespace ExoParseV2.theUniverse.Commands
     {
         public override string Definition { get; } = "Defines a function or constant.";
         public override string Manual { get; } =
-            "Defines a new funcion or constant.\n" +
+            "Defines a new function or constant.\n" +
             "\n" +
             "The item to be defined is placed to the left of the \"=\" symbol.\n" +
             "Whether the item is constant or function is based on the syntax for both.\n" +
             "Constants follow the same naming rules as variables, while functions always end in parenthesis like this: func().\n" +
             "The function's parameters are included inside these parenthesis like this: fun(param1, param2).\n" +
-            "This function and it's parametes can be named anything, of course. Like this: sum(a, b).\n" +
+            "This function and it's parameters can be named anything, of course. Like this: sum(a, b).\n" +
             "\n" +
             "The value of the item being defined is placed to the right of the \"=\" symbol like this: sum(a, b) = a + b. Or: nine = 9.\n" +
             "\n" +
@@ -245,10 +245,10 @@ namespace ExoParseV2.theUniverse.Commands
         public override string Manual { get; } =
             "Deletes a function, constant, or variable.\n" +
             "\n" +
-            "The functions, constant, or variable to be deleted is specified as an arguement.\n" +
+            "The functions, constant, or variable to be deleted is specified as an argument.\n" +
             "If a constant or variable is to be deleted, the name should be provided.\n" +
             "If a functions is to be deleted, the functions name should be given as well as the number of parameters the functions takes.\n" +
-            "If the functions takes zero parametes enter 0" +
+            "If the functions takes zero parameters enter 0" +
             "For example, To delete the round(x) function: :delete round 1\n" +
             "To delete the true constant, enter: :delete true\n" +
             "\n" +
@@ -285,7 +285,7 @@ namespace ExoParseV2.theUniverse.Commands
                 }
                 else
                 {
-                    throw new GenericCommandException($"{argList[1]} is not a vallid integer. This argument should represent the functions parameter count.");
+                    throw new GenericCommandException($"{argList[1]} is not a valid integer. This argument should represent the functions parameter count.");
                 }
             }
             else if (argList.Count == 1)
