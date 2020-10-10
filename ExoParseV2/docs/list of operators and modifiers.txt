@@ -15,10 +15,10 @@ Xor_op
 
 ConditionalAnd_op
 	&&
-		the rightside is only executed if the left evaluates to true. Returns result of left & right.
+		the right side is only executed if the left evaluates to true. Returns result of left & right.
 ConditionalOr_op
 	||
-		The rightside is only executed if the left evaluates to false. Returns result of left | right
+		The right side is only executed if the left evaluates to false. Returns result of left | right
 	  
 CheckEqual_op
 	==
