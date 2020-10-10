@@ -137,24 +137,24 @@ namespace ExoParseV2
     #endregion
     public class Parser
     {
-        public Operator        DefaultOperator { get; set; }
-        public IElement        DefaultElement { get; set; } = IElement.Void;
+        public Operator DefaultOperator { get; set; }
+        public IElement DefaultElement { get; set; } = IElement.Void;
         public SymbolizedIndex SymbolizedIndex { get; set; }
-        public Universe        Universe { get; set; }
-        public IElement        Starter { get; set; }
+        public Universe Universe { get; set; }
+        public IElement Starter { get; set; }
         public Parser(SymbolizedIndex si, Universe universe)
         {
             SymbolizedIndex = si;
             Universe = universe;
 
             stage1Tokenizer = new Tokenizer(Cools.Ems, Cools.Ems, Cools.Ems, Cools.Ems, StringProps.OpenBrackets, StringProps.CloseBrackets, Cools.Ems, Cools.Ems)
-                { BreakOnWhiteSpace = true };
+            { BreakOnWhiteSpace = true };
 
             stage2Tokenizer = new Tokenizer(si.AllSymbols, Cools.Ems, Cools.Ems, Cools.Ems, StringProps.OpenBrackets, StringProps.CloseBrackets, Cools.Ems, Cools.Ems);
 
             stage3Tokenizer = new Tokenizer(Cools.Ems, Cools.Ems, Cools.Ems, Cools.Ems, StringProps.OpenBrackets, StringProps.CloseBrackets, Cools.Ems, Cools.Ems, true);
         }
-        
+
         public bool TryParseBaseElement(String s, out IElement result, Dictionary<string, ILabeled> localLabeled = null)
         {
 
@@ -163,7 +163,7 @@ namespace ExoParseV2
                 result = c;
                 return true;
             }
-            else if (TryParseContainer(s, out Container con))
+            else if (TryParseContainer(s, localLabeled, out Container con))
             {
                 result = con;
                 return true;
@@ -173,7 +173,7 @@ namespace ExoParseV2
                 result = l;
                 return true;
             }
-            else if (TryParseExecution(s, out Execution e))
+            else if (TryParseExecution(s, localLabeled,  out Execution e))
             {
                 result = e;
                 return true;
@@ -183,21 +183,21 @@ namespace ExoParseV2
                 result = null;
                 return false;
             }
-                    
+
         }
 
 
+
+        #region parse element/ expression
         public IElement ParseElement(string s, Dictionary<string, ILabeled> localLabeled = null)
         {
             bool startsWithWhitespace = s.Length > 0 && s[0].IsWhiteSpace();
             s = s.Trim();
             if (s.Length == 0) { return null; } // give up if line is empty
 
-            return InternalParseElement(s, Starter, startsWithWhitespace, localLabeled);
+            return InternalParseElement(s, localLabeled, Starter, startsWithWhitespace);
         }
-
-        #region parse element/ expression
-        private IElement InternalParseElement(string s, IElement starter = null, bool startsWithWhitespace = false, Dictionary<string, ILabeled> localLabeled = null)
+        private IElement InternalParseElement(string s, Dictionary<string, ILabeled> localLabeled, IElement starter = null, bool startsWithWhitespace = false)
         {
             #region internal function definitions
             /// AKA: this code gets run later.
@@ -226,7 +226,7 @@ namespace ExoParseV2
             #region stage 1
             // Break on whitespace.
             List<Item> items = stage1Tokenizer.Tokenize(s_cleaned).Select(t => new Item(t)).ToList(); // seperate string on whitespace and store in a list of items (special object used just for parsing)
-            foreach(Item item in items)
+            foreach (Item item in items)
             {
                 // elements
                 if (item.Element == null && TryParseBaseElementFromItem(item, out IElement e)) // Try to parse each individual item
@@ -242,7 +242,7 @@ namespace ExoParseV2
             #region stage 2
             // Break on operators
             items = items
-                .Select(i => 
+                .Select(i =>
                     (tokens: i.Unparsed ? stage2Tokenizer.Tokenize(i.Text) : new List<string>(), item: i)) //   Tokenize each item that hasn't been discovered to be element or operator or modifier
                 .Select(t => t.tokens.Count == 0 ? t.item.Mkarr() : t.tokens.Select(to => new Item(to))) // Itemize the tokens
                 .SelectMany(m => m).ToList(); // flatten the 2d item list
@@ -291,12 +291,12 @@ namespace ExoParseV2
 
 
 
-            
-//!\/!\/!\     Convert to linked list
+
+            //!\/!\/!\     Convert to linked list
             LinkedList<Item> items_ll = new LinkedList<Item>();
 
             // Try parsing the new tokenized elements
-                // And convert to linked list
+            // And convert to linked list
             foreach (Item item in items)
             {
                 if (item.Element == null && TryParseBaseElementFromItem(item, out IElement e))
@@ -304,12 +304,12 @@ namespace ExoParseV2
                     item.Element = e;
                 }
 
-//!\/!\/!\      I'm piggy backing off this loop to fill the new linkedlist with items.
+                //!\/!\/!\      I'm piggy backing off this loop to fill the new linkedlist with items.
                 items_ll.AddLast(item);
 
             }
             #endregion
-            
+
 
             #region stage 2.5
             // Add on starter element (probably finalVariable: ans (previouse answer)) if applicable
@@ -324,7 +324,7 @@ namespace ExoParseV2
             // Finalize Element and Operator items.
 
             // This means that after this stage the items are definitely elements or they are definitely not: operators, modifiers, or ItemContainers. Or vise/versa, etc. etc. for operators and pre/post modifiers.
-            
+
 
             LinkedListNode<Item> currentNode = items_ll.First;
             do
@@ -612,7 +612,7 @@ namespace ExoParseV2
                             items.AddAfter(currentNode, i);
                         }
                     }
-                    
+
                     currentNode_Next = currentNode.Next;
                     if (collectLeft)
                     {
@@ -705,9 +705,9 @@ namespace ExoParseV2
 
                     Operation opr = new Operation(op, A, B);
                     currentNode.Value = new Item(opr);
-                    
 
-                    while(currentNode.Next != null)
+
+                    while (currentNode.Next != null)
                     {
                         currentNode = currentNode.Next;
                         items.Remove(currentNode.Previous);
@@ -753,18 +753,20 @@ namespace ExoParseV2
 
             return items.First?.Value?.Element;
         }
-        #endregion
-
 
         private Tokenizer stage1Tokenizer;
         private Tokenizer stage2Tokenizer;
         private Tokenizer stage3Tokenizer;
+        #endregion
 
-        public bool TryParseContainer(String s, out Container result)
+
+
+
+        public bool TryParseContainer(String s, Dictionary<string, ILabeled> localLabeled, out Container result)
         {
             if (s.IsWrapped(StringProps.OpenBrackets, StringProps.CloseBrackets, out string opening, out string closing))
             {
-                result = new Container(InternalParseElement(s.UnWrap(StringProps.OpenBrackets, StringProps.CloseBrackets)), opening, closing);
+                result = new Container(InternalParseElement(s.UnWrap(StringProps.OpenBrackets, StringProps.CloseBrackets), localLabeled), opening, closing);
                 return true;
             }
             else
@@ -781,36 +783,65 @@ namespace ExoParseV2
 
         public bool TryParseLabeled(String s, out ILabeled result, Dictionary<string, ILabeled> localLabeled)
         {
-            if (localLabeled != null && localLabeled.TryGetValue(s, out result))
-            {
-                return true;
-            }
+            //if (localLabeled != null && localLabeled.TryGetValue(s, out result))
+            //{
+            //    return true;
+            //}
 
-            if (Universe.NamedItems.TryGetValue(s, out result))
+            if (localLabeled == null)
             {
-                return true;
-            }
-            else
-            {
-                if (this.IsLabel(s))
+                if (Universe.NamedItems.TryGetValue(s, out result))
                 {
-                    result = new Variable(s);
-                    Universe.NamedItems.Add(result.Name, result);
                     return true;
                 }
                 else
                 {
-                    return false;
+                    if (this.IsLabel(s))
+                    {
+                        result = new Variable(s);
+                        Universe.NamedItems.Add(result.Name, result);
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 }
             }
+            else
+            {
+                if (Universe.NamedItems.TryGetValue(s, out result) && result is Constant)
+                {
+                    return true;
+                }
+                else if (localLabeled.TryGetValue(s, out result))
+                {
+                    return true;
+                }
+                else
+                {
+                    if (this.IsLabel(s))
+                    {
+                        result = new Variable(s);
+                        localLabeled.Add(result.Name, result);
+                        //Universe.NamedItems.Add(result.Name, result);
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+
         }
-        
-        public bool TryParseExecution(string s, out Execution result)
+
+        public bool TryParseExecution(string s, Dictionary<string, ILabeled> localLabeled, out Execution result)
         {
             //(string name, List<String> args) partParsed;
             if (IsFunction(s, out var partParsed, out string opening, out string closing))
             {
-                if (TryParseExecution(partParsed, out result, opening, closing))
+                if (TryParseExecution(partParsed, localLabeled, out result, opening, closing))
                 {
                     return true;
                 }
@@ -819,13 +850,13 @@ namespace ExoParseV2
             return false;
         }
 
-        public bool TryParseExecution((String name, List<String> args) partParsed, out Execution result, string openingBracket = null, string closingBracket = null)
+        public bool TryParseExecution((String name, List<String> args) partParsed, Dictionary<string, ILabeled> localLabeled, out Execution result, string openingBracket = null, string closingBracket = null)
         {
             (string name, int argCount) id = (partParsed.name, partParsed.args.Count);
             Function f;
             if (Universe.Functions.TryGetValue(id, out f))
             {
-                result = new Execution(f, partParsed.args.Select(a => InternalParseElement(a)).ToArray(), openingBracket, closingBracket);
+                result = new Execution(f, partParsed.args.Select(a => InternalParseElement(a, localLabeled)).ToArray(), openingBracket, closingBracket);
                 return true;
             }
             else
@@ -925,7 +956,7 @@ namespace ExoParseV2
                     return true; //--(PASS)--
                 }
             }
-            
+
             partParsed = (null, null);
             openingBracket = null;
             closingBracket = null;

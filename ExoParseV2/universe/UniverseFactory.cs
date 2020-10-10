@@ -77,6 +77,7 @@ namespace ExoParseV2
             SymbolizedIndex si = new SymbolizedIndex(
                 new ISymbolized[][]
                 {
+                    new ISymbolized[] {new Semicolon_op()},
                     new ISymbolized[] {new SetDefinition_op(), new SetAsDefinition_op()},
                     new ISymbolized[] {new Ternary_op(), new TernarySeperator_op()},
                     new ISymbolized[] {new NullCoalescing_op()},

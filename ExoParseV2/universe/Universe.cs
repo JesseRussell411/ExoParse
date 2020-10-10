@@ -101,7 +101,7 @@ namespace ExoParseV2.theUniverse
         #region ans
         public Variable ans_var { get; } = new Variable("previousAnswer");
         public Constant Ans { get; }
-        public double? PreviouseAnswer
+        public double? PreviousAnswer
         {
             get
             {

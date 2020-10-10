@@ -181,7 +181,7 @@ namespace ExoParseV2
         public override string Symbol { get; } = ">=";
         protected override IElement calc(IElement a, IElement b)
         {
-            return (a.Execute() == b.Execute()).ToElement();
+            return (a.Execute() >= b.Execute()).ToElement();
         }
     }
     public class LessThanEqualTo_op : LeftToRightOperator
@@ -189,7 +189,7 @@ namespace ExoParseV2
         public override string Symbol { get; } = "<=";
         protected override IElement calc(IElement a, IElement b)
         {
-            return (a.Execute() < b.Execute()).ToElement();
+            return (a.Execute() <= b.Execute()).ToElement();
         }
     }
     #endregion
@@ -262,10 +262,11 @@ namespace ExoParseV2
     }
     #endregion
 
-    #region definiton
+    #region definition
     public class SetDefinition_op : RightToLeftOperator
     {
         public override string Symbol { get; } = ":=";
+        public override bool dontExecute_flag(IElement a, IElement b, Operation parent) => true;
         protected override IElement calc(IElement a, IElement b)
         {
             return a.TrySetDefinition(b);
@@ -278,6 +279,8 @@ namespace ExoParseV2
     public class SetAsDefinition_op : RightToLeftOperator
     {
         public override string Symbol { get; } = ":=$";
+
+        public override bool dontExecute_flag(IElement a, IElement b, Operation parent) => true;
         protected override IElement calc(IElement a, IElement b)
         {
             return a.TrySetDefinition(b.Definition);
@@ -316,11 +319,11 @@ namespace ExoParseV2
                 double? a_Execute = a.Execute();
                 if (a_Execute == LogicUtils.True_double)
                 {
-                    return tm.A;
+                    return tm.A?.Pass();
                 }
                 else if (a_Execute == LogicUtils.False_double)
                 {
-                    return tm.B;
+                    return tm.B?.Pass();
                 }
                 else
                 {
@@ -347,6 +350,37 @@ namespace ExoParseV2
         }
     }
     #endregion
+    public class Semicolon_op : LeftToRightOperator
+    {
+        public override bool ToStringPadding { get; } = false;
+        public override string Symbol { get; } = ";";
+        public override bool dontExecute_flag(IElement a, IElement b, Operation parent)
+        {
+            if (b is Operation)
+            {
+                return b.DontExecute_flag;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        protected override IElement calc(IElement a, IElement b)
+        {
+            var p = a.Pass(out bool dontExecute_flag);
+            if (!dontExecute_flag) { a.Execute(); }
+            return b;
+        }
+        protected override IElement pass(IElement a, IElement b, Operation parent)
+        {
+            return calc(a, b);
+        }
+        public override string ToString()
+        {
+            return $"{Symbol} ";
+        }
+    }
     #endregion
 
 }

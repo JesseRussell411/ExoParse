@@ -19,6 +19,7 @@ namespace ExoParseV2.elements
         }
         public double? Execute() { return Value; }
         public IElement Pass() { return this; }
+        public IElement Calc() { return this; }
         public IElement Definition { get { return this; } }
         public override string ToString()
         {
@@ -76,6 +77,7 @@ namespace ExoParseV2.elements
         public IElement Definition { get; }
         public double? Execute() { return Definition?.Execute(); }
         public IElement Pass() { return this; }
+        public IElement Calc() { return Definition; }
         public Constant(String name, IElement definition)
         {
             Definition = definition;
@@ -103,6 +105,7 @@ namespace ExoParseV2.elements
         public IElement Definition { get; set; }
         public double? Execute() { return Definition?.Execute(); }
         public IElement Pass() { return this; }
+        public IElement Calc() { return Definition; }
         public Variable(String name)
         {
             Name = name;
@@ -116,7 +119,6 @@ namespace ExoParseV2.elements
             return ToString();
         }
     }
-
     public class Operation : IExpressionComponent
     {
         public IElement A { get; set; }
@@ -127,8 +129,7 @@ namespace ExoParseV2.elements
         {
             get
             {
-                return Operator is SetDefinition_op ||
-                    Operator is SetAsDefinition_op;
+                return Operator.dontExecute_flag(A, B, this);
             }
         }
 
@@ -150,7 +151,11 @@ namespace ExoParseV2.elements
         public double? Execute()
         {
             //return Pass()?.Execute();
-            return Operator?.Execute(A?.Pass(), B?.Pass())?.Execute();
+            return Operator?.Calc(A?.Pass(), B?.Pass())?.Execute();
+        }
+        public IElement Calc()
+        {
+            return Operator?.Calc(A?.Pass(), B?.Pass());
         }
         public IElement Pass()
         {
@@ -215,7 +220,12 @@ namespace ExoParseV2.elements
 
         public double? Execute()
         {
-            return Modifier?.Execute(Item?.Pass())?.Execute();
+            return Modifier?.Calc(Item?.Pass())?.Execute();
+            //return Modifier?.calc(Item)?.Execute();
+        }
+        public IElement Calc()
+        {
+            return Modifier?.Calc(Item?.Pass());
             //return Modifier?.calc(Item)?.Execute();
         }
         public IElement Pass()
@@ -315,9 +325,13 @@ namespace ExoParseV2.elements
             return func.Calculate(Arguments)
                        .Execute();
         }
-        public IElement Pass()
+        public IElement Calc()
         {
             return func.Calculate(Arguments);
+        }
+        public IElement Pass()
+        {
+            return this;
         }
 
         public override string ToString()
@@ -380,6 +394,10 @@ namespace ExoParseV2.elements
         {
             return Definition?.Pass();
         }
+        public IElement Calc()
+        {
+            return Definition?.Calc();
+        }
         public override string ToString()
         {
             //return Definition.NullableToString(ParsingProps.VoidLabel).Wrap(ParsingProps.OpenBrackets[0], ParsingProps.CloseBrackets[0]);
@@ -404,6 +422,10 @@ namespace ExoParseV2.elements
             return null;
         }
         public IElement Pass()
+        {
+            return this;
+        }
+        public IElement Calc()
         {
             return this;
         }

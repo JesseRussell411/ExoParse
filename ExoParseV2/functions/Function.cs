@@ -42,6 +42,7 @@ namespace ExoParseV2
             {
                 return IElement.Void;
             }
+
             foreach (IElement arg in args)
             {
                 if (arg == IElement.Void)
@@ -83,7 +84,7 @@ namespace ExoParseV2
         /// <summary>
         /// Defines the function's behavior.
         /// </summary>
-        public IElement Behavior { get; }
+        public IElement Behavior { get; set; }
 
         /// <summary>
         /// Links to Variable objects assumed to exist in the IElement object defining the function's behavior.
@@ -95,21 +96,32 @@ namespace ExoParseV2
             Name = name;
             Behavior = definition;
             ArgVars = arguments;
-            Parameters = ArgVars.Select(v => v.Name).ToArray(); // Set Parameters acordingly.
+            Parameters = ArgVars.Select(v => v.Name).ToArray(); // Set Parameters accordingly.
         }
 
         protected override IElement calc(IElement[] args)
         {
+            //Record what the args where before execution
+            IElement[] oldArgs = new IElement[args.Length];
+
             // Set the value for each parameter to the given value.
             //Note that args is guaranteed to have the same length as ArgVars thanks to the actual interface method: Function.Calculate which calls this method.
             for (int i = 0; i < ArgVars.Length; i++)
             {
-                ArgVars[i].Definition = args[i];
+                oldArgs[i] = ArgVars[i].Definition;
+                ArgVars[i].Definition = args[i].Calc();
             }
             //
 
+            var result = Behavior.Pass().Calc().Calc();
 
-            return Behavior.Pass();
+            // Return what the args where.
+            for(int i = 0; i < ArgVars.Length; i++)
+            {
+                ArgVars[i].Definition = oldArgs[i];
+            }
+
+            return result;
         }
     }
 

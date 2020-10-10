@@ -161,8 +161,8 @@ namespace ExoParseV2.universe
                     // Print the value from the execution
                     println($"\t{ex.ElementExecuteToString()}");
 
-                    // Set the previos answer variable to the new previouse answer.
-                    un.PreviouseAnswer= ex;
+                    // Set the previous answer variable to the new previous answer.
+                    un.PreviousAnswer= ex;
                 }
 
                 // Decorative line break.
