@@ -196,51 +196,73 @@ namespace ExoParseV2.theUniverse.Commands
         protected override void exec(string args, Universe universe)
         {
             Action thro = () => throw new GenericCommandException("Invalid arguments.");
-            string[] args_split = args.Split("=", 2).Select(s => s.Trim()).ToArray();
-            if (args_split.Length != 2) { thro(); }
 
+            string[] args_split = args.Split("=", 2).Select(s => s.Trim()).ToArray();// split the args around the "=" symbol
+
+            if (args_split.Length != 2) { thro(); }// there wasn't a "=", invalid arguments.
+
+            // If this is a functions that's been entered do this
             if (universe.Parser.IsFunction(args_split[0].Trim(), out (string name, List<string> @params) partParsed))
             {
                 var @params = new Dictionary<string, ILabeled>();
+
+
                 foreach (var param in partParsed.@params)
                 {
                     string param_trim = param.Trim();
                     @params.Add(param_trim, new Variable(param_trim));
                 }
+
+                // go copy the arguments out of params before it gets filled with other local variables.
                 var params_items = @params.Values.Select(p => (Variable)p).ToArray();
+
+                // what is this functions called? what does it look like?
                 CustomFunction f = new CustomFunction(partParsed.name, null, params_items, null);
 
+                // does this functions already exist?
                 if (universe.Functions.ContainsKey(f.Id))
                 {
                     throw new GenericCommandException($"{f} already exists.");
                 }
                 else
                 {
+                    // no, good to go, add the function
                     universe.AddFunction(f);
                 }
+                
+                // define the behavior of the new function (and fill params with any locally created variables other than the function's arguments)
                 f.Behavior = universe.Parser.ParseElement(args_split[1], @params);
-                f.LocalVars = @params.Select(p => p.Value).Where(l => l is Variable).Select(l => (Variable)l).ToArray();
+
+                // set the functions localVars field to these local variables.
+                f.LocalVars = @params.Select(p => p.Value)
+                                     .Where(l => l is Variable)
+                                     .Select(l => (Variable)l)
+                                     .ToArray();
 
 
 
-                return;
+                return;// done
             }
             else if (universe.Parser.IsLabel(args_split[0]))
             {
+                // this isn't a function, but it could be a constant
                 Constant con = new Constant(args_split[0], universe.Parser.ParseElement(args_split[1]));
+
+                // is this constant name already taken?
                 if (universe.NamedItems.ContainsKey(con.Name))
                 {
                     throw new GenericCommandException($"{con} already exists.");
                 }
                 else
                 {
+                    // no, good to go
                     universe.AddLabeled(con);
-                    return;
+                    return; // done
                 }
             }
             else
             {
-                thro();
+                thro();// yo, thro, somethin's wrong.
             }
         }
     }

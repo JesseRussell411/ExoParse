@@ -81,13 +81,12 @@ namespace ExoParseV2
                     new ISymbolized[] {new SetDefinition_op(), new SetAsDefinition_op()},
                     new ISymbolized[] {new Ternary_op(), new TernarySeperator_op()},
                     new ISymbolized[] {new NullCoalescing_op()},
+                    new ISymbolized[] {new ConditionalAnd_op(), new ConditionalOr_op()},
+                    new ISymbolized[] {new And_op(), new Or_op(), new Xor_op()},
                     new ISymbolized[] {new CheckEqual_op(),new CheckNotEqual_op(), new GreaterThan_op(), new GreaterThanEqualTo_op(), new LessThan_op(), new LessThanEqualTo_op()},
                     new ISymbolized[] {new SetEqual_op()},
                     new ISymbolized[] {new PlusEqual_op(), new MinusEqual_op()},
-                    new ISymbolized[] {new TimesEqual_op(), new DivEqual_op(), new FloorDivsEqual_op(), new ModEqual_op()},
-                    new ISymbolized[] {new TimesEqual_op(), new PowerEqual_op()},
-                    new ISymbolized[] {new ConditionalAnd_op(), new ConditionalOr_op()},
-                    new ISymbolized[] {new And_op(), new Or_op(), new Xor_op()},
+                    new ISymbolized[] {new TimesEqual_op(), new DivEqual_op(), new FloorDivsEqual_op(), new ModEqual_op(), new PowerEqual_op(), new XorEqual_op()},
                     new ISymbolized[] {new Addition_op(), new Subtraction_op() },
                     new ISymbolized[] {multiplication, new Division_op(), new FloorDivision_op(), new Modulus_op()},
                     new ISymbolized[] {new Negative_mod(), new Positive_mod()},
@@ -97,7 +96,7 @@ namespace ExoParseV2
                     new ISymbolized[] {new IncrementAfter_mod(), new DecrementAfter_mod()},
                     new ISymbolized[] {new IncrementBefore_mod(), new DecrementBefore_mod()},
                     new ISymbolized[] {new Factorial_mod() },
-                    new ISymbolized[] {new EqualsNot_mod()},
+                    //new ISymbolized[] {new EqualsNot_mod()}, naaaaaahhhhh, maybe not
                     new ISymbolized[] {new Dereference_mod()},
                 }
                 );

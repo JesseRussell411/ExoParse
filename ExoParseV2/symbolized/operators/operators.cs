@@ -98,6 +98,7 @@ namespace ExoParseV2
             return LogicUtils.And(a.Execute(), b.Execute()).ToElement();
         }
     }
+    #region conditional
     public class ConditionalAnd_op : LeftToRightOperator
     {
         public override string Symbol { get; } = "&&";
@@ -139,6 +140,7 @@ namespace ExoParseV2
             }
         }
     }
+    #endregion
     #endregion
 
     #region comparison
@@ -260,6 +262,32 @@ namespace ExoParseV2
             return a.TrySetDefinition(b, (self, other) => (self.Execute() % other.Execute()).ToElement());
         }
     }
+    #region logic equals
+    public class AndEqual_op : RightToLeftOperator
+    {
+        public override string Symbol { get; } = "&=";
+        protected override IElement calc(IElement a, IElement b)
+        {
+            return a.TrySetDefinition(b, (self, other) => LogicUtils.And(a.Execute(), b.Execute()).ToElement());
+        }
+    }
+    public class OrEqual_op : RightToLeftOperator
+    {
+        public override string Symbol { get; } = "|=";
+        protected override IElement calc(IElement a, IElement b)
+        {
+            return a.TrySetDefinition(b, (self, other) => LogicUtils.Or(a.Execute(), b.Execute()).ToElement());
+        }
+    }
+    public class XorEqual_op : RightToLeftOperator
+    {
+        public override string Symbol { get; } = "^^="; // ^= was taken by PowerEqual_op
+        protected override IElement calc(IElement a, IElement b)
+        {
+            return a.TrySetDefinition(b, (self, other) => LogicUtils.Xor(a.Execute(), b.Execute()).ToElement());
+        }
+    }
+    #endregion
     #endregion
 
     #region definition
@@ -319,7 +347,8 @@ namespace ExoParseV2
                 double? a_Execute = a.Execute();
                 if (a_Execute == LogicUtils.True_double)
                 {
-                    return tm.A?.Pass();
+                    var result =  tm.A?.Pass();
+                    return result;
                 }
                 else if (a_Execute == LogicUtils.False_double)
                 {
