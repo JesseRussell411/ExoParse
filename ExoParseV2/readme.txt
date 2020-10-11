@@ -4,7 +4,7 @@ It's a system for parsing mathematical expressions containing double precision f
 
 literals: 5 4.5 2.334 0.3 9e-4
 
-varaibles: a b velocity
+variables: a b velocity
 
 constants: pi e true false
 
@@ -14,9 +14,9 @@ These elements are linked together by operators and modifiers.
 
 Operators: 1 + 2   4 * 7
 
-Modfiers: -2   5!
+Modifiers: -2   5!
 
-At the moment, ExoParse is set up as a command line tool (found in app.program). However, there's no reason this system couldn't be used for the backend or in other use interface components. Blender has a similar system for instance, which allows the user to enter an expression into text fields expecting numbers.
+At the moment, ExoParse is set up as a command line tool (found in app.program). However, there's no reason this system couldn't be adapted for the back-end use or in other use interface components. Blender has a similar system for instance, which allows the user to enter an expression into text fields expecting numbers.
 
 
 for example your could enter:
@@ -46,6 +46,8 @@ b
 
 you may have noticed the ":=" operator and it's effects on b in relation to a. This is the "set definition" operator; it sets the definition of a variable to the thing on the right; by contrast, the "=" operator is the "set equal" operator and it sets the variable's definition to the value of the thing on the right, ie: what gets returned when the thing on the right is executed. This can be thought of like a pointer. The value of what the variable points to get's returned when it's executed but other than that, the variable only points to it; it's not the same item. To dereference the variable and gain access to what it is pointing to, directly, precede it with the dereference modifier ($): $b returns a.
 
+To find a full list of operators and modifiers, try looking in /docs/list of operators and modifers.txt in the source code.
+
 for example:
 b
 	4
@@ -60,3 +62,17 @@ $b = 42
 	42
 
 a is not 42, b is still pointing to a, so its value is also 42. If we only entered: b = 42, without the $, then b would now be pointing to the literal: 42 and a would not have been touched.
+
+Another feature of ExoParse id functions. It comes with a few standard built in functions like sin(x), cos(x), log(base, x), ln(x), ect. But what's more interesting is the ability to define new functions using the :def command.
+
+:def sum(a, b, c) = a + b + c
+
+Commands are a little like preprocessor directives in c, they tell ExoParse to do miscellaneous things like defining functions or just exiting. to see a list of available commands enter the command :help. note that to use a command, it has to start with ':'; This is known as the command operator and must be the first character in the statement for ExoParse to recognize the statement as a command. Additionally,  command names are not case sensitive so :HeLp works just a well as :help or :HELP
+
+After defining sum(a, b, c), we can use in like any other functions. for example: sum(1,2,3) would return 6 and sum(3,3,3) would return 9.
+
+Functions also support recursion allowing users to define more complex functions, and yet more complex functions if they use ternary statement and semicolon operators. These special operators allow for basic program flow. here's an example:
+
+:def factorial(n) =    n <= 1   ?   1   :    n * factorial(n - 1)
+
+This factorial function recursively calculated the factorial of n.

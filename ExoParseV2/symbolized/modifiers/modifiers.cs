@@ -34,6 +34,14 @@ namespace ExoParseV2
     public class Dereference_mod : PreModifier
     {
         public override string Symbol { get { return "$"; } }
+        public override bool dontExecute_flag(IElement item, Modification parent)
+        {
+            return true;
+        }
+        protected override IElement pass(IElement item, Modification parent)
+        {
+            return calc(item);
+        }
         protected override IElement calc(IElement item)
         {
             return item.Definition;

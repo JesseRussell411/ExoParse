@@ -8,7 +8,8 @@ using System.Text;
 namespace ExoParseV2.elements
 {
     /// <summary>
-    /// The simplest element. Contains a read-only property for the double? value and nothing else.
+    /// The simplest element. Contains a read-only property for a double? value and nothing else.
+    /// </summary>
     /// </summary>
     public struct Literal : IElement
     {
@@ -217,7 +218,7 @@ namespace ExoParseV2.elements
         {
             get
             {
-                return Modifier is Dereference_mod;
+                return Modifier?.dontExecute_flag(Item, this) ?? false;
             }
         }
 

@@ -8,6 +8,10 @@ namespace ExoParseV2
     public abstract class Modifier : ISymbolized
     {
         public abstract string Symbol { get; }
+        public virtual bool dontExecute_flag(IElement item, Modification parent)
+        {
+            return false;
+        }
         public virtual IElement Calc(IElement item)
         {
             if (item == IElement.Void) { return IElement.Void; }

@@ -11,7 +11,7 @@ Or_op
 	|
 Xor_op
 	^^
-		the symbol, '^', was taken by exponentiation
+		the symbol, '^', was taken by Exponentiation_op
 
 ConditionalAnd_op
 	&&
@@ -32,7 +32,9 @@ GreaterThenEqual_op
 	>=
 LessThenEqual_op
 	<=
-	  
+XorEqual_op
+	^^=
+		Again, the symbol "^=" was taken by PowerEqual_op
 
 PlusEqual_op
 	+=
@@ -74,7 +76,7 @@ Exponentiation_op
 
 NullCoalescing_op
 	??
-
+		Return left normally, but if left is null, return right.
 ---------------------------
 Modifiers:
 system name

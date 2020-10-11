@@ -15,6 +15,8 @@ namespace ExoParseV2
         }
         public virtual IElement Pass(IElement a, IElement b, Operation parent)
         {
+            a = a?.Pass();
+            b = b?.Pass();
             if (a == IElement.Void || b == IElement.Void || parent == null) { return IElement.Void; }
             return pass(a, b, parent);
         }
