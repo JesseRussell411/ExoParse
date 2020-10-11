@@ -7,6 +7,7 @@ using ExoParseV2.theUniverse;
 using ExoParseV2.theUniverse.Commands;
 using ExoParseV2.utilities;
 using ExoParseV2.universe;
+using System.Text;
 
 namespace ExoParseV2
 {
@@ -20,33 +21,12 @@ namespace ExoParseV2
 
 
 
+
             bool stop = false;
             Stopwatch s = new Stopwatch();
             while (!stop)
             {
-                Console.Write("> ");
-                string input = Console.ReadLine();
-                if (un.Debug)
-                {
-                    s.Reset();
-                    s.Start();
-                }
-
-                try
-                {
-                    ui.RunLine(input);
-                    //un.TakeLine(input);
-                }
-                catch (MessageException me)
-                {
-                    Console.WriteLine(me.Message);
-                }
-
-                if (un.Debug)
-                {
-                    s.Stop();
-                    Console.WriteLine($"                   Total time taken: {s.ElapsedMilliseconds}");
-                }
+                ui.ReadAndRunLine();
             }
         }
     }

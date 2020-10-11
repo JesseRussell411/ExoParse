@@ -332,7 +332,15 @@ namespace ExoParseV2
             }
             else
             {
-                throw new ExecutionException($"Improper use of a ternary statement; Are you missing a set of parenthesis?");
+                double? a_Execute = a.Execute();
+                if (a_Execute == LogicUtils.True_double)
+                {
+                    return b.Pass();
+                }
+                else
+                {
+                    return ElementUtils.NullElement;
+                }
             }
         }
     }
@@ -356,21 +364,14 @@ namespace ExoParseV2
         public override string Symbol { get; } = ";";
         public override bool dontExecute_flag(IElement a, IElement b, Operation parent)
         {
-            if (b is Operation)
-            {
-                return b.DontExecute_flag;
-            }
-            else
-            {
-                return false;
-            }
+            return b?.DontExecute_flag ?? false;
         }
 
         protected override IElement calc(IElement a, IElement b)
         {
             var p = a.Pass(out bool dontExecute_flag);
             if (!dontExecute_flag) { a.Execute(); }
-            return b;
+            return b.Pass();
         }
         protected override IElement pass(IElement a, IElement b, Operation parent)
         {

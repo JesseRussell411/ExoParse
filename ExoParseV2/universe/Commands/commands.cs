@@ -208,7 +208,7 @@ namespace ExoParseV2.theUniverse.Commands
                     @params.Add(param_trim, new Variable(param_trim));
                 }
                 var params_items = @params.Values.Select(p => (Variable)p).ToArray();
-                CustomFunction f = new CustomFunction(partParsed.name, null, params_items);
+                CustomFunction f = new CustomFunction(partParsed.name, null, params_items, null);
 
                 if (universe.Functions.ContainsKey(f.Id))
                 {
@@ -218,8 +218,11 @@ namespace ExoParseV2.theUniverse.Commands
                 {
                     universe.AddFunction(f);
                 }
-
                 f.Behavior = universe.Parser.ParseElement(args_split[1], @params);
+                f.LocalVars = @params.Select(p => p.Value).Where(l => l is Variable).Select(l => (Variable)l).ToArray();
+
+
+
                 return;
             }
             else if (universe.Parser.IsLabel(args_split[0]))

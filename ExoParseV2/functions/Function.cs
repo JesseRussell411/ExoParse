@@ -8,7 +8,7 @@ using ExoParseV2.elements;
 namespace ExoParseV2
 {
     /// <summary>
-    /// Abstract class that represents a mathimematical function with an arbitrary number of inputs and one output.
+    /// Abstract class that represents a mathematical function with an arbitrary number of inputs and one output.
     /// </summary>
     public abstract class Function
     {
@@ -32,7 +32,7 @@ namespace ExoParseV2
         }
 
         /// <summary>
-        /// Executes the function with the given input arguments. IF the number of arguments given does not match the number of parametes, null will be returned.
+        /// Executes the function with the given input arguments. IF the number of arguments given does not match the number of parameters, null will be returned.
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
@@ -90,43 +90,45 @@ namespace ExoParseV2
         /// Links to Variable objects assumed to exist in the IElement object defining the function's behavior.
         /// </summary>
         public Variable[] ArgVars { get; }
+
+        public Variable[] LocalVars { get; set; }
         
-        public CustomFunction(String name, IElement definition, Variable[] arguments)
+        public CustomFunction(String name, IElement definition, Variable[] arguments, Variable[] localVars)
         {
             Name = name;
             Behavior = definition;
             ArgVars = arguments;
             Parameters = ArgVars.Select(v => v.Name).ToArray(); // Set Parameters accordingly.
+            LocalVars = localVars;
         }
 
         protected override IElement calc(IElement[] args)
         {
             //Record what the args where before execution
-            IElement[] oldArgs = new IElement[args.Length];
+            IElement[] oldvars = LocalVars.Select(l => l.Definition).ToArray();
 
             // Set the value for each parameter to the given value.
             //Note that args is guaranteed to have the same length as ArgVars thanks to the actual interface method: Function.Calculate which calls this method.
             for (int i = 0; i < ArgVars.Length; i++)
             {
-                oldArgs[i] = ArgVars[i].Definition;
                 ArgVars[i].Definition = args[i].Calc();
             }
             //
 
-            var result = Behavior.Pass().Calc().Calc();
+            var result = Behavior.Execute();
 
-            // Return what the args where.
-            for(int i = 0; i < ArgVars.Length; i++)
+            // Return what the vars where.
+            for(int i = 0; i < LocalVars.Length; i++)
             {
-                ArgVars[i].Definition = oldArgs[i];
+                LocalVars[i].Definition = oldvars[i];
             }
 
-            return result;
+            return result.ToElement();
         }
     }
 
     public abstract class BuiltInFunction : Function
     {
-        // Mostly for the sake of it for now
+        // Mostly for the sake of it, for now
     }
 }

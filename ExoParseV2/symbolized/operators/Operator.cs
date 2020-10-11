@@ -21,7 +21,7 @@ namespace ExoParseV2
         public virtual IElement Calc(IElement a, IElement b)
         {
             if (a == IElement.Void || b == IElement.Void) { return IElement.Void; }
-            return calc(a, b);
+            return calc(a?.Pass(), b?.Pass());
         }
         protected abstract IElement calc(IElement a, IElement b);
         protected virtual IElement pass(IElement a, IElement b, Operation parent)

@@ -26,7 +26,7 @@ namespace ExoParseV2.elements
 
 
 
-        public virtual bool DontExecute_flag { get { return false; } }
+        public bool DontExecute_flag { get; }
 
         public static IElement Null { get { return new Literal(null); } }
 

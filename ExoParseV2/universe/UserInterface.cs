@@ -25,10 +25,11 @@ namespace ExoParseV2.universe
         public Func<string> Readln { get; set; } = Console.ReadLine;
         private string      readln() { return Readln(); }
 
-
+        public string LineBreakEscapeSymbol { get; set; } = "\\";
         private Universe un;
 
         public Universe Universe { get => un; set => un = value; }
+
         private void RunCommand(string statement)
         {
             int? nameEnd = null;
@@ -93,6 +94,38 @@ namespace ExoParseV2.universe
             //
 
             println();
+        }
+        public void ReadAndRunLine()
+        {
+            print("> ");
+            string rawInput = readln();
+            var inputBuilder = new StringBuilder();
+            bool splitLine = false;
+
+            while (rawInput.Length >= LineBreakEscapeSymbol.Length && rawInput.Substring(rawInput.Length - LineBreakEscapeSymbol.Length, LineBreakEscapeSymbol.Length) == LineBreakEscapeSymbol)
+            {
+                splitLine = true;
+                inputBuilder.Append(rawInput.Substring(0, rawInput.Length - LineBreakEscapeSymbol.Length));
+                print("\\");
+                rawInput = readln();
+            }
+            inputBuilder.Append(rawInput);
+
+            string input = inputBuilder.ToString();
+            if (splitLine)
+            {
+                println(input);
+            }
+
+            try
+            {
+                RunLine(input);
+                //un.TakeLine(input);
+            }
+            catch (MessageException me)
+            {
+                println(me.Message);
+            }
         }
         public void RunLine(string statement)
         {

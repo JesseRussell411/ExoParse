@@ -17,6 +17,7 @@ namespace ExoParseV2.elements
         {
             Value = value;
         }
+        public bool DontExecute_flag { get { return false; } }
         public double? Execute() { return Value; }
         public IElement Pass() { return this; }
         public IElement Calc() { return this; }
@@ -74,6 +75,7 @@ namespace ExoParseV2.elements
     public class Constant : ILabeled
     {
         public string Name { get; }
+        public bool DontExecute_flag { get; } = false;
         public IElement Definition { get; }
         public double? Execute() { return Definition?.Execute(); }
         public IElement Pass() { return this; }
@@ -103,6 +105,7 @@ namespace ExoParseV2.elements
     {
         public string Name { get; }
         public IElement Definition { get; set; }
+        public bool DontExecute_flag { get; } = false;
         public double? Execute() { return Definition?.Execute(); }
         public IElement Pass() { return this; }
         public IElement Calc() { return Definition; }
@@ -151,16 +154,16 @@ namespace ExoParseV2.elements
         public double? Execute()
         {
             //return Pass()?.Execute();
-            return Operator?.Calc(A?.Pass(), B?.Pass())?.Execute();
+            return Operator?.Calc(A, B)?.Execute();
         }
         public IElement Calc()
         {
-            return Operator?.Calc(A?.Pass(), B?.Pass());
+            return Operator?.Calc(A, B);
         }
         public IElement Pass()
         {
             //return Operator?.Execute(A?.Pass(), B?.Pass());
-            return Operator?.Pass(A?.Pass(), B?.Pass(), this);
+            return Operator?.Pass(A, B, this);
         }
 
         public override string ToString()
@@ -287,6 +290,7 @@ namespace ExoParseV2.elements
 
     public class Execution : IElement
     {
+        public bool DontExecute_flag { get; } = false;
         public Execution(Function function, params IElement[] arguments)
             : this(function, arguments, null, null) { }
         public Execution(Function function, IElement[] arguments, string openingBracket = null, string closingBracket = null, string delim = null)
@@ -362,6 +366,13 @@ namespace ExoParseV2.elements
 
     public class Container : IElement
     {
+        public bool DontExecute_flag
+        {
+            get
+            {
+                return Definition?.DontExecute_flag ?? false;
+            }
+        }
         public Container(IElement item, string openBracket, string closeBracket)
         {
             Item = item;
@@ -414,7 +425,7 @@ namespace ExoParseV2.elements
     {
         public readonly object From;
         public readonly IList<object> Contents;
-
+        public bool DontExecute_flag { get; } = true;
         public IElement Definition { get { return ElementUtils.NullElement; } }
 
         public double? Execute()
