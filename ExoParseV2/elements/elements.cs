@@ -55,7 +55,7 @@ namespace ExoParseV2.elements
         public static bool TryParse(String s, out Literal result, bool trapNegPos = false)
         {
             if (s.Length == 0) { result = Literal.Null; return false; }//--(FAIL)--
-            if (!trapNegPos && (s[0] == '-' || s[0] == '+')) { result = Literal.Null; return false; }//--(FAIL)--
+            if (!trapNegPos && !s.Select(c => char.ToLower(c)).Contains('e') && (s[0] == '-' || s[0] == '+')) { result = Literal.Null; return false; }//--(FAIL)--
             if (s == StringProps.NullLabel) { result = Literal.Null; return true; }//--(PASS)--
 
             if (double.TryParse(s, out double d))
@@ -109,7 +109,7 @@ namespace ExoParseV2.elements
         public bool DontExecute_flag { get; } = false;
         public double? Execute() { return Definition?.Execute(); }
         public IElement Pass() { return this; }
-        public IElement Calc() { return Definition; }
+        public IElement Calc() { return this; }
         public Variable(String name)
         {
             Name = name;
