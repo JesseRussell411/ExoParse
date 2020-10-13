@@ -31,6 +31,8 @@ namespace ExoParseV2.elements
         public static IElement Null { get { return new Literal(null); } }
 
         public static IElement Void { get { return null; } }
+
+        // the REAL version of this is found in utilities.ElementUtils. It's an extension method so it can take null pointers into account and return "void" instead of crashing.
         public string ToSiString(SymbolizedIndex si, IExpressionComponent parent);
 
     }

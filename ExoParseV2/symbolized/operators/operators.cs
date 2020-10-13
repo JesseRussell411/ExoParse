@@ -304,6 +304,8 @@ namespace ExoParseV2
             return calc(a, b);
         }
     }
+
+    // Not really needed anymore now that .Pass(), .Calc(), and .Execute() are better defined. the dereference operator ($) can actually return a variable's definition through pass now, so you can just use := and $ like this b := $a and it will actually work.
     public class SetAsDefinition_op : RightToLeftOperator
     {
         public override string Symbol { get; } = ":=$";
@@ -336,6 +338,7 @@ namespace ExoParseV2
             }
         }
     }
+    #region program flow
     #region ternary
     public class Ternary_op : RightToLeftOperator
     {
@@ -412,5 +415,6 @@ namespace ExoParseV2
         }
     }
     #endregion
+#endregion
 
 }
