@@ -204,7 +204,7 @@ namespace ExoParseV2.theUniverse.Commands
             // If this is a functions that's been entered do this
             if (universe.Parser.IsFunction(args_split[0].Trim(), out (string name, List<string> @params) partParsed))
             {
-                var @params = new Dictionary<string, ILabeled>();
+                var @params = new Dictionary<string, IReference>();
 
 
                 foreach (var param in partParsed.@params)
@@ -318,7 +318,7 @@ namespace ExoParseV2.theUniverse.Commands
             else if (argList.Count == 1)
             {
                 // Constant
-                if (universe.NamedItems.TryGetValue(argList[0], out ILabeled l))
+                if (universe.NamedItems.TryGetValue(argList[0], out IReference l))
                 {
                     universe.NamedItems.Remove(l.Name);
                     universe.PrintFunction($"{l} has been deleted.\n");

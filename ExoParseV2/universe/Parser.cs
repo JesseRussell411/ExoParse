@@ -155,7 +155,7 @@ namespace ExoParseV2
             stage3Tokenizer = new Tokenizer(Cools.Ems, Cools.Ems, Cools.Ems, Cools.Ems, StringProps.OpenBrackets, StringProps.CloseBrackets, Cools.Ems, Cools.Ems, true);
         }
 
-        public bool TryParseBaseElement(String s, out IElement result, Dictionary<string, ILabeled> localLabeled = null)
+        public bool TryParseBaseElement(String s, out IElement result, Dictionary<string, IReference> localLabeled = null)
         {
 
             if (TryParseConstant(s, out Literal c))
@@ -168,7 +168,7 @@ namespace ExoParseV2
                 result = con;
                 return true;
             }
-            else if (TryParseLabeled(s, out ILabeled l, localLabeled))
+            else if (TryParseLabeled(s, out IReference l, localLabeled))
             {
                 result = l;
                 return true;
@@ -189,7 +189,7 @@ namespace ExoParseV2
 
 
         #region parse element/ expression
-        public IElement ParseElement(string s, Dictionary<string, ILabeled> localLabeled = null)
+        public IElement ParseElement(string s, Dictionary<string, IReference> localLabeled = null)
         {
             bool startsWithWhitespace = s.Length > 0 && s[0].IsWhiteSpace();
             s = s.Trim();
@@ -197,7 +197,7 @@ namespace ExoParseV2
 
             return InternalParseElement(s, localLabeled, Starter, startsWithWhitespace);
         }
-        private IElement InternalParseElement(string s, Dictionary<string, ILabeled> localLabeled, IElement starter = null, bool startsWithWhitespace = false)
+        private IElement InternalParseElement(string s, Dictionary<string, IReference> localLabeled, IElement starter = null, bool startsWithWhitespace = false)
         {
             #region internal function definitions
             /// AKA: this code gets run later.
@@ -762,7 +762,7 @@ namespace ExoParseV2
 
 
 
-        public bool TryParseContainer(String s, Dictionary<string, ILabeled> localLabeled, out Container result)
+        public bool TryParseContainer(String s, Dictionary<string, IReference> localLabeled, out Container result)
         {
             if (s.IsWrapped(StringProps.OpenBrackets, StringProps.CloseBrackets, out string opening, out string closing))
             {
@@ -781,7 +781,7 @@ namespace ExoParseV2
             return Literal.TryParse(s, out result, containNegPos);
         }
 
-        public bool TryParseLabeled(String s, out ILabeled result, Dictionary<string, ILabeled> localLabeled)
+        public bool TryParseLabeled(String s, out IReference result, Dictionary<string, IReference> localLabeled)
         {
             //if (localLabeled != null && localLabeled.TryGetValue(s, out result))
             //{
@@ -836,7 +836,7 @@ namespace ExoParseV2
 
         }
 
-        public bool TryParseExecution(string s, Dictionary<string, ILabeled> localLabeled, out Execution result)
+        public bool TryParseExecution(string s, Dictionary<string, IReference> localLabeled, out Execution result)
         {
             //(string name, List<String> args) partParsed;
             if (IsFunction(s, out var partParsed, out string opening, out string closing))
@@ -850,7 +850,7 @@ namespace ExoParseV2
             return false;
         }
 
-        public bool TryParseExecution((String name, List<String> args) partParsed, Dictionary<string, ILabeled> localLabeled, out Execution result, string openingBracket = null, string closingBracket = null)
+        public bool TryParseExecution((String name, List<String> args) partParsed, Dictionary<string, IReference> localLabeled, out Execution result, string openingBracket = null, string closingBracket = null)
         {
             (string name, int argCount) id = (partParsed.name, partParsed.args.Count);
             Function f;

@@ -8,9 +8,10 @@ namespace ExoParseV2
     public abstract class Modifier : ISymbolized
     {
         public abstract string Symbol { get; }
-        public virtual bool dontExecute_flag(IElement item, Modification parent)
+        public virtual bool DontExecute_flag(IElement item, Modification parent) { return false; }
+        public int GetPriority(SymbolizedIndex si)
         {
-            return false;
+            return si.GetPriority(this);
         }
         public virtual IElement Calc(IElement item)
         {
@@ -25,7 +26,7 @@ namespace ExoParseV2
         protected abstract IElement calc(IElement item);
         protected virtual IElement pass(IElement item, Modification parent)
         {
-            return calc(item);
+            return parent;
         }
 
         public override string ToString()
@@ -33,10 +34,6 @@ namespace ExoParseV2
             return Symbol;
         }
 
-        public int GetPriority(SymbolizedIndex si)
-        {
-            return si.GetPriority(this);
-        }
     }
 
     public abstract class PreModifier : Modifier

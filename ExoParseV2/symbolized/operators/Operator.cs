@@ -8,45 +8,33 @@ namespace ExoParseV2
     public abstract class Operator : ISymbolized
     {
         public abstract string Symbol { get; }
-        public virtual bool ToStringPadding { get; } = true;
-        public virtual bool dontExecute_flag(IElement a, IElement b, Operation parent)
+        public virtual bool DontExecute_flag(IElement a, IElement b, Operation parent)
         {
             return false;
         }
+        public int GetPriority(SymbolizedIndex si)
+        {
+            return si.GetPriority(this);
+        }
+
+        #region pass and calc
         public virtual IElement Pass(IElement a, IElement b, Operation parent)
         {
-            a = a?.Pass();
-            b = b?.Pass();
             if (a == IElement.Void || b == IElement.Void || parent == null) { return IElement.Void; }
             return pass(a, b, parent);
         }
         public virtual IElement Calc(IElement a, IElement b)
         {
-            a = a?.Pass();
-            b = b?.Pass();
             if (a == IElement.Void || b == IElement.Void) { return IElement.Void; }
             return calc(a, b);
         }
+        protected virtual IElement pass(IElement a, IElement b, Operation parent) { return parent; }
         protected abstract IElement calc(IElement a, IElement b);
-        protected virtual IElement pass(IElement a, IElement b, Operation parent)
-        {
-            return parent;
-        }
+        #endregion
 
         public override string ToString()
         {
-            if (ToStringPadding)
-            {
-                return $" {Symbol} ";
-            }
-            else
-            {
-                return Symbol;
-            }
-        }
-        public int GetPriority(SymbolizedIndex si)
-        {
-            return si.GetPriority(this);
+            return $" {Symbol} ";
         }
     }
 

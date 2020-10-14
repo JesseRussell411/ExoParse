@@ -6,34 +6,30 @@ namespace ExoParseV2.elements
 {
     public interface IElement
     {
-        //There are three "levels of aggression" for getting an element's value:
-        //Execute
-        public double? Execute();
-        public IElement Calc();
-        //Pass
+        /// <summary>
+        /// Called when received by an Operation or Modification.
+        /// </summary>
+        /// <returns></returns>
         public IElement Pass();
+        public IElement Calc();
+        public double? Execute();
         public virtual IElement Pass(out bool dontExecute_flag)
         {
             dontExecute_flag = DontExecute_flag;
             return Pass();
         }
+        public virtual bool DontExecute_flag { get { return false; } }
         //Definition
-        public IElement Definition { get; }
+        public virtual IElement Definition { get { return this; } }
 
 
-        //Execute: Returns the element's numeric value, if the element involves actions that mutate variables, these actions will take place. Such as a++ for example.
-        //Pass: Returns the elements base value, this is usually just the element itself like in the case of variables or literals or constants, but in the case of Operations, Modifiers, or Containers, Something more is given.
-
-
-
-        public bool DontExecute_flag { get; }
-
-        public static IElement Null { get { return new Literal(null); } }
-
-        public static IElement Void { get { return null; } }
-
-        // the REAL version of this is found in utilities.ElementUtils. It's an extension method so it can take null pointers into account and return "void" instead of crashing.
+        // *The REAL version of this is found in utilities.ElementUtils. It's an extension method so it can take null pointers into account and return "void" instead of crashing.
         public string ToSiString(SymbolizedIndex si, IExpressionComponent parent);
+
+        #region static
+        public static IElement Null { get { return new Literal(null); } }
+        public static IElement Void { get { return null; } }
+        #endregion
 
     }
 
@@ -42,7 +38,7 @@ namespace ExoParseV2.elements
         public IElement Definition { set; }
     }
 
-    public interface ILabeled : IElement
+    public interface IReference : IElement
     {
         public string Name { get; }
     }

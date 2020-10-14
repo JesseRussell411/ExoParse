@@ -62,10 +62,13 @@ namespace ExoParseV2
     public class Exponentiation_op : RightToLeftOperator
     {
         public override string Symbol { get; } = "^";
-        public override bool ToStringPadding { get; } = false;
         protected override IElement calc(IElement a, IElement b)
         {
             return MathUtils.Power(a.Execute(), b.Execute()).ToElement();
+        }
+        public override string ToString()
+        {
+            return Symbol;
         }
     }
     #endregion
@@ -294,7 +297,7 @@ namespace ExoParseV2
     public class SetDefinition_op : RightToLeftOperator
     {
         public override string Symbol { get; } = ":=";
-        public override bool dontExecute_flag(IElement a, IElement b, Operation parent) => true;
+        public override bool DontExecute_flag(IElement a, IElement b, Operation parent) => true;
         protected override IElement calc(IElement a, IElement b)
         {
             return a.TrySetDefinition(b);
@@ -310,7 +313,7 @@ namespace ExoParseV2
     {
         public override string Symbol { get; } = ":=$";
 
-        public override bool dontExecute_flag(IElement a, IElement b, Operation parent) => true;
+        public override bool DontExecute_flag(IElement a, IElement b, Operation parent) => true;
         protected override IElement calc(IElement a, IElement b)
         {
             return a.TrySetDefinition(b.Definition);
@@ -351,12 +354,12 @@ namespace ExoParseV2
                 double? a_Execute = a.Execute();
                 if (a_Execute == LogicUtils.True_double)
                 {
-                    var result =  tm.A?.Pass();
+                    var result =  tm.A;
                     return result;
                 }
                 else if (a_Execute == LogicUtils.False_double)
                 {
-                    return tm.B?.Pass();
+                    return tm.B;
                 }
                 else
                 {
@@ -368,7 +371,7 @@ namespace ExoParseV2
                 double? a_Execute = a.Execute();
                 if (a_Execute == LogicUtils.True_double)
                 {
-                    return b.Pass();
+                    return b;
                 }
                 else
                 {
@@ -393,18 +396,16 @@ namespace ExoParseV2
     #endregion
     public class Semicolon_op : LeftToRightOperator
     {
-        public override bool ToStringPadding { get; } = false;
         public override string Symbol { get; } = ";";
-        public override bool dontExecute_flag(IElement a, IElement b, Operation parent)
+        public override bool DontExecute_flag(IElement a, IElement b, Operation parent)
         {
             return b?.DontExecute_flag ?? false;
         }
 
         protected override IElement calc(IElement a, IElement b)
         {
-            var p = a.Pass(out bool dontExecute_flag);
-            if (!dontExecute_flag) { a.Execute(); }
-            return b.Pass();
+            if (!a.DontExecute_flag) { a.Execute(); }
+            return b;
         }
         protected override IElement pass(IElement a, IElement b, Operation parent)
         {

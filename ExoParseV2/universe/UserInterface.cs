@@ -179,13 +179,13 @@ namespace ExoParseV2.universe
                 IElement p = e.Pass(out bool dontExecute);
                 double? ex = null;
 
-                // Print the parsed expression to show the user what was inturpreted by the parser.
+                // Print the parsed expression to show the user what was interpreted by the parser.
                 println(e.ToString(un.SymbolizedIndex));
 
                 // Print the expression after it has been ran.
                 println(p.ToString(un.SymbolizedIndex));
 
-                // Execute the expression unless the don't-execuse flag was true.
+                // Execute the expression unless the don't-execute flag was true.
                 if (!dontExecute)
                 {
                     // Execute

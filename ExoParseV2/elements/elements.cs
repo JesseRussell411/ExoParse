@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Net.Security;
 using System.Text;
 
 namespace ExoParseV2.elements
@@ -13,16 +14,17 @@ namespace ExoParseV2.elements
     /// </summary>
     public struct Literal : IElement
     {
-        public readonly double? Value;
         public Literal(double? value)
         {
             Value = value;
         }
-        public bool DontExecute_flag { get { return false; } }
-        public double? Execute() { return Value; }
+        public readonly double? Value;
+
         public IElement Pass() { return this; }
         public IElement Calc() { return this; }
-        public IElement Definition { get { return this; } }
+        public double? Execute() { return Value; }
+
+        public bool DontExecute_flag { get { return false; } }
         public override string ToString()
         {
             if (Value == null) { return StringProps.NullLabel; }
@@ -31,14 +33,13 @@ namespace ExoParseV2.elements
 
             return s.Contains('E') ? $" {s} " : s; // *add extra padding around scientific notation to make sure the output can be parsed.
         }
-
         public string ToSiString(SymbolizedIndex si, IExpressionComponent parent)
         {
             return ToString();
         }
 
         #region static
-        public static Literal Null { get { return new Literal(null); } }
+        public static Literal Default { get { return new Literal(null); } }
 
         public static Literal Parse(String s, bool trapNegPos = false)
         {
@@ -54,9 +55,12 @@ namespace ExoParseV2.elements
         }
         public static bool TryParse(String s, out Literal result, bool trapNegPos = false)
         {
-            if (s.Length == 0) { result = Literal.Null; return false; }//--(FAIL)--
-            if (!trapNegPos && !s.Select(c => char.ToLower(c)).Contains('e') && (s[0] == '-' || s[0] == '+')) { result = Literal.Null; return false; }//--(FAIL)--
-            if (s == StringProps.NullLabel) { result = Literal.Null; return true; }//--(PASS)--
+            if (s.Length == 0) { result = Literal.Default; return false; }//--(FAIL)--
+
+            if (!trapNegPos && !s.Select(c => char.ToLower(c)).Contains('e') && (s[0] == '-' || s[0] == '+'))
+            { result = Literal.Default; return false; }//--(FAIL)--
+
+            if (s == StringProps.NullLabel) { result = Literal.Default; return true; }//--(PASS)--
 
             if (double.TryParse(s, out double d))
             {
@@ -65,7 +69,7 @@ namespace ExoParseV2.elements
             }
             else
             {
-                result = Literal.Null;
+                result = Literal.Default;
                 return false; //--(FAIL)--
             }
         }
@@ -73,14 +77,8 @@ namespace ExoParseV2.elements
         #endregion
     }
 
-    public class Constant : ILabeled
+    public class Constant : IReference
     {
-        public string Name { get; }
-        public bool DontExecute_flag { get; } = false;
-        public IElement Definition { get; }
-        public double? Execute() { return Definition?.Execute(); }
-        public IElement Pass() { return this; }
-        public IElement Calc() { return Definition; }
         public Constant(String name, IElement definition)
         {
             Definition = definition;
@@ -91,6 +89,13 @@ namespace ExoParseV2.elements
             Definition = value.ToElement();
             Name = name;
         }
+        public string Name { get; }
+        public IElement Definition { get; }
+
+
+        public IElement Pass() { return this; }
+        public IElement Calc() { return Definition; }
+        public double? Execute() { return Definition?.Execute(); }
 
         public override string ToString()
         {
@@ -102,18 +107,20 @@ namespace ExoParseV2.elements
         }
     }
 
-    public class Variable : IRedefinable, ILabeled
+    public class Variable : IReference, IRedefinable
     {
-        public string Name { get; }
-        public IElement Definition { get; set; }
-        public bool DontExecute_flag { get; } = false;
-        public double? Execute() { return Definition?.Execute(); }
-        public IElement Pass() { return this; }
-        public IElement Calc() { return this; }
         public Variable(String name)
         {
             Name = name;
         }
+        public string Name { get; }
+        public IElement Definition { get; set; }
+
+        public IElement Pass() { return this; }
+        public IElement Calc() { return this; }
+        public double? Execute() { return Definition?.Execute(); }
+
+        public bool DontExecute_flag { get; } = false;
         public override string ToString()
         {
             return Name;
@@ -125,46 +132,43 @@ namespace ExoParseV2.elements
     }
     public class Operation : IExpressionComponent
     {
-        public IElement A { get; set; }
-        public IElement B { get; set; }
-        public Operator Operator { get; set; }
-        public IElement Definition { get { return this; } }
-        public bool DontExecute_flag
-        {
-            get
-            {
-                return Operator.dontExecute_flag(A, B, this);
-            }
-        }
-
-
-        public Operation(Operator op, double? a, double? b)
-            : this(op, a.ToElement(), b.ToElement()) { }
-
-        public Operation(Operator op, long? a, long? b)
-            : this(op, a.ToElement(), b.ToElement()) { }
-
-
+        #region constructors
         public Operation(Operator op, IElement a, IElement b)
         {
             Operator = op;
             A = a;
             B = b;
         }
+        public Operation(Operator op, double? a, double? b)
+            : this(op, a.ToElement(), b.ToElement()) { }
 
-        public double? Execute()
+        public Operation(Operator op, long? a, long? b)
+            : this(op, a.ToElement(), b.ToElement()) { }
+        #endregion
+
+        #region Properties
+        public IElement A { get; set; }
+        public IElement B { get; set; }
+        public Operator Operator { get; set; }
+        public IElement Definition { get { return this; } }
+        public bool DontExecute_flag
+        { get { return Operator?.DontExecute_flag(A, B, this) ?? false; } }
+        #endregion
+
+
+        #region methods
+        public IElement Pass()
         {
-            //return Pass()?.Execute();
-            return Operator?.Calc(A, B)?.Execute();
+            return Operator?.Pass(A?.Pass(), B?.Pass(), this);
         }
         public IElement Calc()
         {
-            return Operator?.Calc(A, B);
+            return Operator?.Calc(A?.Pass(), B?.Pass());
         }
-        public IElement Pass()
+        public double? Execute()
         {
-            //return Operator?.Execute(A?.Pass(), B?.Pass());
-            return Operator?.Pass(A, B, this);
+            //return Pass()?.Execute();
+            return Operator?.Calc(A?.Pass(), B?.Pass())?.Execute();
         }
 
         public override string ToString()
@@ -187,8 +191,6 @@ namespace ExoParseV2.elements
 
             A_string = A?.ToString(si, this) ?? StringProps.VoidLabel;
             B_string = B?.ToString(si, this) ?? StringProps.VoidLabel;
-            //A_string = A == null ? "" : (A is IExpressionComponent a ? a.ToString(si, this) : A.ToString());
-            //B_string = B == null ? "" : (B is IExpressionComponent b ? b.ToString(si, this) : B.ToString());
 
             returnString = $"{A_string}{Operator}{B_string}";
 
@@ -201,6 +203,7 @@ namespace ExoParseV2.elements
                 return returnString;
             }
         }
+        #endregion
     }
 
     public class Modification : IExpressionComponent
@@ -214,29 +217,27 @@ namespace ExoParseV2.elements
         public Modifier Modifier { get; set; }
 
         public IElement Definition { get { return this; } }
-        public bool DontExecute_flag
-        {
-            get
-            {
-                return Modifier?.dontExecute_flag(Item, this) ?? false;
-            }
+        public bool DontExecute_flag { get { return Modifier?.DontExecute_flag(Item, this) ?? false; }
         }
 
-        public double? Execute()
+        public int GetPriority(SymbolizedIndex si)
         {
-            return Modifier?.Calc(Item?.Pass())?.Execute();
-            //return Modifier?.calc(Item)?.Execute();
+            return si.GetPriority(Modifier);
+        }
+
+        public IElement Pass()
+        {
+            return Modifier?.Pass(Item?.Pass(), this);
         }
         public IElement Calc()
         {
             return Modifier?.Calc(Item?.Pass());
-            //return Modifier?.calc(Item)?.Execute();
         }
-        public IElement Pass()
+        public double? Execute()
         {
-            return Modifier?.Pass(Item.Pass(), this);
-            //return Modifier?.calc(Item?.Pass());
+            return Modifier?.Calc(Item?.Pass())?.Execute();
         }
+
         public override string ToString()
         {
             String itemString;
@@ -253,11 +254,6 @@ namespace ExoParseV2.elements
             }
         }
 
-        public int GetPriority(SymbolizedIndex si)
-        {
-            return si.GetPriority(Modifier);
-        }
-
         public string ToSiString(SymbolizedIndex si, IExpressionComponent parent)
         {
 
@@ -267,37 +263,12 @@ namespace ExoParseV2.elements
             string Item_str = Item.ToString(si, this);
             string modifier_str = Modifier is PreModifier ? $"{Modifier}{Item_str}" : $"{Item_str}{Modifier}";
             return toWrap ? modifier_str.Wrap(StringProps.OpenBrackets[0], StringProps.CloseBrackets[0]) : modifier_str;
-            //bool toWrap = true;
-            //if (parent == null)
-            //{
-            //    toWrap = false;
-            //}
-            //else
-            //{
-            //    bool checkPriority = true;
-            //    if (parent is Operation op)
-            //    {
-            //        // If this modifier is printed on the outside of the operation (-a+b), then it doesn't need to be wrapped in parenthesis
-            //        IElement check = Modifier is PreModifier ? op?.A : op?.B;
-            //        checkPriority = (this != check);
-            //    }
-
-            //    if (checkPriority)
-            //    {
-            //        toWrap = (parent.GetPriority(si) < ((IExpressionComponent)this).GetPriority(si));
-            //    }
-            //    else
-            //    {
-            //        toWrap = false;
-            //    }
-            //}
-            ////string Item_string = Item is IExpressionComponent component ? component.ToString(si, this) : Item.ToString();
         }
     }
 
     public class Execution : IElement
     {
-        public bool DontExecute_flag { get; } = false;
+        #region Constructors
         public Execution(Function function, params IElement[] arguments)
             : this(function, arguments, null, null) { }
         public Execution(Function function, IElement[] arguments, string openingBracket = null, string closingBracket = null, string delim = null)
@@ -314,6 +285,8 @@ namespace ExoParseV2.elements
                 Arguments[i] = arguments[i];
             }
         }
+        #endregion
+
         public Function Function
         {
             get
@@ -326,23 +299,24 @@ namespace ExoParseV2.elements
                 Arguments = new IElement[func?.ParamCount ?? 0];
             }
         }
+        public IElement[] Arguments { get; private set; }
         public string OpeningBracket { get; set; }
         public string ClosingBracket { get; set; }
         public string Delim { get; set; }
-        public IElement[] Arguments { get; private set; }
-        public IElement Definition { get { return this; } }
-        public double? Execute()
-        {
-            return func.Calculate(Arguments)
-                       .Execute();
-        }
-        public IElement Calc()
-        {
-            return func.Calculate(Arguments);
-        }
+        public bool DontExecute_flag { get; } = false;
+
+        #region methods
         public IElement Pass()
         {
             return this;
+        }
+        public IElement Calc()
+        {
+            return func?.Calculate(Arguments);
+        }
+        public double? Execute()
+        {
+            return func?.Calculate(Arguments)?.Execute();
         }
 
         public override string ToString()
@@ -350,36 +324,19 @@ namespace ExoParseV2.elements
             return ToSiString(null);
         }
 
-        public string ToSiString(SymbolizedIndex si = null, IExpressionComponent parent = null)
+        public string ToSiString(SymbolizedIndex si, IExpressionComponent parent = null)
         {
             if (func == null) { return $"{StringProps.VoidLabel}{OpeningBracket}{ClosingBracket}"; }
-            Func<IElement[], string> ds;
-            if (si == null)
-            {
-                ds = (IElement[] e) => e.ToDelimString(Delim + " ");
-            }
-            else
-            {
-                ds = (IElement[] e) => e.ToDelimString(si, Delim + " ");
-            }
-            return $"{func.Name}{ds(Arguments).Wrap(OpeningBracket, ClosingBracket)}";
+            string ds = Arguments.Select(a => a.ToString(si)).ToDelimString($"{Delim} ");
+            return $"{func.Name}{ds.Wrap(OpeningBracket, ClosingBracket)}";
         }
-
-
-
+        #endregion
 
         private Function func;
     }
 
     public class Container : IElement
     {
-        public bool DontExecute_flag
-        {
-            get
-            {
-                return Definition?.DontExecute_flag ?? false;
-            }
-        }
         public Container(IElement item, string openBracket, string closeBracket)
         {
             Item = item;
@@ -387,43 +344,33 @@ namespace ExoParseV2.elements
             CloseBracket = closeBracket;
         }
         public Container(IElement item)
-            : this(item, StringProps.OpenBrackets[0], StringProps.CloseBrackets[0])
-        {
-        }
+            : this(item, StringProps.OpenBrackets[0], StringProps.CloseBrackets[0]) { }
+
         public IElement Item { get; set; }
+        public IElement Definition { get { return Item; } }
         public string OpenBracket { get; set; }
         public string CloseBracket { get; set; }
-        public IElement Definition
-        {
-            get
-            {
-                return Item;
-            }
-            set
-            {
-                Item = value;
-            }
-        }
-        public double? Execute()
-        {
-            return Definition?.Execute();
-        }
+
         public IElement Pass()
         {
-            return Definition?.Pass();
+            return Definition;
         }
         public IElement Calc()
         {
             return Definition?.Calc();
         }
+        public double? Execute()
+        {
+            return Definition?.Execute();
+        }
+
         public override string ToString()
         {
-            //return Definition.NullableToString(ParsingProps.VoidLabel).Wrap(ParsingProps.OpenBrackets[0], ParsingProps.CloseBrackets[0]);
-            return Item?.ToString()?.Wrap(OpenBracket, CloseBracket) ?? StringProps.VoidLabel;
+            return (Item?.ToString() ?? StringProps.VoidLabel).Wrap(OpenBracket, CloseBracket);
         }
         public string ToSiString(SymbolizedIndex si, IExpressionComponent parent)
         {
-            return Item?.ToString(si, null)?.Wrap(OpenBracket, CloseBracket) ?? StringProps.VoidLabel;
+            return (Item?.ToString(si) ?? StringProps.VoidLabel).Wrap(OpenBracket, CloseBracket);
         }
     }
 
@@ -435,15 +382,15 @@ namespace ExoParseV2.elements
         public bool DontExecute_flag { get; } = true;
         public IElement Definition { get { return ElementUtils.NullElement; } }
 
-        public double? Execute()
+        public virtual double? Execute()
         {
             return null;
         }
-        public IElement Pass()
+        public virtual IElement Pass()
         {
             return this;
         }
-        public IElement Calc()
+        public virtual IElement Calc()
         {
             return this;
         }

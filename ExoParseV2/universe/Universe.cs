@@ -51,7 +51,7 @@ namespace ExoParseV2.theUniverse
         #region environment
         #region vars and functions
         public Dictionary<(string name, int paramCount), Function> Functions { get; } = new Dictionary<(string name, int paramCount), Function>();
-        public Dictionary<string, ILabeled> NamedItems { get; } = new Dictionary<string, ILabeled>();
+        public Dictionary<string, IReference> NamedItems { get; } = new Dictionary<string, IReference>();
 
 
         public bool AddFunction(Function function)
@@ -69,16 +69,16 @@ namespace ExoParseV2.theUniverse
         }
 
 
-        public bool AddLabeled(IEnumerable<ILabeled> labeled)
+        public bool AddLabeled(IEnumerable<IReference> labeled)
         {
             bool success = true;
-            foreach (ILabeled l in labeled)
+            foreach (IReference l in labeled)
             {
                 if (!NamedItems.TryAdd(l.Name, l)) { success = false; }
             }
             return success;
         }
-        public bool AddLabeled(ILabeled labeled)
+        public bool AddLabeled(IReference labeled)
         {
             return NamedItems.TryAdd(labeled.Name, labeled);
         }
