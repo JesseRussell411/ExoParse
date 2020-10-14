@@ -328,13 +328,14 @@ namespace ExoParseV2
         public override string Symbol { get; } = "??";
         protected override IElement calc(IElement a, IElement b)
         {
-            if (a.Execute() == null)
+            double? a_Execute = a.Execute();
+            if (a_Execute == null)
             {
                 return b;
             }
             else
             {
-                return a;
+                return a_Execute.ToElement();
             }
         }
     }
