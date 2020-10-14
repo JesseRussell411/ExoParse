@@ -260,32 +260,38 @@ namespace ExoParseV2.elements
 
         public string ToSiString(SymbolizedIndex si, IExpressionComponent parent)
         {
-            bool toWrap = true;
-            if (parent == null)
-            {
-                toWrap = false;
-            }
-            else
-            {
-                bool checkPriority = true;
-                if (parent is Operation)
-                {
-                    IElement check = Modifier is PreModifier ? ((Operation)parent)?.A : ((Operation)parent)?.B;
-                    checkPriority = (this != check);
-                }
 
-                if (checkPriority)
-                {
-                    toWrap = (parent.GetPriority(si) < ((IExpressionComponent)this).GetPriority(si));
-                }
-                else
-                {
-                    toWrap = false;
-                }
-            }
-            string Item_string = Item.ToString(si, this);
-            //string Item_string = Item is IExpressionComponent component ? component.ToString(si, this) : Item.ToString();
-            return Modifier is PreModifier ? $"{Modifier}{Item_string}" : $"{Item_string}{Modifier}".Wrap(StringProps.OpenBrackets[0], StringProps.CloseBrackets[0]);
+            bool toWrap = parent is Modification;
+            //toWrap || !toWarp, that is the question!
+
+            string Item_str = Item.ToString(si, this);
+            string modifier_str = Modifier is PreModifier ? $"{Modifier}{Item_str}" : $"{Item_str}{Modifier}";
+            return toWrap ? modifier_str.Wrap(StringProps.OpenBrackets[0], StringProps.CloseBrackets[0]) : modifier_str;
+            //bool toWrap = true;
+            //if (parent == null)
+            //{
+            //    toWrap = false;
+            //}
+            //else
+            //{
+            //    bool checkPriority = true;
+            //    if (parent is Operation op)
+            //    {
+            //        // If this modifier is printed on the outside of the operation (-a+b), then it doesn't need to be wrapped in parenthesis
+            //        IElement check = Modifier is PreModifier ? op?.A : op?.B;
+            //        checkPriority = (this != check);
+            //    }
+
+            //    if (checkPriority)
+            //    {
+            //        toWrap = (parent.GetPriority(si) < ((IExpressionComponent)this).GetPriority(si));
+            //    }
+            //    else
+            //    {
+            //        toWrap = false;
+            //    }
+            //}
+            ////string Item_string = Item is IExpressionComponent component ? component.ToString(si, this) : Item.ToString();
         }
     }
 
