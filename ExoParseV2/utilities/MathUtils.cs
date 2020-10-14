@@ -24,10 +24,11 @@ namespace ExoParseV2
         public static double? Factorial(double? n)
         {
             if (n == null) { return null; }
+            if (n == 0.0)  { return 1.0;  }
 
-            if (n < 0 || n != Math.Floor((double)n))
+            if (n < 0 || n % 1 != 0)
             {
-                throw new ExecutionException($"Factorial can only be performed on positive integers.");
+                throw new ExecutionException($"Factorial can only be performed on positive integers and 0.");
             }
 
             BigInteger n_BigInteger = new BigInteger((double)n);

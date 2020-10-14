@@ -96,7 +96,6 @@ namespace ExoParseV2
                     new ISymbolized[] {new IncrementAfter_mod(), new DecrementAfter_mod()},
                     new ISymbolized[] {new IncrementBefore_mod(), new DecrementBefore_mod()},
                     new ISymbolized[] {new Factorial_mod() },
-                    //new ISymbolized[] {new EqualsNot_mod()}, naaaaaahhhhh, maybe not
                     new ISymbolized[] {new Dereference_mod()},
                 }
                 );

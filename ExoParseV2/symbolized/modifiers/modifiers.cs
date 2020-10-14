@@ -30,7 +30,6 @@ namespace ExoParseV2
             return LogicUtils.Not(item.Execute()).ToElement();
         }
     }
-
     public class Dereference_mod : PreModifier
     {
         public override string Symbol { get { return "$"; } }
@@ -130,6 +129,19 @@ namespace ExoParseV2
         protected override IElement calc(IElement item)
         {
             item.TryChangeDefinition(self => LogicUtils.Not(self.Execute()).ToElement());
+            return item;
+        }
+        protected override IElement pass(IElement item, Modification parent)
+        {
+            return parent;
+        }
+    }
+
+    public class DontPass_mod : PreModifier
+    {
+        public override string Symbol { get { return "<-"; } }
+        protected override IElement calc(IElement item)
+        {
             return item;
         }
         protected override IElement pass(IElement item, Modification parent)
