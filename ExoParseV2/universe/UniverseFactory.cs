@@ -8,7 +8,7 @@ using ExoParseV2.elements;
 
 namespace ExoParseV2
 {
-    class UniverseFactory
+    public class UniverseFactory
     {
         public Universe CreateUniverse()
         {
@@ -78,7 +78,7 @@ namespace ExoParseV2
                 new ISymbolized[][]
                 {
                     new ISymbolized[] {new Semicolon_op()},
-                    new ISymbolized[] {new SetDefinition_op(), new SetAsDefinition_op()},
+                    new ISymbolized[] {new SetDefinition_op()},
                     new ISymbolized[] {new Ternary_op(), new TernarySeperator_op()},
                     new ISymbolized[] {new NullCoalescing_op()},
                     new ISymbolized[] {new ConditionalAnd_op(), new ConditionalOr_op()},

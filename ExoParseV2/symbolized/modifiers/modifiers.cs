@@ -45,6 +45,10 @@ namespace ExoParseV2
         {
             return item.Definition;
         }
+        protected override double? execute(IElement item, Modification parent)
+        {
+            return null;
+        }
     }
     public class IncrementAfter_mod : PostModifier
     {

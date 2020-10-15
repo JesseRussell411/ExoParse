@@ -10,7 +10,7 @@ using ExoParseV2.theUniverse;
 
 namespace ExoParseV2.universe
 {
-    class UserInterface
+    public class UserInterface
     {
         public UserInterface(Universe universe)
         {

@@ -298,31 +298,36 @@ namespace ExoParseV2
     {
         public override string Symbol { get; } = ":=";
         public override bool DontExecute_flag(IElement a, IElement b, Operation parent) => true;
+        protected override IElement pass(IElement a, IElement b, Operation parent)
+        {
+            return calc(a, b);
+        }
         protected override IElement calc(IElement a, IElement b)
         {
             return a.TrySetDefinition(b);
         }
-        protected override IElement pass(IElement a, IElement b, Operation parent)
+        protected override double? execute(IElement a, IElement b, Operation parent)
         {
-            return calc(a, b);
+            calc(a, b);
+            return null;
         }
     }
 
-    // Not really needed anymore now that .Pass(), .Calc(), and .Execute() are better defined. the dereference operator ($) can actually return a variable's definition through pass now, so you can just use := and $ like this b := $a and it will actually work.
-    public class SetAsDefinition_op : RightToLeftOperator
-    {
-        public override string Symbol { get; } = ":=$";
+    //// Not really needed anymore now that .Pass(), .Calc(), and .Execute() are better defined. the dereference operator ($) can actually return a variable's definition through pass now, so you can just use := and $ like this b := $a and it will actually work.
+    //public class SetAsDefinition_op : RightToLeftOperator
+    //{
+    //    public override string Symbol { get; } = ":=$";
 
-        public override bool DontExecute_flag(IElement a, IElement b, Operation parent) => true;
-        protected override IElement calc(IElement a, IElement b)
-        {
-            return a.TrySetDefinition(b.Definition);
-        }
-        protected override IElement pass(IElement a, IElement b, Operation parent)
-        {
-            return calc(a, b);
-        }
-    }
+    //    public override bool DontExecute_flag(IElement a, IElement b, Operation parent) => true;
+    //    protected override IElement calc(IElement a, IElement b)
+    //    {
+    //        return a.TrySetDefinition(b.Definition);
+    //    }
+    //    protected override IElement pass(IElement a, IElement b, Operation parent)
+    //    {
+    //        return calc(a, b);
+    //    }
+    //}
     #endregion
 
     #region misc

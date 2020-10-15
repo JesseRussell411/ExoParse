@@ -17,7 +17,7 @@ namespace ExoParseV2
             return si.GetPriority(this);
         }
 
-        #region pass and calc
+        #region pass, calc, and execute
         public virtual IElement Pass(IElement a, IElement b, Operation parent)
         {
             if (a == IElement.Void || b == IElement.Void || parent == null) { return IElement.Void; }
@@ -28,8 +28,14 @@ namespace ExoParseV2
             if (a == IElement.Void || b == IElement.Void) { return IElement.Void; }
             return calc(a, b);
         }
+        public virtual double? Execute(IElement a, IElement b, Operation parent)
+        {
+            if (a == IElement.Void || b == IElement.Void || parent == null) { return null; }
+            return Execute(a, b, parent);
+        }
         protected virtual IElement pass(IElement a, IElement b, Operation parent) { return parent; }
         protected abstract IElement calc(IElement a, IElement b);
+        protected virtual double? execute(IElement a, IElement b, Operation parent) { return pass(a, b, parent).Execute(); }
         #endregion
 
         public override string ToString()

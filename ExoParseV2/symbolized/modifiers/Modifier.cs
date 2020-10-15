@@ -13,21 +13,28 @@ namespace ExoParseV2
         {
             return si.GetPriority(this);
         }
-        public virtual IElement Calc(IElement item)
-        {
-            if (item == IElement.Void) { return IElement.Void; }
-            return calc(item);
-        }
+
+        #region pass, calc, and execute
         public virtual IElement Pass(IElement item, Modification parent)
         {
             if (item == IElement.Void || parent == null) { return IElement.Void; }
             return pass(item, parent);
         }
-        protected abstract IElement calc(IElement item);
-        protected virtual IElement pass(IElement item, Modification parent)
+        public virtual IElement Calc(IElement item)
         {
-            return parent;
+            if (item == IElement.Void) { return IElement.Void; }
+            return calc(item);
         }
+        public virtual double? Execute(IElement item, Modification parent)
+        {
+            if (item == IElement.Void || parent == null) { return null; }
+            return execute(item, parent);
+        }
+
+        protected virtual IElement pass(IElement item, Modification parent) { return parent; }
+        protected abstract IElement calc(IElement item);
+        protected virtual double? execute(IElement item, Modification parent) { return pass(item, parent).Execute(); }
+        #endregion
 
         public override string ToString()
         {
