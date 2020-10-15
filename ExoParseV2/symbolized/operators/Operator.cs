@@ -31,11 +31,11 @@ namespace ExoParseV2
         public virtual double? Execute(IElement a, IElement b, Operation parent)
         {
             if (a == IElement.Void || b == IElement.Void || parent == null) { return null; }
-            return Execute(a, b, parent);
+            return execute(a, b, parent);
         }
         protected virtual IElement pass(IElement a, IElement b, Operation parent) { return parent; }
         protected abstract IElement calc(IElement a, IElement b);
-        protected virtual double? execute(IElement a, IElement b, Operation parent) { return pass(a, b, parent).Execute(); }
+        protected virtual double? execute(IElement a, IElement b, Operation parent) { return calc(a, b).Execute(); }
         #endregion
 
         public override string ToString()

@@ -33,7 +33,7 @@ namespace ExoParseV2
 
         protected virtual IElement pass(IElement item, Modification parent) { return parent; }
         protected abstract IElement calc(IElement item);
-        protected virtual double? execute(IElement item, Modification parent) { return pass(item, parent).Execute(); }
+        protected virtual double? execute(IElement item, Modification parent) { return calc(item).Execute(); }
         #endregion
 
         public override string ToString()
