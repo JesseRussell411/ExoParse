@@ -11,7 +11,6 @@ namespace ExoParseV2.elements
     /// <summary>
     /// The simplest element. Contains a read-only property for a double? value and nothing else.
     /// </summary>
-    /// </summary>
     public struct Literal : IElement
     {
         public Literal(double? value)

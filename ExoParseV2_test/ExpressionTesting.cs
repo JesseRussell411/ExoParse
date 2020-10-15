@@ -22,14 +22,21 @@ namespace ExoParseV2_test
         [TestMethod]
         public void SimpleLiteral()
         {
-            Universe vers = uf?.CreateUniverse();
+            Universe vers = uf.CreateUniverse();
             Assert.AreEqual(vers.ParseLine("3.2")?.Execute(), 3.2);
+        }
+
+        [TestMethod]
+        public void SimpleExpression()
+        {
+            Universe vers = uf.CreateUniverse();
+            Assert.AreEqual(vers.ParseLine("3 + 2")?.Execute(), 5);
         }
 
         [TestMethod]
         public void VariableValue()
         {
-            var vers = uf?.CreateUniverse();
+            var vers = uf.CreateUniverse();
 
             var exp1 = vers.ParseLine("a = 42");
             var exp2 = vers.ParseLine("b = true");
@@ -45,7 +52,7 @@ namespace ExoParseV2_test
         [TestMethod]
         public void SetDefinition()
         {
-            Universe vers = uf?.CreateUniverse();
+            Universe vers = uf.CreateUniverse();
 
             var exp1 = vers.ParseLine("a = 42");
             var exp2 = vers.ParseLine("ppa := ++a");
@@ -67,10 +74,15 @@ namespace ExoParseV2_test
             Assert.AreEqual(c.Definition, ppa);
             //
 
-            //Executing ppa should execute its definition which is ++a, thus should will be 43 afterwards:
+            //Executing ppa should execute its definition which is ++a, thus a should be 43 afterwards:
             ppa.Execute();
             Assert.AreEqual(a.Execute(), 43);
             //
+
+            b.Execute();
+            Assert.AreEqual(a.Execute(), 44);
+            c.Execute();
+            Assert.AreEqual(a.Execute(), 45);
         }
     }
 }
