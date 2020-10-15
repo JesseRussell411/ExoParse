@@ -22,8 +22,8 @@ namespace ExoParseV2.universe
         private void println(object s) { Print(s.ToString() + "\n"); }
         private void println() { Print("" + "\n"); }
 
-        public Func<string> Readln { get; set; } = Console.ReadLine;
-        private string      readln() { return Readln(); }
+        public Func<string> ReadLine { get; set; } = Console.ReadLine;
+        private string      readln() { return ReadLine(); }
 
         public string LineBreakEscapeSymbol { get; set; } = "\\";
         private Universe un;
