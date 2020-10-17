@@ -5,4 +5,4 @@ Math expression parser written in C# for .netcore
  
 In ExoParseV1, version 1 can be found.
 
-In ExoParseV2, version 2 can be found. This i the latest version but is incomplete. Version 1 is in a more finished state.
+In ExoParseV2, version 2 can be found. This is the latest version.
