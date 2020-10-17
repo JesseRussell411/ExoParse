@@ -65,7 +65,7 @@ namespace ExoParseV2
             constants.Add(new Constant("true", LogicUtils.True_double));
             constants.Add(new Constant("false", LogicUtils.False_double));
             constants.Add(new Constant(StringProps.NullLabel, ElementUtils.NullElement));
-            constants.Add(new Constant("void", ElementUtils.VoidElement));
+            constants.Add(new Constant(StringProps.VoidLabel, ElementUtils.VoidElement));
             constants.Add(new Constant("theMeaningOfLife", new Literal(42)));
 
             return constants;
@@ -74,6 +74,9 @@ namespace ExoParseV2
         private SymbolizedIndex CreateSymbolizedIndex()
         {
 
+            // This is were the operators and modifiers are added to the universe. 
+            // The order in which they are added is what defines their priority.
+            // Some are added at the same time; hence, they have the same priority.
             SymbolizedIndex si = new SymbolizedIndex(
                 new ISymbolized[][]
                 {

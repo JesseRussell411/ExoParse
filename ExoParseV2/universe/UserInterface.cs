@@ -150,7 +150,7 @@ namespace ExoParseV2.universe
                     if (un.commentOpFinder.Found(c, next))
                     {
                         //statement = statement.Substring(0, i - commentOperator.Length);// remove comment from statement.
-                        statement = statement.rng(0, i);
+                        statement = statement.rng(0, (i - un.CommentOperator.Length) + 1);
                         un.commentOpFinder.Reset();// don't forget to reset the opfinder.
                         break;// no point in finishing the loop.
                     }
