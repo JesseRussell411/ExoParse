@@ -1,4 +1,5 @@
-﻿using ParsingTools;
+﻿using ExoParseV2.utilities;
+using ParsingTools;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -374,4 +375,43 @@ namespace ExoParseV2.elements
             return (Item?.ToString(si) ?? StringProps.VoidLabel).Wrap(OpenBracket, CloseBracket);
         }
     }
+
+    //public class ArraySelection : IElement
+    //{
+    //    public Array Array { get; set; }
+    //    public IElement Index { get; set; }
+
+    //    public IElement calc()
+    //    {
+    //        return Array.Get(index);
+    //    }
+    //}
+
+    //public class Array
+    //{
+    //    public string Name { get; }
+    //    public Dictionary<int, IElement> Contents { get; } = new Dictionary<int, IElement>();
+    //    public Array(string name)
+    //    {
+    //        Name = name;
+    //    }
+    //    public IElement Get(IElement index, SymbolizedIndex si)
+    //    {
+    //        int? index_i = (int?)index.Execute();
+    //        if (index_i == null) 
+    //        { 
+    //            throw new ExecutionException($"Array index for {Name}[{index}] cannot be {(index == null ? StringProps.VoidLabel : StringProps.NullLabel)}."); 
+    //        }
+
+
+    //        if (Contents.TryGetValue((int)index_i, out IElement value)){
+    //            return value;
+    //        }
+    //        else
+    //        {
+    //            return IElement.Void;
+    //        }
+    //    }
+    //}
+
 }

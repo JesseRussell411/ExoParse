@@ -126,6 +126,10 @@ namespace ExoParseV2.universe
             {
                 println(me.Message);
             }
+            catch (StackOverflowException so) //* sadly, this doesn't work, but hey, maybe someday it will.
+            {
+                println("Stack Overflow Error.");
+            }
         }
         public void RunLine(string statement)
         {
@@ -146,7 +150,7 @@ namespace ExoParseV2.universe
                         //statement = statement.Substring(0, i - commentOperator.Length);// remove comment from statement.
                         statement = statement.rng(0, i);
                         un.commentOpFinder.Reset();// don't forget to reset the opfinder.
-                        break;// no point in finnishing the loop.
+                        break;// no point in finishing the loop.
                     }
                 }
             }

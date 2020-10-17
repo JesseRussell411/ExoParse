@@ -125,20 +125,24 @@ namespace ExoParseV2
             return MathUtils.Factorial(item.Execute()).ToElement();
         }
     }
-
-    // kinda just for fun, it toggles a boolean. a is true; a=!; a is now false
-    public class EqualsNot_mod : PostModifier
+    public class Semicolon_post_mod : PostModifier
     {
-        public override string Symbol { get { return "=!"; } }
+        public override string Symbol { get { return ";"; } }
         protected override IElement calc(IElement item)
         {
-            item.TryChangeDefinition(self => LogicUtils.Not(self.Execute()).ToElement());
-            return item;
-        }
-        protected override IElement pass(IElement item, Modification parent)
-        {
-            return parent;
+            return item.Pass();
         }
     }
-
+    public class Semicolon_pre_mod : PreModifier
+    {
+        public override string Symbol { get { return ";"; } }
+        protected override IElement calc(IElement item)
+        {
+            return item;
+        }
+        public override string ToString()
+        {
+            return $"{Symbol} ";
+        }
+    }
 }

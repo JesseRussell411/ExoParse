@@ -37,7 +37,7 @@ namespace ConvenienceTools
         
         public static string[] Ems { get { return new string[0]; } }
         public static int[] Emi { get { return new int[0]; } }
-        public static int[] Emb { get { return new int[0]; } }
+        public static bool[] Emb { get { return new bool[0]; } }
         public static double[] Emd { get { return new double[0]; } }
         public static List<string> Lems { get { return new List<string>(); } }
         public static List<int> Lemi { get { return new List<int>(); } }
@@ -49,7 +49,7 @@ namespace ConvenienceTools
         public static bool InBounds(this string arr, int index) => index < arr.Length && index >= 0;
 
         /// <summary>
-        /// Returns a substring contained by start inclusively and end exclusiely. Entering -1 for end represents the string's length.
+        /// Returns a substring contained by start inclusively and end exclusively. Entering -1 for end represents the string's length.
         /// </summary>
         /// <param name="s"></param>
         /// <param name="start"></param>

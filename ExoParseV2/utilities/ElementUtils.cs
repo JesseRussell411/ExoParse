@@ -97,7 +97,12 @@ namespace ExoParseV2
         }
         public static string ToString(this IElement self,SymbolizedIndex si, IExpressionComponent parent)
         {
-            return self?.ToSiString(si, parent) ?? StringProps.VoidLabel;
+            if (si == null)
+            {
+                return self?.ToString() ?? StringProps.VoidLabel;
+            } else {
+                return self?.ToSiString(si, parent) ?? StringProps.VoidLabel;
+            }
         }
         public static string ToString(this IElement self, SymbolizedIndex si)
         {
