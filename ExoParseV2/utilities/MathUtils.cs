@@ -6,6 +6,19 @@ namespace ExoParseV2
 {
     public static class MathUtils
     {
+        public static double? Div(double? a, double? b)
+        {
+            if (b == 0)
+            {
+                throw new ExecutionException("Divide by zero error.");
+            }
+
+            return a / b;
+        }
+        public static double? FloorDiv(double? a, double? b)
+        {
+            return Floor(Div(a, b));
+        }
         public static double? Log(double? d, double? newBase)
         {
             if (d == null || newBase == null) { return null; }

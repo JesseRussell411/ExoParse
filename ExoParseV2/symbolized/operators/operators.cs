@@ -38,7 +38,8 @@ namespace ExoParseV2
         public override string Symbol { get; } = "/";
         protected override IElement calc(IElement a, IElement b)
         {
-            return (a.Execute() / b.Execute()).ToElement();
+            return MathUtils.Div(a.Execute(), b.Execute()).ToElement();
+            //return (a.Execute() / b.Execute()).ToElement();
         }
     }
     public class FloorDivision_op : LeftToRightOperator
@@ -46,7 +47,7 @@ namespace ExoParseV2
         public override string Symbol { get; } = "//";
         protected override IElement calc(IElement a, IElement b)
         {
-            return MathUtils.Floor(a.Execute() / b.Execute()).ToElement();
+            return MathUtils.FloorDiv(a.Execute(), b.Execute()).ToElement();
         }
     }
 
@@ -238,7 +239,7 @@ namespace ExoParseV2
         public override string Symbol { get; } = "/=";
         protected override IElement calc(IElement a, IElement b)
         {
-            return a.TrySetDefinition(b, (self, other) => (self.Execute() / other.Execute()).ToElement());
+            return a.TrySetDefinition(b, (self, other) => MathUtils.Div(self.Execute(), other.Execute()).ToElement());
         }
     }
     public class FloorDivsEqual_op : RightToLeftOperator
@@ -246,7 +247,7 @@ namespace ExoParseV2
         public override string Symbol { get; } = "//=";
         protected override IElement calc(IElement a, IElement b)
         {
-            return a.TrySetDefinition(b, (self, other) => MathUtils.Floor(self.Execute() / other.Execute()).ToElement());
+            return a.TrySetDefinition(b, (self, other) => MathUtils.FloorDiv(self.Execute(), other.Execute()).ToElement());
         }
     }
     public class PowerEqual_op : RightToLeftOperator

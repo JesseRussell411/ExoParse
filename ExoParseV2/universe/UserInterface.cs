@@ -124,11 +124,13 @@ namespace ExoParseV2.universe
             }
             catch (MessageException me)
             {
-                println(me.Message);
+                println(" *" + me.Message);
+                println();
             }
-            catch (StackOverflowException so) //* sadly, this doesn't work, but hey, maybe someday it will.
+            catch (StackOverflowException so) //* sadly, this doesn't work, but hey, maybe someday.
             {
-                println("Stack Overflow Error.");
+                println(" *Stack Overflow Error.");
+                println();
             }
         }
         public void RunLine(string statement)
