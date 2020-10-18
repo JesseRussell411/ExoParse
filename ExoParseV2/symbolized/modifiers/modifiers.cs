@@ -30,9 +30,22 @@ namespace ExoParseV2
             return LogicUtils.Not(item.Execute()).ToElement();
         }
     }
-    public class Dereference_mod : PreModifier
+    public class GetValue_mod : PreModifier
     {
         public override string Symbol { get { return "$"; } }
+        protected override IElement calc(IElement item)
+        {
+            return item.Execute().ToElement();
+        }
+        protected override IElement pass(IElement item, Modification parent)
+        {
+            return calc(item);
+        }
+
+    }
+    public class Dereference_mod : PreModifier
+    {
+        public override string Symbol { get { return "*"; } }
         public override bool DontExecute_flag(IElement item, Modification parent)
         {
             return true;
@@ -50,7 +63,7 @@ namespace ExoParseV2
             return null;
         }
     }
-    public class IncrementAfter_mod : PostModifier
+    public class Increment_post_mod : PostModifier
     {
         public override string Symbol { get { return "++"; } }
         protected override IElement calc(IElement item)
@@ -71,7 +84,7 @@ namespace ExoParseV2
             return parent;
         }
     }
-    public class IncrementBefore_mod : PreModifier
+    public class Increment_pre_mod : PreModifier
     {
         public override string Symbol { get { return "++"; } }
         protected override IElement calc(IElement item)
@@ -83,7 +96,7 @@ namespace ExoParseV2
             return parent;
         }
     }
-    public class DecrementAfter_mod : PostModifier
+    public class Decrement_post_mod : PostModifier
     {
         public override string Symbol { get { return "--"; } }
         protected override IElement calc(IElement item)
@@ -104,7 +117,7 @@ namespace ExoParseV2
             return parent;
         }
     }
-    public class DecrementBefore_mod : PreModifier
+    public class Decrement_pre_mod : PreModifier
     {
         public override string Symbol { get { return "--"; } }
         protected override IElement calc(IElement item)

@@ -150,7 +150,7 @@ namespace ExoParseV2.elements
         public IElement A { get; set; }
         public IElement B { get; set; }
         public Operator Operator { get; set; }
-        public IElement Definition { get { return this; } }
+        public IElement Definition { get { return Pass(); } }
         public bool DontExecute_flag
         { get { return Operator?.DontExecute_flag(A, B, this) ?? false; } }
         #endregion
@@ -217,7 +217,7 @@ namespace ExoParseV2.elements
         public IElement Item { get; set; }
         public Modifier Modifier { get; set; }
 
-        public IElement Definition { get { return this; } }
+        public IElement Definition { get { return Pass(); } }
         public bool DontExecute_flag { get { return Modifier?.DontExecute_flag(Item, this) ?? false; }
         }
 

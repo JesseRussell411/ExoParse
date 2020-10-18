@@ -74,7 +74,7 @@ namespace ExoParseV2
         private SymbolizedIndex CreateSymbolizedIndex()
         {
 
-            // This is were the operators and modifiers are added to the universe. 
+            // This is were the operators and modifiers are added to the universe.
             // The order in which they are added is what defines their priority.
             // Some are added at the same time; hence, they have the same priority.
             SymbolizedIndex si = new SymbolizedIndex(
@@ -97,10 +97,10 @@ namespace ExoParseV2
                     new ISymbolized[] {new Exponentiation_op()},
                     new ISymbolized[] {new Factorial_mod()},
                     new ISymbolized[] {new Not_mod()},
-                    new ISymbolized[] {new IncrementAfter_mod(), new DecrementAfter_mod()},
-                    new ISymbolized[] {new IncrementBefore_mod(), new DecrementBefore_mod()},
+                    new ISymbolized[] {new Increment_post_mod(), new Decrement_post_mod()},
+                    new ISymbolized[] {new Increment_pre_mod(), new Decrement_pre_mod()},
                     new ISymbolized[] {new Factorial_mod() },
-                    new ISymbolized[] {new Dereference_mod()},
+                    new ISymbolized[] {new Dereference_mod(), new GetValue_mod()},
                 }
                 );
 
