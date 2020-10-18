@@ -247,6 +247,63 @@ namespace ExoParseV2.Functions
             return MathUtils.Ln(args[0].Execute()).ToElement();
         }
     }
+    public class While_func : BuiltInFunction
+    {
+        public override string Name { get; } = "while";
+        public override string[] Parameters { get; } = { "condition", "expression" };
+        protected override IElement calc(IElement[] args)
+        {
+            IElement condition = args[0].Definition;
+            IElement expression = args[1].Definition;
+            IElement result = IElement.Void;
+
+            while (condition.Execute().ToBool() == true)
+            {
+                result = expression.Calc();
+            }
+
+            return result;
+        }
+    }
+    public class DoWhile_func : BuiltInFunction
+    {
+        public override string Name { get; } = "doWhile";
+        public override string[] Parameters { get; } = { "condition", "expression" };
+        protected override IElement calc(IElement[] args)
+        {
+            IElement condition = args[0].Definition;
+            IElement expression = args[1].Definition;
+            IElement result = IElement.Void;
+
+            do
+            {
+                result = expression.Calc();
+            } while (condition.Execute().ToBool() == true);
+
+            return result;
+        }
+    }
+    public class For_func : BuiltInFunction
+    {
+        public override string Name { get; } = "for";
+        public override string[] Parameters { get; } = { "assignment", "condition", "iteration", "expression" };
+        protected override IElement calc(IElement[] args)
+        {
+            IElement assignment = args[0].Definition;
+            IElement condition  = args[1].Definition;
+            IElement iteration  = args[2].Definition;
+            IElement expression = args[3].Definition;
+
+            IElement result = IElement.Void;
+
+            for (assignment.Execute(); condition.Execute().ToBool() == true; iteration.Execute())
+            {
+                result = expression.Calc();
+            }
+
+            return result;
+        }
+    }
     #endregion
 
 }

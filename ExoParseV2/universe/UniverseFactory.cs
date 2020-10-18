@@ -128,6 +128,9 @@ namespace ExoParseV2
             funcs.Add(new NaturalLog_func());
             funcs.Add(new Round_func());
             funcs.Add(new Round2_func());
+            funcs.Add(new While_func());
+            funcs.Add(new DoWhile_func());
+            funcs.Add(new For_func());
             return funcs;
         }
     }
