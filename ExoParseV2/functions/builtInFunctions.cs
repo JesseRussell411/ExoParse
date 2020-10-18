@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using ExoParseV2.elements;
+using ExoParseV2.theUniverse;
 
 namespace ExoParseV2.Functions
 {
@@ -302,6 +303,19 @@ namespace ExoParseV2.Functions
             }
 
             return result;
+        }
+    }
+
+    public class Print_func : BuiltInFunction
+    {
+        public override string Name { get; } = "print";
+        public override string[] Parameters { get; } = { "n" };
+        public Universe Universe { get; set; }
+        protected override IElement calc(IElement[] args)
+        {
+            IElement arg0_def = args[0].Definition;
+            Universe.PrintFunction($"{arg0_def}\n");
+            return arg0_def;
         }
     }
     #endregion

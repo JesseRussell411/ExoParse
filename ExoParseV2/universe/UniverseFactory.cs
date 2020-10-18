@@ -13,13 +13,15 @@ namespace ExoParseV2
         public Universe CreateUniverse()
         {
             Universe uni = new Universe();
+            uni.PrintFunction = Console.Write;
+            uni.ReadFunction = Console.ReadLine;
             multiplication = new Multiplication_op();
             starter = uni.Ans;
             defaultElement = ElementUtils.VoidElement;
 
             SymbolizedIndex si = CreateSymbolizedIndex();
 
-            uni.AddFunctions(CreateBuiltInFunctions());
+            uni.AddFunctions(CreateBuiltInFunctions(uni));
             uni.AddLabeled(CreateConstants());
 
             Parser pars = new Parser(si, uni);
@@ -31,8 +33,6 @@ namespace ExoParseV2
             uni.SymbolizedIndex = si;
             uni.Parser = pars;
             uni.AddCommands(CreateCommands());
-            uni.PrintFunction = Console.Write;
-            uni.ReadFunction = Console.ReadLine;
 
             uni.AddLabeled(uni.Ans);
 
@@ -106,7 +106,7 @@ namespace ExoParseV2
 
             return si;
         }
-        private List<BuiltInFunction> CreateBuiltInFunctions()
+        private List<BuiltInFunction> CreateBuiltInFunctions( Universe universe)
         {
             var funcs = new List<BuiltInFunction>();
             funcs.Add(new Sin_func());
@@ -131,6 +131,7 @@ namespace ExoParseV2
             funcs.Add(new While_func());
             funcs.Add(new DoWhile_func());
             funcs.Add(new For_func());
+            funcs.Add(new Print_func() { Universe = universe});
             return funcs;
         }
     }
