@@ -17,7 +17,8 @@ namespace ExoParseV2
         {
             UniverseFactory uf = new UniverseFactory();
             theUniverse.Universe un = uf.CreateUniverse();
-            UserInterface ui = new UserInterface(un);
+            StatementTaker st = new StatementTaker(un);
+            UserInterface ui = new UserInterface(st);
 
 
 

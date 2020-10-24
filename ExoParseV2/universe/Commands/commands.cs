@@ -15,7 +15,7 @@ namespace ExoParseV2.theUniverse.Commands
             Name = "exit";
         }
 
-        protected override void exec(string args, Universe universe)
+        protected override string exec(string args, Universe universe)
         {
             if (int.TryParse(args, out int i))
             {
@@ -25,6 +25,7 @@ namespace ExoParseV2.theUniverse.Commands
             {
                 System.Environment.Exit(0);
             }
+            return "";
         }
     }
     public class Help_cmd : Command
@@ -34,12 +35,10 @@ namespace ExoParseV2.theUniverse.Commands
         {
             Name = "help";
         }
-        protected override void exec(string args, Universe universe)
+        protected override string exec(string args, Universe universe)
         {
-            // get print function
-            var print = universe.PrintFunction;
-            Action<string> println = s => print($"{s}\n");
-            //
+            // Create result builder.
+            StringBuilder result = new StringBuilder();
 
             // trim args
             args = args.Trim();
@@ -51,11 +50,11 @@ namespace ExoParseV2.theUniverse.Commands
                 // If so, find that command and list it's manual entry.
                 if (universe.Commands.TryGetValue(args, out Command cmd))
                 {
-                    println(cmd.Name + ":");
-                    for (int i = 0; i < cmd.Name.Length + 1; i++) { print("-"); }
-                    println("");
-                    println(cmd.Manual);
-                    println("");
+                    result.Append($"{cmd.Name}:");
+
+                    for (int i = 0; i < cmd.Name.Length + 1; i++) { result.Append("-"); }
+                    result.Append("\n");
+                    result.Append($"{cmd.Manual}\n\n");
 
                 }
                 else
@@ -69,14 +68,15 @@ namespace ExoParseV2.theUniverse.Commands
                 // If not, list all of them
                 foreach (Command cmd in universe.Commands.Select(p => p.Value))
                 {
-                    println(cmd.Name + ":");
-                    for (int i = 0; i < cmd.Name.Length + 1; i++) { print("-"); }
-                    println("");
-                    println(cmd.Definition);
-                    println("");
+                    result.Append($"{cmd.Name}:");
+                    for (int i = 0; i < cmd.Name.Length + 1; i++) { result.Append("-"); }
+                    result.Append($"\n{cmd.Definition}\n\n");
                 }
                 //
             }
+
+            // Return the result string.
+            return result.ToString();
         }
     }
     
@@ -87,10 +87,13 @@ namespace ExoParseV2.theUniverse.Commands
         {
             Name = "listvars";
         }
-        protected override void exec(string args, Universe universe)
+        protected override string exec(string args, Universe universe)
         {
-            Action<object> print = o => universe.PrintFunction(o.ToString());
+            StringBuilder result = new StringBuilder();
+
+            Action<object> print = o => result.Append(o.ToString());
             Action<object> println = o => print($"{o} \n");
+
 
             foreach (var g in universe.NamedItems.Select(p => p.Value).GroupBy(l => l is Variable))
             {
@@ -112,6 +115,8 @@ namespace ExoParseV2.theUniverse.Commands
                 
                 println("");
             }
+
+            return result.ToString();
         }
 
     }
@@ -123,10 +128,10 @@ namespace ExoParseV2.theUniverse.Commands
             Name = "debug";
         }
             
-        protected override void exec(string args, Universe universe)
+        protected override string exec(string args, Universe universe)
         {
             universe.Debug = !universe.Debug;
-            universe.PrintFunction($"Debug mode is {(universe.Debug ? "on" : "off" )}.\n\n");
+            return $"Debug mode is {(universe.Debug ? "on" : "off")}.\n\n";
         }
     }
     public class ListFuncs_cmd : Command
@@ -137,10 +142,13 @@ namespace ExoParseV2.theUniverse.Commands
             Name = "listfuncs";
         }
 
-        protected override void exec(string args, Universe universe)
+        protected override string exec(string args, Universe universe)
         {
-            var print = universe.PrintFunction;
-            Action<string> println = s => print(s + "\n");
+            StringBuilder result = new StringBuilder();
+
+            Action<object> print = o => result.Append(o.ToString());
+            Action<object> println = o => print($"{o} \n");
+
             foreach(var g in universe.Functions.Select(p => p.Value).GroupBy(f => f is CustomFunction))
             {
                 if (g.Key)
@@ -166,6 +174,7 @@ namespace ExoParseV2.theUniverse.Commands
 
                 println("");
             }
+            return result.ToString();
         }
 
     }
@@ -193,8 +202,13 @@ namespace ExoParseV2.theUniverse.Commands
             Name = "def";
         }
 
-        protected override void exec(string args, Universe universe)
+        protected override string exec(string args, Universe universe)
         {
+            StringBuilder result = new StringBuilder();
+
+            Action<object> print = o => result.Append(o.ToString());
+            Action<object> println = o => print($"{o} \n");
+
             Action thro = () => throw new GenericCommandException("Invalid arguments.");
 
             string[] args_split = args.Split("=", 2).Select(s => s.Trim()).ToArray();// split the args around the "=" symbol
@@ -241,7 +255,7 @@ namespace ExoParseV2.theUniverse.Commands
 
 
 
-                return;// done
+                return result.ToString();// done
             }
             else if (universe.Parser.IsLabel(args_split[0]))
             {
@@ -257,13 +271,15 @@ namespace ExoParseV2.theUniverse.Commands
                 {
                     // no, good to go
                     universe.AddLabeled(con);
-                    return; // done
+                    return result.ToString();// done
                 }
             }
             else
             {
                 thro();// yo, thro, somethin's wrong.
             }
+
+            return result.ToString();
         }
     }
     public class Delete_cmd : Command
@@ -292,7 +308,7 @@ namespace ExoParseV2.theUniverse.Commands
             Name = "delete";
         }
 
-        protected override void exec(string args, Universe universe)
+        protected override string exec(string args, Universe universe)
         {
             List<string> argList = argSplitter.Tokenize(args);
             if (argList.Count == 2)
@@ -303,7 +319,7 @@ namespace ExoParseV2.theUniverse.Commands
                     if (universe.Functions.TryGetValue((argList[0], i), out Function f))
                     {
                         universe.Functions.Remove(f.Id);
-                        universe.PrintFunction($"{f} has been deleted.\n");
+                        return $"{f} has been deleted.\n";
                     }
                     else
                     {
@@ -321,7 +337,7 @@ namespace ExoParseV2.theUniverse.Commands
                 if (universe.NamedItems.TryGetValue(argList[0], out IReference l))
                 {
                     universe.NamedItems.Remove(l.Name);
-                    universe.PrintFunction($"{l} has been deleted.\n");
+                    return $"{l} has been deleted.\n";
                 }
                 else
                 {
@@ -342,9 +358,9 @@ namespace ExoParseV2.theUniverse.Commands
             Name = "echo";
         }
 
-        protected override void exec(string args, Universe universe)
+        protected override string exec(string args, Universe universe)
         {
-            universe.PrintFunction(args);
+            return args;
         }
     }
 }
