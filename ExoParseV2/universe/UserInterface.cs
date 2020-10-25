@@ -9,9 +9,9 @@ namespace ExoParseV2.universe
 {
     class UserInterface
     {
-        public UserInterface(StatementTaker statementTaker)
+        public UserInterface(Universe universe)
         {
-            StatementTaker = statementTaker;
+            Universe = universe;
         }
         // print:
         public Action<string> Print { get; set; } = Console.Write;
@@ -26,11 +26,11 @@ namespace ExoParseV2.universe
         private string readln() { return ReadLine(); }
         //
 
-        public StatementTaker StatementTaker;
+        public Universe Universe { get; set; }
 
         public string RunLine(string statment)
         {
-            return StatementTaker.RunStatement(statment);
+            return Universe.RunStatement(statment);
         }
 
         public void ReadAndRunLine()

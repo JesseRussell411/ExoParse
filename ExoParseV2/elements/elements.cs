@@ -106,6 +106,13 @@ namespace ExoParseV2.elements
             return ToString();
         }
     }
+    public class BuiltInConstant : Constant
+    {
+        public BuiltInConstant(string name, IElement definition)
+            : base(name, definition) { }
+        public BuiltInConstant(string name, double? value)
+            : base(name, value) { }
+    }
 
     public class Variable : IReference, IRedefinable
     {
@@ -355,7 +362,7 @@ namespace ExoParseV2.elements
 
         public IElement Pass()
         {
-            return Definition;
+            return Definition?.Pass();
         }
         public IElement Calc()
         {

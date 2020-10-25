@@ -53,6 +53,9 @@ namespace ExoParseV2
             commands.Add(new Def_cmd());
             commands.Add(new Delete_cmd());
             commands.Add(new Echo_cmd());
+            commands.Add(new Run_cmd());
+            commands.Add(new GenerateScript_cmd());
+            commands.Add(new ReGenerateScript_cmd());
             return commands;
         }
 
@@ -60,13 +63,13 @@ namespace ExoParseV2
         {
             List<Constant> constants = new List<Constant>();
 
-            constants.Add(new Constant("pi", Math.PI));
-            constants.Add(new Constant("e", Math.E));
-            constants.Add(new Constant("true", LogicUtils.True_double));
-            constants.Add(new Constant("false", LogicUtils.False_double));
-            constants.Add(new Constant(StringProps.NullLabel, ElementUtils.NullElement));
-            constants.Add(new Constant(StringProps.VoidLabel, ElementUtils.VoidElement));
-            constants.Add(new Constant("theMeaningOfLife", new Literal(42)));
+            constants.Add(new BuiltInConstant("pi", Math.PI));
+            constants.Add(new BuiltInConstant("e", Math.E));
+            constants.Add(new BuiltInConstant("true", LogicUtils.True_double));
+            constants.Add(new BuiltInConstant("false", LogicUtils.False_double));
+            constants.Add(new BuiltInConstant(StringProps.NullLabel, ElementUtils.NullElement));
+            constants.Add(new BuiltInConstant(StringProps.VoidLabel, ElementUtils.VoidElement));
+            constants.Add(new BuiltInConstant("theMeaningOfLife", new Literal(42)));
 
             return constants;
         }

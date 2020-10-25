@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -95,7 +96,7 @@ namespace ExoParseV2.theUniverse.Commands
             Action<object> println = o => print($"{o} \n");
 
 
-            foreach (var g in universe.NamedItems.Select(p => p.Value).GroupBy(l => l is Variable))
+            foreach (var g in universe.Labled.Select(p => p.Value).GroupBy(l => l is Variable))
             {
                 if (g.Key)
                 {
@@ -199,7 +200,7 @@ namespace ExoParseV2.theUniverse.Commands
 
         public Def_cmd()
         {
-            Name = "def";
+            Name = Command.defName;
         }
 
         protected override string exec(string args, Universe universe)
@@ -242,6 +243,7 @@ namespace ExoParseV2.theUniverse.Commands
                 {
                     // no, good to go, add the function
                     universe.AddFunction(f);
+                    println($"{f} has been created.");
                 }
                 
                 // define the behavior of the new function (and fill params with any locally created variables other than the function's arguments)
@@ -263,7 +265,7 @@ namespace ExoParseV2.theUniverse.Commands
                 Constant con = new Constant(args_split[0], universe.Parser.ParseElement(args_split[1]));
 
                 // is this constant name already taken?
-                if (universe.NamedItems.ContainsKey(con.Name))
+                if (universe.Labled.ContainsKey(con.Name))
                 {
                     throw new GenericCommandException($"{con} already exists.");
                 }
@@ -271,7 +273,7 @@ namespace ExoParseV2.theUniverse.Commands
                 {
                     // no, good to go
                     universe.AddLabeled(con);
-                    return result.ToString();// done
+                    println($"{con} has been created.");
                 }
             }
             else
@@ -334,9 +336,9 @@ namespace ExoParseV2.theUniverse.Commands
             else if (argList.Count == 1)
             {
                 // Constant
-                if (universe.NamedItems.TryGetValue(argList[0], out IReference l))
+                if (universe.Labled.TryGetValue(argList[0], out IReference l))
                 {
-                    universe.NamedItems.Remove(l.Name);
+                    universe.Labled.Remove(l.Name);
                     return $"{l} has been deleted.\n";
                 }
                 else
@@ -361,6 +363,128 @@ namespace ExoParseV2.theUniverse.Commands
         protected override string exec(string args, Universe universe)
         {
             return args;
+        }
+    }
+    public class Run_cmd : Command
+    {
+        public override string Definition { get; } = "Runs the script at the path specified.";
+        public Run_cmd()
+        {
+            Name = "run";
+        }
+
+        protected override string exec(string args, Universe universe)
+        {
+            string path = args.Trim();
+            if (File.Exists(path))
+            {
+                StringBuilder result = new StringBuilder();
+                using (StreamReader sr = File.OpenText(path))
+                {
+                    string line = null;
+                    while ((line = sr.ReadLine()) != null)
+                    {
+                        result.Append($"{universe.RunStatement(line)}\n");
+                    }
+                }
+                return result.ToString();
+            }
+            else
+            {
+                throw new GenericCommandException($"{path} could not be found.");
+            }
+        }
+    }
+
+    public class GenerateScript_cmd : Command
+    {
+        public override string Definition { get; } = "At the path specified, generates a script that re-creates the current state of the program when run.";
+        public GenerateScript_cmd()
+        {
+            Name = "generateScript";
+        }
+
+        protected bool generate(StreamWriter sw, Universe universe)
+        {
+            #region constants and variables
+            sw.WriteLine($"{universe.CommentOperator} Constants and variables:");
+            sw.WriteLine($"{universe.CommentOperator} ------------------------");
+            foreach (var item in universe.Labled.Values)
+            {
+                if (!(item is BuiltInConstant))
+                {
+                    sw.WriteLine($"{(item is Constant ? $"{universe.CommandOperator}{Command.defName} {item.Name}" : item.Name)} {(item.Definition is Literal ? "=" : ":=")} {item.Definition.ToString(universe.SymbolizedIndex)}");
+                }
+            }
+            #endregion
+
+            #region functions
+            sw.WriteLine($"{universe.CommentOperator} Functions:");
+            sw.WriteLine($"{universe.CommentOperator} ----------");
+            foreach (var func in universe.Functions.Values)
+            {
+                if ((func is CustomFunction cf))
+                {
+                    sw.WriteLine($"{universe.CommandOperator}{Command.defName} {cf} = {cf.Behavior.ToString(universe.SymbolizedIndex)}");
+                }
+            }
+            #endregion
+            return true;
+        }
+
+        protected StreamWriter OpenFileForWriting(string path)
+        {
+            try
+            {
+                return new StreamWriter(path);
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                throw new GenericCommandException(e.Message);
+            }
+            catch (DirectoryNotFoundException e)
+            {
+                throw new GenericCommandException(e.Message);
+            }
+            catch (IOException e)
+            {
+                throw new GenericCommandException(e.Message);
+            }
+        }
+
+        protected override string exec(string args, Universe universe)
+        {
+            string path = args.Trim();
+            if (File.Exists(path))
+            {
+                throw new GenericCommandException($"{path} already exists. use reGenerateScript to replace it.");
+            }
+            else
+            {
+                using (StreamWriter sw = OpenFileForWriting(path))
+                {
+                    generate(sw, universe);
+                }
+                return "Script generated at {path}\n";
+            }
+        }
+    }
+    public class ReGenerateScript_cmd : GenerateScript_cmd
+    {
+        public override string Definition { get; } = "At the path specified, generates a script that re-creates the current state of the program when run. If the script already exists, it is replaced.";
+        public ReGenerateScript_cmd()
+        {
+            Name = "regenerateScript";
+        }
+
+        protected override string exec(string args, Universe universe)
+        {
+            string path = args.Trim();
+            using (StreamWriter sw = OpenFileForWriting(path))
+            {
+                generate(sw, universe);
+            }
+            return "Script generated at {path}\n";
         }
     }
 }

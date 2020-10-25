@@ -42,8 +42,8 @@ namespace ExoParseV2_test
             var exp2 = vers.ParseLine("b = true");
             exp1.Execute();
             exp2.Execute();
-            var a = vers.NamedItems["a"];
-            var b = vers.NamedItems["b"];
+            var a = vers.Labled["a"];
+            var b = vers.Labled["b"];
 
             Assert.AreEqual(a.Execute(), 42);
             Assert.AreEqual(b.Execute(), LogicUtils.True_double);
@@ -61,10 +61,10 @@ namespace ExoParseV2_test
             exp1.Execute();
             exp2.Execute();
             exp3.Execute();
-            var a = vers.NamedItems["a"];
-            var b = vers.NamedItems["b"];
-            var c = vers.NamedItems["c"];
-            var ppa = vers.NamedItems["ppa"];
+            var a = vers.Labled["a"];
+            var b = vers.Labled["b"];
+            var c = vers.Labled["c"];
+            var ppa = vers.Labled["ppa"];
 
             // a should still be 42, ppa or ++a should not have been executed.
             Assert.AreEqual(a.Execute(), 42);

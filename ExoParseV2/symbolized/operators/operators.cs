@@ -353,6 +353,10 @@ namespace ExoParseV2
     public class Ternary_op : RightToLeftOperator
     {
         public override string Symbol { get; } = "?";
+        protected override IElement pass(IElement a, IElement b, Operation parent)
+        {
+            return calc(a, b);
+        }
         protected override IElement calc(IElement a, IElement b)
         {
             if (b is TernaryMessenger tm)

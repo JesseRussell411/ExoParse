@@ -14,5 +14,6 @@ namespace ExoParseV2
         public static readonly string   VoidLabel = "void";
         public static readonly string   CommandOperator = ":";
         public static readonly string   CommentOperator = "#";
+        public static readonly string   LineBreakEscapeSymbol = "\\";
     }
 }

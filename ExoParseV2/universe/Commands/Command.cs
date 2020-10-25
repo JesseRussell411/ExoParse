@@ -28,5 +28,7 @@ namespace ExoParseV2.theUniverse.Commands
         }
         protected abstract string exec(string args, Universe universe);
         protected Tokenizer argSplitter { get; } = new Tokenizer(new string[0], StringProps.Barriers, new string[0], new string[0], new string[0], new string[0], StringProps.Barriers, new string[0]) { BreakOnWhiteSpace = true, IncludeEmpty = false };
+
+        public static readonly string defName = "def";
     }
 }
