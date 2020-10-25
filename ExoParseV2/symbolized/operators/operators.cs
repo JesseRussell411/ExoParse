@@ -355,7 +355,7 @@ namespace ExoParseV2
         public override string Symbol { get; } = "?";
         protected override IElement pass(IElement a, IElement b, Operation parent)
         {
-            return calc(a, b);
+            return parent;
         }
         protected override IElement calc(IElement a, IElement b)
         {
@@ -364,8 +364,7 @@ namespace ExoParseV2
                 double? a_Execute = a.Execute();
                 if (a_Execute == LogicUtils.True_double)
                 {
-                    var result =  tm.A;
-                    return result;
+                    return tm.A;
                 }
                 else if (a_Execute == LogicUtils.False_double)
                 {
