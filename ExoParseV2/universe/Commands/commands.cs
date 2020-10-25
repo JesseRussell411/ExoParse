@@ -384,7 +384,15 @@ namespace ExoParseV2.theUniverse.Commands
                     string line = null;
                     while ((line = sr.ReadLine()) != null)
                     {
-                        result.Append($"{universe.RunStatement(line)}\n");
+                        try
+                        {
+                            result.Append($"{universe.RunStatement(line)}\n");
+                        }
+                        catch(MessageException e)
+                        {
+                            result.Append($" *{e.Message}\n\n");
+                            
+                        }
                     }
                 }
                 return result.ToString();
