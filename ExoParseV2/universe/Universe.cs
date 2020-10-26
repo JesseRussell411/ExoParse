@@ -87,7 +87,8 @@ namespace ExoParseV2.theUniverse
         public Dictionary<string, Command> Commands { get; }
         public bool AddCommand(Command cmd)
         {
-            return Commands.TryAdd(cmd.Name, cmd);
+            // Command names are non case-sensitive to ToLower().
+            return Commands.TryAdd(cmd.Name.ToLower(), cmd);
         }
         public bool AddCommands(IEnumerable<Command> commands)
         {

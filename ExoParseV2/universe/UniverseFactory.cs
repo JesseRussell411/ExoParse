@@ -51,6 +51,7 @@ namespace ExoParseV2
             commands.Add(new Debug_cmd());
             commands.Add(new ListFuncs_cmd());
             commands.Add(new Def_cmd());
+            commands.Add(new Redef_cmd());
             commands.Add(new Delete_cmd());
             commands.Add(new Echo_cmd());
             commands.Add(new Run_cmd());

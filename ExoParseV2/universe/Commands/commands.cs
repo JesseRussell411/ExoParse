@@ -10,12 +10,9 @@ namespace ExoParseV2.theUniverse.Commands
 {
     public class Exit_cmd : Command
     {
+        public override string Name { get; } = "exit";
         public override string Definition { get; } = "Terminates the session.";
-        public Exit_cmd()
-        {
-            Name = "exit";
-        }
-
+        
         protected override string exec(string args, Universe universe)
         {
             if (int.TryParse(args, out int i))
@@ -31,11 +28,9 @@ namespace ExoParseV2.theUniverse.Commands
     }
     public class Help_cmd : Command
     {
-        public override string Definition { get; } = "Lists all commands and their definition. If a specific command is given as an argument, then that command's manual is displayed unless the command has no manual, then its definition will be displayed.";
-        public Help_cmd()
-        {
-            Name = "help";
-        }
+        public override string Name { get; } = "help";
+        public override string Definition { get; } = "Lists all commands and their definition. If a specific command is given as an argument, " +
+            "then that command's manual is displayed unless the command has no manual, then its definition will be displayed.";
         protected override string exec(string args, Universe universe)
         {
             // Create result builder.
@@ -80,14 +75,10 @@ namespace ExoParseV2.theUniverse.Commands
             return result.ToString();
         }
     }
-    
     public class ListVars_cmd : Command
     {
+        public override string Name { get; } = "listVars";
         public override string Definition { get; } = "Lists all of the constants and variables defined in the environment.";
-        public ListVars_cmd()
-        {
-            Name = "listvars";
-        }
         protected override string exec(string args, Universe universe)
         {
             StringBuilder result = new StringBuilder();
@@ -123,11 +114,8 @@ namespace ExoParseV2.theUniverse.Commands
     }
     public class Debug_cmd : Command
     {
+        public override string Name { get; } = "debug";
         public override string Definition { get; } = "Toggles debug mode.";
-        public Debug_cmd()
-        {
-            Name = "debug";
-        }
             
         protected override string exec(string args, Universe universe)
         {
@@ -137,11 +125,8 @@ namespace ExoParseV2.theUniverse.Commands
     }
     public class ListFuncs_cmd : Command
     {
+        public override string Name { get; } = "listFuncs";
         public override string Definition { get; } = "Lists all registered functions.";
-        public ListFuncs_cmd()
-        {
-            Name = "listfuncs";
-        }
 
         protected override string exec(string args, Universe universe)
         {
@@ -181,6 +166,7 @@ namespace ExoParseV2.theUniverse.Commands
     }
     public class Def_cmd : Command
     {
+        public override string Name { get; } = "def";
         public override string Definition { get; } = "Defines a function or constant.";
         public override string Manual { get; } =
             "Defines a new function or constant.\n" +
@@ -197,13 +183,7 @@ namespace ExoParseV2.theUniverse.Commands
             ":def nine = 9\n" +
             ":def sum(a, b) = a + b\n" +
             ":def sinOfPi = sin(pi)\n";
-
-        public Def_cmd()
-        {
-            Name = Command.defName;
-        }
-
-        protected override string exec(string args, Universe universe)
+        protected string define(string args, Universe universe, bool redefine = false)
         {
             StringBuilder result = new StringBuilder();
 
@@ -234,18 +214,27 @@ namespace ExoParseV2.theUniverse.Commands
                 // what is this functions called? what does it look like?
                 CustomFunction f = new CustomFunction(partParsed.name, null, params_items, null);
 
-                // does this functions already exist?
-                if (universe.Functions.ContainsKey(f.Id))
+
+                if (universe.Functions.TryGetValue(f.Id, out Function existingFunction))
                 {
-                    throw new GenericCommandException($"{f} already exists.");
+                    if (redefine)
+                    {
+                        if (existingFunction is BuiltInFunction)
+                        {
+                            throw new GenericCommandException($"{f} is a built in function and cannot be redefined.");
+                        }
+                    }
+                    else
+                    {
+                        throw new GenericCommandException($"{existingFunction} already exists.{(!(existingFunction is BuiltInFunction) ? " Use redef to redefine it." : "")}");
+                    }
                 }
-                else
-                {
-                    // no, good to go, add the function
-                    universe.AddFunction(f);
-                    println($"{f} has been created.");
-                }
-                
+
+                // no, good to go, add the function
+                universe.AddFunction(f);
+                println($"{f} has been created.");
+
+
                 // define the behavior of the new function (and fill params with any locally created variables other than the function's arguments)
                 f.Behavior = universe.Parser.ParseElement(args_split[1], @params);
 
@@ -265,16 +254,24 @@ namespace ExoParseV2.theUniverse.Commands
                 Constant con = new Constant(args_split[0], universe.Parser.ParseElement(args_split[1]));
 
                 // is this constant name already taken?
-                if (universe.Labled.ContainsKey(con.Name))
+                if (universe.Labled.TryGetValue(con.Name, out IReference existing))
                 {
-                    throw new GenericCommandException($"{con} already exists.");
+                    if (redefine)
+                    {
+                        if (existing is BuiltInConstant)
+                        {
+                            throw new GenericCommandException($"{existing} is a built in constant and cannot be redefined");
+                        }
+                    }
+                    else
+                    {
+                        throw new GenericCommandException($"{existing} already exist.{(!(existing is BuiltInConstant) ? " Use redef to redefine it." : "")}");
+                    }
                 }
-                else
-                {
-                    // no, good to go
-                    universe.AddLabeled(con);
-                    println($"{con} has been created.");
-                }
+
+                // no, good to go
+                universe.AddLabeled(con);
+                println($"{con} has been created.");
             }
             else
             {
@@ -283,9 +280,23 @@ namespace ExoParseV2.theUniverse.Commands
 
             return result.ToString();
         }
+        protected override string exec(string args, Universe universe)
+        {
+            return define(args, universe);
+        }
+    }
+    public class Redef_cmd : Def_cmd
+    {
+        public override string Name { get; } = "redef";
+        public override string Definition { get; } = "Defines a function or constant. If it already exists, it is redefined unless it's built in.";
+        protected override string exec(string args, Universe universe)
+        {
+            return define(args, universe, true);
+        }
     }
     public class Delete_cmd : Command
     {
+        public override string Name { get; } = "delete";
         public override string Definition { get; } = "Deletes a function, constant, or variable.";
         public override string Manual { get; } =
             "Deletes a function, constant, or variable.\n" +
@@ -305,11 +316,6 @@ namespace ExoParseV2.theUniverse.Commands
             ":delete sin 1\n" +
             ":delete func 0\n";
 
-        public Delete_cmd()
-        {
-            Name = "delete";
-        }
-
         protected override string exec(string args, Universe universe)
         {
             List<string> argList = argSplitter.Tokenize(args);
@@ -320,8 +326,15 @@ namespace ExoParseV2.theUniverse.Commands
                 {
                     if (universe.Functions.TryGetValue((argList[0], i), out Function f))
                     {
-                        universe.Functions.Remove(f.Id);
-                        return $"{f} has been deleted.\n";
+                        if (f is BuiltInFunction)
+                        {
+                            throw new GenericCommandException($"{f} is a built in function and cannot be deleted.");
+                        }
+                        else
+                        {
+                            universe.Functions.Remove(f.Id);
+                            return $"{f} has been deleted.\n";
+                        }
                     }
                     else
                     {
@@ -336,10 +349,17 @@ namespace ExoParseV2.theUniverse.Commands
             else if (argList.Count == 1)
             {
                 // Constant
-                if (universe.Labled.TryGetValue(argList[0], out IReference l))
+                if (universe.Labled.TryGetValue(argList[0], out IReference r))
                 {
-                    universe.Labled.Remove(l.Name);
-                    return $"{l} has been deleted.\n";
+                    if (r is BuiltInConstant)
+                    {
+                        throw new GenericCommandException($"{r} is a built in constant and cannot be deleted.");
+                    }
+                    else
+                    {
+                        universe.Labled.Remove(r.Name);
+                        return $"{r} has been deleted.\n";
+                    }
                 }
                 else
                 {
@@ -354,11 +374,8 @@ namespace ExoParseV2.theUniverse.Commands
     }
     public class Echo_cmd : Command
     {
+        public override string Name { get; } = "echo";
         public override string Definition { get; } = "Prints the argument.";
-        public Echo_cmd()
-        {
-            Name = "echo";
-        }
 
         protected override string exec(string args, Universe universe)
         {
@@ -367,11 +384,8 @@ namespace ExoParseV2.theUniverse.Commands
     }
     public class Run_cmd : Command
     {
+        public override string Name { get; } = "run";
         public override string Definition { get; } = "Runs the script at the path specified.";
-        public Run_cmd()
-        {
-            Name = "run";
-        }
 
         protected override string exec(string args, Universe universe)
         {
@@ -403,14 +417,10 @@ namespace ExoParseV2.theUniverse.Commands
             }
         }
     }
-
     public class GenerateScript_cmd : Command
     {
+        public override string Name { get; } = "generateScript";
         public override string Definition { get; } = "At the path specified, generates a script that re-creates the current state of the program when run.";
-        public GenerateScript_cmd()
-        {
-            Name = "generateScript";
-        }
 
         protected bool generate(StreamWriter sw, Universe universe)
         {
@@ -479,11 +489,10 @@ namespace ExoParseV2.theUniverse.Commands
     }
     public class ReGenerateScript_cmd : GenerateScript_cmd
     {
-        public override string Definition { get; } = "At the path specified, generates a script that re-creates the current state of the program when run. If the script already exists, it is replaced.";
-        public ReGenerateScript_cmd()
-        {
-            Name = "regenerateScript";
-        }
+        public override string Name { get; } = "regenerateScript";
+        public override string Definition { get; } =
+            "At the path specified, generates a script that re-creates the current state of the program when run." +
+            " If the script already exists, it is replaced.";
 
         protected override string exec(string args, Universe universe)
         {

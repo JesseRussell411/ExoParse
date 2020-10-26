@@ -8,20 +8,9 @@ namespace ExoParseV2.theUniverse.Commands
 {
     public abstract class Command
     {
-        private string name;
-        public string Name
-        {
-            get { return name; }
-            protected set
-            {
-                name = value.ToLower();
-            }
-        }
+        public abstract string Name { get; }
         public abstract string Definition { get; }
-        public virtual string Manual
-        {
-            get { return Definition; }
-        }
+        public virtual string Manual { get => Definition; }
         public string Execute(string args, Universe universe)
         {
             return exec(args, universe);

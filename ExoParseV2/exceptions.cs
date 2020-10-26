@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using ExoParseV2.elements;
+using ExoParseV2.theUniverse.Commands;
 
 namespace ExoParseV2
 {
@@ -11,15 +12,15 @@ namespace ExoParseV2
         {
         }
     }
-    class ParsingException : MessageException
+    public class ParsingException : MessageException
     {
         public ParsingException(string message) : base(message) { }
     }
-    class ExecutionException : MessageException
+    public class ExecutionException : MessageException
     {
         public ExecutionException(string message) : base(message) { }
     }
-    class NotRedefinableException : ExecutionException
+    public class NotRedefinableException : ExecutionException
     {
         public IElement Item { get; }
         public NotRedefinableException(IElement item) : base($"{item} is not redefinable.")
@@ -27,8 +28,7 @@ namespace ExoParseV2
             Item = item;
         }
     }
-
-    class GenericCommandException : MessageException
+    public class GenericCommandException : MessageException
     {
         public GenericCommandException(string message)
             : base(message) { }
