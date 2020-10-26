@@ -87,7 +87,7 @@ namespace ExoParseV2.theUniverse.Commands
             Action<object> println = o => print($"{o} \n");
 
 
-            foreach (var g in universe.Labled.Select(p => p.Value).GroupBy(l => l is Variable))
+            foreach (var g in universe.References.Select(p => p.Value).GroupBy(l => l is Variable))
             {
                 if (g.Key)
                 {
@@ -230,9 +230,20 @@ namespace ExoParseV2.theUniverse.Commands
                     }
                 }
 
-                // no, good to go, add the function
-                universe.AddFunction(f);
-                println($"{f} has been created.");
+                // good to go, add the function
+                if (existingFunction != null)
+                {
+                    universe.Functions.Remove(existingFunction.Id);
+                    universe.AddFunction(f);
+                    println($"{f} has been redefined.");
+                }
+                else
+                {
+                    universe.AddFunction(f);
+                    println($"{f} has been created.");
+                }
+
+
 
 
                 // define the behavior of the new function (and fill params with any locally created variables other than the function's arguments)
@@ -254,7 +265,7 @@ namespace ExoParseV2.theUniverse.Commands
                 Constant con = new Constant(args_split[0], universe.Parser.ParseElement(args_split[1]));
 
                 // is this constant name already taken?
-                if (universe.Labled.TryGetValue(con.Name, out IReference existing))
+                if (universe.References.TryGetValue(con.Name, out IReference existing))
                 {
                     if (redefine)
                     {
@@ -269,9 +280,19 @@ namespace ExoParseV2.theUniverse.Commands
                     }
                 }
 
-                // no, good to go
-                universe.AddLabeled(con);
-                println($"{con} has been created.");
+                // good to go
+                if (existing!= null)
+                {
+                    universe.References.Remove(existing.Name);
+                    universe.AddLabeled(con);
+                    println($"{con} has been redefined.");
+                }
+                else
+                {
+                    universe.AddLabeled(con);
+                    println($"{con} has been created.");
+                }
+
             }
             else
             {
@@ -349,7 +370,7 @@ namespace ExoParseV2.theUniverse.Commands
             else if (argList.Count == 1)
             {
                 // Constant
-                if (universe.Labled.TryGetValue(argList[0], out IReference r))
+                if (universe.References.TryGetValue(argList[0], out IReference r))
                 {
                     if (r is BuiltInConstant)
                     {
@@ -357,7 +378,7 @@ namespace ExoParseV2.theUniverse.Commands
                     }
                     else
                     {
-                        universe.Labled.Remove(r.Name);
+                        universe.References.Remove(r.Name);
                         return $"{r} has been deleted.\n";
                     }
                 }
@@ -427,7 +448,7 @@ namespace ExoParseV2.theUniverse.Commands
             #region constants and variables
             sw.WriteLine($"{universe.CommentOperator} Constants and variables:");
             sw.WriteLine($"{universe.CommentOperator} ------------------------");
-            foreach (var item in universe.Labled.Values)
+            foreach (var item in universe.References.Values)
             {
                 if (!(item is BuiltInConstant))
                 {

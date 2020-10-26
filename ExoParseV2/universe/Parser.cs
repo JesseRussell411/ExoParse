@@ -790,7 +790,7 @@ namespace ExoParseV2
 
             if (localLabeled == null)
             {
-                if (Universe.Labled.TryGetValue(s, out result))
+                if (Universe.References.TryGetValue(s, out result))
                 {
                     return true;
                 }
@@ -799,7 +799,7 @@ namespace ExoParseV2
                     if (this.IsLabel(s))
                     {
                         result = new Variable(s);
-                        Universe.Labled.Add(result.Name, result);
+                        Universe.References.Add(result.Name, result);
                         return true;
                     }
                     else
@@ -810,7 +810,7 @@ namespace ExoParseV2
             }
             else
             {
-                if (Universe.Labled.TryGetValue(s, out result) && result is Constant)
+                if (Universe.References.TryGetValue(s, out result) && result is Constant)
                 {
                     return true;
                 }
