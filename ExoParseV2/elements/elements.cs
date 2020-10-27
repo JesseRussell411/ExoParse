@@ -174,7 +174,7 @@ namespace ExoParseV2.elements
         }
         public double? Execute()
         {
-            return Operator.Execute(A?.Pass(), B?.Pass(), this);
+            return Operator?.Execute(A?.Pass(), B?.Pass(), this);
             //return Pass()?.Execute();
             //return Operator?.Calc(A?.Pass(), B?.Pass())?.Execute();
         }

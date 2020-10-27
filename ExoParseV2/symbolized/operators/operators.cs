@@ -414,11 +414,11 @@ namespace ExoParseV2
         protected override IElement calc(IElement a, IElement b)
         {
             if (!a.DontExecute_flag) { a.Execute(); }
-            return b;
+            return b.Calc();
         }
         protected override IElement pass(IElement a, IElement b, Operation parent)
         {
-            return calc(a, b);
+            return parent;
         }
         public override string ToString()
         {

@@ -115,7 +115,7 @@ namespace ExoParseV2
             }
             //
 
-            var result = Behavior.Execute();
+            double? result = Behavior?.Execute();
 
             // Return what the vars where.
             for(int i = 0; i < LocalVars.Length; i++)
@@ -127,8 +127,5 @@ namespace ExoParseV2
         }
     }
 
-    public abstract class BuiltInFunction : Function
-    {
-        // Mostly for the sake of it, for now
-    }
+    public abstract class BuiltInFunction : Function { }
 }
