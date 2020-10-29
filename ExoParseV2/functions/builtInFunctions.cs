@@ -318,6 +318,28 @@ namespace ExoParseV2.Functions
             return arg0_def;
         }
     }
+
+    public class RandRange_func : BuiltInFunction
+    {
+        public override string Name { get; } = "randomRange";
+        public override string[] Parameters { get; } = { "minValue", "maxValue" };
+        public Universe Universe { get; set; }
+        private static Random rand = new Random();
+        protected override IElement calc(IElement[] args)
+        {
+            double? minValue = args[0].Execute();
+            double? maxValue = args[1].Execute();
+            if (minValue != null && maxValue != null)
+            {
+                if (minValue > maxValue) { throw new ExecutionException("minValue cannot be greater than maxValue."); }
+                return ((rand.NextDouble() * (maxValue - minValue)) + minValue).ToElement();
+            }
+            else
+            {
+                return IElement.Null;
+            }
+        }
+    }
     #endregion
 
 }

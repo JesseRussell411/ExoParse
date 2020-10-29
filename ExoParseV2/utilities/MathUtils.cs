@@ -6,6 +6,7 @@ namespace ExoParseV2
 {
     public static class MathUtils
     {
+        private static Random rand = new Random();
         public static double? Div(double? a, double? b)
         {
             if (b == 0)
