@@ -50,10 +50,6 @@ namespace ExoParseV2
             }
 
             BigInteger n_BigInteger = n?.Int ?? 0;
-            //if (n_BigInteger > 170)
-            //{
-            //    return IntFloat.PositiveInfinity;
-            //}
 
             BigInteger fact = n_BigInteger;
             n_BigInteger--;
@@ -61,6 +57,7 @@ namespace ExoParseV2
             {
                 fact *= n_BigInteger;
             }
+
             return (IntFloat)fact;
         }
 

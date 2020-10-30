@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 using System.Text;
 using ExoParseV2.elements;
 
-namespace ExoParseV2.theUniverse.Commands
+namespace ExoParseV2.theUniverse.commands
 {
     public class Exit_cmd : Command
     {
@@ -163,6 +163,35 @@ namespace ExoParseV2.theUniverse.Commands
             return result.ToString();
         }
 
+    }
+    public class ListOps_cmd : Command
+    {
+        public override string Name { get; } = "listOps";
+        public override string Definition { get; } = "List all operators and modifiers";
+        protected override string exec(string args, Universe universe)
+        {
+            StringBuilder result = new StringBuilder();
+
+
+            foreach (var g in universe.SymbolizedIndex.ItemsFlat)
+            {
+                if (g is Operator)
+                {
+                    result.Append($"A{g}B\n");
+                }
+                else if (g is PreModifier)
+                {
+                    result.Append($"{g}A\n");
+                }
+                else if (g is PostModifier)
+                {
+                    result.Append($"A{g}\n");
+                }
+                
+            }
+
+            return result.ToString();
+        }
     }
     public class Def_cmd : Command
     {

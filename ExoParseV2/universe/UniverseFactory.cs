@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using ExoParseV2.Functions;
 using ExoParseV2.theUniverse;
-using ExoParseV2.theUniverse.Commands;
+using ExoParseV2.theUniverse.commands;
 using ExoParseV2.elements;
 using IntegerFloatingPoint;
 
@@ -46,11 +46,12 @@ namespace ExoParseV2
         private List<Command> CreateCommands()
         {
             var commands = new List<Command>();
-            commands.Add(new ListVars_cmd());
             commands.Add(new Help_cmd());
             commands.Add(new Exit_cmd());
             commands.Add(new Debug_cmd());
+            commands.Add(new ListVars_cmd());
             commands.Add(new ListFuncs_cmd());
+            commands.Add(new ListOps_cmd());
             commands.Add(new Def_cmd());
             commands.Add(new Redef_cmd());
             commands.Add(new Delete_cmd());

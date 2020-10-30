@@ -7,8 +7,8 @@ namespace ExoParseV2
 {
     public static class LogicUtils
     {
-        public static readonly IntFloat True_IntFloat = 1.0;
-        public static  readonly IntFloat False_IntFloat = 0.0;
+        public static readonly IntFloat True_IntFloat  = 1;
+        public static readonly IntFloat False_IntFloat = 0;
         public static IntFloat? Not(IntFloat? num)
         {
             return (!num.ToBool()).ToIntFloat();

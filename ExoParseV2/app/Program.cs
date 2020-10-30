@@ -4,7 +4,7 @@ using System.Linq;
 using ExoParseV2.Functions;
 using System.Diagnostics;
 using ExoParseV2.theUniverse;
-using ExoParseV2.theUniverse.Commands;
+using ExoParseV2.theUniverse.commands;
 using ExoParseV2.utilities;
 using ExoParseV2.universe;
 using System.Text;

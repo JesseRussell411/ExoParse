@@ -1,4 +1,4 @@
-﻿using ExoParseV2.theUniverse.Commands;
+﻿using ExoParseV2.theUniverse.commands;
 using System;
 using System.Collections.Generic;
 using ParsingTools;
