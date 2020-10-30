@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using ExoParseV2.elements;
+using IntegerFloatingPoint;
 
 namespace ExoParseV2
 {
@@ -28,14 +29,14 @@ namespace ExoParseV2
             if (a == IElement.Void || b == IElement.Void) { return IElement.Void; }
             return calc(a, b);
         }
-        public virtual double? Execute(IElement a, IElement b, Operation parent)
+        public virtual IntFloat? Execute(IElement a, IElement b, Operation parent)
         {
             if (a == IElement.Void || b == IElement.Void || parent == null) { return null; }
             return execute(a, b, parent);
         }
         protected virtual IElement pass(IElement a, IElement b, Operation parent) { return parent; }
         protected abstract IElement calc(IElement a, IElement b);
-        protected virtual double? execute(IElement a, IElement b, Operation parent) { return calc(a, b)?.Execute(); }
+        protected virtual IntFloat? execute(IElement a, IElement b, Operation parent) { return calc(a, b)?.Execute(); }
         #endregion
 
         public override string ToString()

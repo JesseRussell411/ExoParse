@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using IntegerFloatingPoint;
 
 namespace ExoParseV2.elements
 {
@@ -13,7 +14,7 @@ namespace ExoParseV2.elements
         public virtual IElement Pass() { return this; }
 
         public IElement Calc();
-        public double? Execute();
+        public IntFloat? Execute();
         public virtual IElement Pass(out bool dontExecute_flag)
         {
             dontExecute_flag = DontExecute_flag;

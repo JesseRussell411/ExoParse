@@ -6,23 +6,24 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Net.Security;
 using System.Text;
+using IntegerFloatingPoint;
 
 namespace ExoParseV2.elements
 {
     /// <summary>
-    /// The simplest element. Contains a read-only property for a double? value and nothing else.
+    /// The simplest element. Contains a read-only property for a IntFloat? value and nothing else.
     /// </summary>
     public struct Literal : IElement
     {
-        public Literal(double? value)
+        public Literal(IntFloat? value)
         {
             Value = value;
         }
-        public readonly double? Value;
+        public readonly IntFloat? Value;
 
         public IElement Pass() { return this; }
         public IElement Calc() { return this; }
-        public double? Execute() { return Value; }
+        public IntFloat? Execute() { return Value; }
 
         public bool DontExecute_flag { get { return false; } }
         public override string ToString()
@@ -62,7 +63,7 @@ namespace ExoParseV2.elements
 
             if (s == StringProps.NullLabel) { result = Literal.Default; return true; }//--(PASS)--
 
-            if (double.TryParse(s, out double d))
+            if (IntFloat.TryParse(s, out IntFloat d))
             {
                 result = new Literal(d);
                 return true;//--(PASS)--
@@ -84,7 +85,7 @@ namespace ExoParseV2.elements
             Definition = definition;
             Name = name;
         }
-        public Constant(string name, double? value)
+        public Constant(string name, IntFloat? value)
         {
             Definition = value.ToElement();
             Name = name;
@@ -95,7 +96,7 @@ namespace ExoParseV2.elements
 
         public IElement Pass() { return this; }
         public IElement Calc() { return Definition; }
-        public double? Execute() { return Definition?.Execute(); }
+        public IntFloat? Execute() { return Definition?.Execute(); }
 
         public override string ToString()
         {
@@ -110,7 +111,7 @@ namespace ExoParseV2.elements
     {
         public BuiltInConstant(string name, IElement definition)
             : base(name, definition) { }
-        public BuiltInConstant(string name, double? value)
+        public BuiltInConstant(string name, IntFloat? value)
             : base(name, value) { }
     }
 
@@ -125,7 +126,7 @@ namespace ExoParseV2.elements
 
         public IElement Pass() { return this; }
         public IElement Calc() { return this; }
-        public double? Execute() { return Definition?.Execute(); }
+        public IntFloat? Execute() { return Definition?.Execute(); }
 
         public bool DontExecute_flag { get; } = false;
         public override string ToString()
@@ -146,7 +147,7 @@ namespace ExoParseV2.elements
             A = a;
             B = b;
         }
-        public Operation(Operator op, double? a, double? b)
+        public Operation(Operator op, IntFloat? a, IntFloat? b)
             : this(op, a.ToElement(), b.ToElement()) { }
 
         public Operation(Operator op, long? a, long? b)
@@ -172,7 +173,7 @@ namespace ExoParseV2.elements
         {
             return Operator?.Calc(A?.Pass(), B?.Pass());
         }
-        public double? Execute()
+        public IntFloat? Execute()
         {
             return Operator?.Execute(A?.Pass(), B?.Pass(), this);
             //return Pass()?.Execute();
@@ -241,7 +242,7 @@ namespace ExoParseV2.elements
         {
             return Modifier?.Calc(Item?.Pass());
         }
-        public double? Execute()
+        public IntFloat? Execute()
         {
             return Modifier?.Execute(Item?.Pass(), this);
             //return Modifier?.Calc(Item?.Pass())?.Execute();
@@ -323,7 +324,7 @@ namespace ExoParseV2.elements
         {
             return func?.Calculate(Arguments);
         }
-        public double? Execute()
+        public IntFloat? Execute()
         {
             return func?.Calculate(Arguments)?.Execute();
         }
@@ -368,7 +369,7 @@ namespace ExoParseV2.elements
         {
             return Definition?.Calc();
         }
-        public double? Execute()
+        public IntFloat? Execute()
         {
             return Definition?.Execute();
         }

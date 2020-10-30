@@ -1,6 +1,6 @@
 ﻿ExoParse stands for ExpressionParser or math Expression Parser(the o makes it sound cooler, honestly though, I think I'll rename it in the future if it turns into something big, like that'll happen)
 
-It's a system for parsing mathematical expressions containing double precision floating point numbers (literals), variables, constants, and functions.
+It's a system for parsing mathematical expressions containing IntFloat precision floating point numbers (literals), variables, constants, and functions.
 
 literals: 5 4.5 2.334 0.3 9e-4
 

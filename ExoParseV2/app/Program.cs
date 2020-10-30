@@ -8,6 +8,7 @@ using ExoParseV2.theUniverse.Commands;
 using ExoParseV2.utilities;
 using ExoParseV2.universe;
 using System.Text;
+using IntegerFloatingPoint;
 
 namespace ExoParseV2
 {

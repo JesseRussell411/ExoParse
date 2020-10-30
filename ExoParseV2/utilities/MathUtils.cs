@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Numerics;
+using IntegerFloatingPoint;
 
 
 namespace ExoParseV2
@@ -7,7 +8,7 @@ namespace ExoParseV2
     public static class MathUtils
     {
         private static Random rand = new Random();
-        public static double? Div(double? a, double? b)
+        public static IntFloat? Div(IntFloat? a, IntFloat? b)
         {
             if (b == 0)
             {
@@ -16,39 +17,39 @@ namespace ExoParseV2
 
             return a / b;
         }
-        public static double? FloorDiv(double? a, double? b)
+        public static IntFloat? FloorDiv(IntFloat? a, IntFloat? b)
         {
             return Floor(Div(a, b));
         }
-        public static double? Log(double? d, double? newBase)
+        public static IntFloat? Log(IntFloat? d, IntFloat? newBase)
         {
             if (d == null || newBase == null) { return null; }
-            return Math.Log((double)d, (double)newBase);
+            return IntFloat.Log((IntFloat)d, (IntFloat)newBase);
         }
-        public static double? Log10(double? d)
+        public static IntFloat? Log10(IntFloat? d)
         {
             if (d == null) { return null; }
-            return Math.Log10((double)d);
+            return IntFloat.Log10((IntFloat)d);
         }
-        public static double? Ln(double? d)
+        public static IntFloat? Ln(IntFloat? d)
         {
             if (d == null) { return null; }
-            return Math.Log((double)d);
+            return IntFloat.Log((IntFloat)d, Math.E);
         }
-        public static double? Factorial(double? n)
+        public static IntFloat? Factorial(IntFloat? n)
         {
             if (n == null) { return null; }
-            if (n == 0.0)  { return 1.0;  }
+            if (n == 0.0) { return 1.0; }
 
             if (n < 0 || n % 1 != 0)
             {
                 throw new ExecutionException($"Factorial can only be performed on positive integers and 0.");
             }
 
-            BigInteger n_BigInteger = new BigInteger((double)n);
+            BigInteger n_BigInteger = n?.Int ?? 0;
             if (n_BigInteger > 170)
             {
-                return double.PositiveInfinity;
+                return IntFloat.PositiveInfinity;
             }
 
             BigInteger fact = n_BigInteger;
@@ -57,11 +58,11 @@ namespace ExoParseV2
             {
                 fact *= n_BigInteger;
             }
-            return (double)fact;
+            return (IntFloat)fact;
         }
 
         #region trigonometry
-        public static double? Sin(double? x)
+        public static IntFloat? Sin(IntFloat? x)
         {
             if (x == null)
             {
@@ -69,11 +70,11 @@ namespace ExoParseV2
             }
             else
             {
-                return Math.Sin((double)x);
+                return Math.Sin(x?.Float ?? 0);
             }
         }
 
-        public static double? Cos(double? x)
+        public static IntFloat? Cos(IntFloat? x)
         {
             if (x == null)
             {
@@ -81,10 +82,10 @@ namespace ExoParseV2
             }
             else
             {
-                return Math.Cos((double)x);
+                return Math.Cos(x?.Float ?? 0);
             }
         }
-        public static double? Tan(double? x)
+        public static IntFloat? Tan(IntFloat? x)
         {
             if (x == null)
             {
@@ -92,10 +93,10 @@ namespace ExoParseV2
             }
             else
             {
-                return Math.Tan((double)x);
+                return Math.Tan(x?.Float ?? 0);
             }
         }
-        public static double? Asin(double? x)
+        public static IntFloat? Asin(IntFloat? x)
         {
             if (x == null)
             {
@@ -103,23 +104,11 @@ namespace ExoParseV2
             }
             else
             {
-                return Math.Asin((double)x);
-            }
-        }
-
-        public static double? Acos(double? x)
-        {
-            if (x == null)
-            {
-                return null;
-            }
-            else
-            {
-                return Math.Acos((double)x);
+                return Math.Asin(x?.Float ?? 0);
             }
         }
 
-        public static double? Atan(double? x)
+        public static IntFloat? Acos(IntFloat? x)
         {
             if (x == null)
             {
@@ -127,21 +116,33 @@ namespace ExoParseV2
             }
             else
             {
-                return Math.Atan((double)x);
+                return Math.Acos(x?.Float ?? 0);
             }
         }
 
-        public static double? ToDegrees(double? radians)
+        public static IntFloat? Atan(IntFloat? x)
+        {
+            if (x == null)
+            {
+                return null;
+            }
+            else
+            {
+                return Math.Atan(x?.Float ?? 0);
+            }
+        }
+
+        public static IntFloat? ToDegrees(IntFloat? radians)
         {
             return radians * (180.0 / Math.PI);
         }
-        public static double? ToRadians(double? degrees)
+        public static IntFloat? ToRadians(IntFloat? degrees)
         {
             return degrees * (Math.PI / 180.0);
         }
         #endregion
 
-        public static double? Power(double? x, double? y)
+        public static IntFloat? Power(IntFloat? x, IntFloat? y)
         {
             if (x == null || y == null)
             {
@@ -149,10 +150,10 @@ namespace ExoParseV2
             }
             else
             {
-                return Math.Pow((double)x, (double)y);
+                return IntFloat.Pow((IntFloat)x, (IntFloat)y);
             }
         }
-        public static double? Floor(double? d)
+        public static IntFloat? Floor(IntFloat? d)
         {
             if (d == null)
             {
@@ -160,10 +161,10 @@ namespace ExoParseV2
             }
             else
             {
-                return Math.Floor((double)d);
+                return IntFloat.Floor((IntFloat)d);
             }
         }
-        public static double? Ceiling(double? d)
+        public static IntFloat? Ceiling(IntFloat? d)
         {
             if (d == null)
             {
@@ -171,10 +172,10 @@ namespace ExoParseV2
             }
             else
             {
-                return Math.Ceiling((double)d);
+                return IntFloat.Ceiling((IntFloat)d);
             }
         }
-        public static double? Abs(double? d)
+        public static IntFloat? Abs(IntFloat? d)
         {
             if (d == null)
             {
@@ -182,10 +183,10 @@ namespace ExoParseV2
             }
             else
             {
-                return Math.Abs((double)d);
+                return IntFloat.Abs((IntFloat)d);
             }
         }
-        public static double? Sign(double? d)
+        public static IntFloat? Sign(IntFloat? d)
         {
             if (d == null)
             {
@@ -193,11 +194,11 @@ namespace ExoParseV2
             }
             else
             {
-                return Math.Sign((double)d);
+                return IntFloat.Sign((IntFloat)d);
             }
         }
 
-        public static double? Min(double? a, double? b)
+        public static IntFloat? Min(IntFloat? a, IntFloat? b)
         {
             if (a == null || b == null)
             {
@@ -205,11 +206,11 @@ namespace ExoParseV2
             }
             else
             {
-                return Math.Min((double)a, (double)b);
+                return IntFloat.Min((IntFloat)a, (IntFloat)b);
             }
         }
 
-        public static double? Max(double? a, double? b)
+        public static IntFloat? Max(IntFloat? a, IntFloat? b)
         {
             if (a == null || b == null)
             {
@@ -217,11 +218,11 @@ namespace ExoParseV2
             }
             else
             {
-                return Math.Max((double)a, (double)b);
+                return IntFloat.Max((IntFloat)a, (IntFloat)b);
             }
         }
 
-        public static double? Round(double? d)
+        public static IntFloat? Round(IntFloat? d)
         {
             if (d == null)
             {
@@ -232,7 +233,7 @@ namespace ExoParseV2
                 return Math.Round((double)d);
             }
         }
-        public static double? Round(double? d, double? decimals)
+        public static IntFloat? Round(IntFloat? d, IntFloat? decimals)
         {
             if (d == null || decimals == null || decimals != Floor(decimals))
             {
@@ -240,9 +241,9 @@ namespace ExoParseV2
             }
             else
             {
-                if (decimals > 15) { decimals = 15; }
-                if (decimals < 0) { decimals = 0; }
-                return Math.Round((double)d, (int)decimals);
+                BigInteger decimals_bigInt = decimals?.Int ?? 0;
+                int decimals_int = decimals_bigInt > 15 ? 15 : decimals_bigInt < 0 ? 0 : (int)decimals_bigInt;
+                return Math.Round((double)d, decimals_int);
             }
         }
     }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using ParsingTools;
 using ExoParseV2.elements;
+using IntegerFloatingPoint;
 
 namespace ExoParseV2
 {
@@ -26,7 +27,7 @@ namespace ExoParseV2
         /// </summary>
         public (string name, int paramCount) Id { get { return (name: Name, paramCount: ParamCount); } }
 
-        public IElement Calculate(params double?[] args)
+        public IElement Calculate(params IntFloat?[] args)
         {
             return Calculate(args.Select(a => a.ToElement()).ToArray());
         }
@@ -115,7 +116,7 @@ namespace ExoParseV2
             }
             //
 
-            double? result = Behavior?.Execute();
+            IntFloat? result = Behavior?.Execute();
 
             // Return what the vars where.
             for(int i = 0; i < LocalVars.Length; i++)

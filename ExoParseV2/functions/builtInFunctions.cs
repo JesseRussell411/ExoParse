@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using ExoParseV2.elements;
 using ExoParseV2.theUniverse;
+using IntegerFloatingPoint;
 
 namespace ExoParseV2.Functions
 {
@@ -13,14 +14,14 @@ namespace ExoParseV2.Functions
         public override string[] Parameters { get; } = { "x" };
         protected override IElement calc(IElement[] args)
         {
-            double? arg_execute = args[0].Execute();
+            IntFloat? arg_execute = args[0].Execute();
             if (arg_execute == null)
             {
                 return ElementUtils.NullElement;
             }
             else
             {
-                return Math.Sin((double)arg_execute).ToElement();
+                return ((IntFloat)Math.Sin((double)arg_execute)).ToElement();
             }
         }
     }
@@ -31,7 +32,7 @@ namespace ExoParseV2.Functions
         public override string[] Parameters { get; } = { "x" };
         protected override IElement calc(IElement[] args)
         {
-            double? arg_execute = args[0].Execute();
+            IntFloat? arg_execute = args[0].Execute();
             if (arg_execute == null)
             {
                 return ElementUtils.NullElement;
@@ -49,7 +50,7 @@ namespace ExoParseV2.Functions
         public override string[] Parameters { get; } = { "x" };
         protected override IElement calc(IElement[] args)
         {
-            double? arg_execute = args[0].Execute();
+            IntFloat? arg_execute = args[0].Execute();
             if (arg_execute == null)
             {
                 return ElementUtils.NullElement;
@@ -67,7 +68,7 @@ namespace ExoParseV2.Functions
         public override string[] Parameters { get; } = { "x" };
         protected override IElement calc(IElement[] args)
         {
-            double? arg_execute = args[0].Execute();
+            IntFloat? arg_execute = args[0].Execute();
             if (arg_execute == null)
             {
                 return ElementUtils.NullElement;
@@ -85,7 +86,7 @@ namespace ExoParseV2.Functions
         public override string[] Parameters { get; } = { "x" };
         protected override IElement calc(IElement[] args)
         {
-            double? arg_execute = args[0].Execute();
+            IntFloat? arg_execute = args[0].Execute();
             if (arg_execute == null)
             {
                 return ElementUtils.NullElement;
@@ -103,7 +104,7 @@ namespace ExoParseV2.Functions
         public override string[] Parameters { get; } = { "x" };
         protected override IElement calc(IElement[] args)
         {
-            double? arg_execute = args[0].Execute();
+            IntFloat? arg_execute = args[0].Execute();
             if (arg_execute == null)
             {
                 return ElementUtils.NullElement;
@@ -193,7 +194,7 @@ namespace ExoParseV2.Functions
         public override string[] Parameters { get; } = { "x", "decimals" };
         protected override IElement calc(IElement[] args)
         {
-            double? args1_execute = args[1].Execute();
+            IntFloat? args1_execute = args[1].Execute();
             if (args1_execute != MathUtils.Floor(args1_execute))
             {
                 throw new MessageException($"Incorrect ussage of {this}. Decimals must be an integer");
@@ -344,27 +345,27 @@ namespace ExoParseV2.Functions
         }
     }
 
-    public class RandRange_func : BuiltInFunction
-    {
-        public override string Name { get; } = "randomRange";
-        public override string[] Parameters { get; } = { "minValue", "maxValue" };
-        public Universe Universe { get; set; }
-        private static Random rand = new Random();
-        protected override IElement calc(IElement[] args)
-        {
-            double? minValue = args[0].Execute();
-            double? maxValue = args[1].Execute();
-            if (minValue != null && maxValue != null)
-            {
-                if (minValue > maxValue) { throw new ExecutionException("minValue cannot be greater than maxValue."); }
-                return ((rand.NextDouble() * (maxValue - minValue)) + minValue).ToElement();
-            }
-            else
-            {
-                return IElement.Null;
-            }
-        }
-    }
+    //public class RandRange_func : BuiltInFunction
+    //{
+    //    public override string Name { get; } = "randomRange";
+    //    public override string[] Parameters { get; } = { "minValue", "maxValue" };
+    //    public Universe Universe { get; set; }
+    //    private static Random rand = new Random();
+    //    protected override IElement calc(IElement[] args)
+    //    {
+    //        IntFloat? minValue = args[0].Execute();
+    //        IntFloat? maxValue = args[1].Execute();
+    //        if (minValue != null && maxValue != null)
+    //        {
+    //            if (minValue > maxValue) { throw new ExecutionException("minValue cannot be greater than maxValue."); }
+    //            return ((rand.NextIntFloat() * (maxValue - minValue)) + minValue).ToElement();
+    //        }
+    //        else
+    //        {
+    //            return IElement.Null;
+    //        }
+    //    }
+    //}
     #endregion
 
 }

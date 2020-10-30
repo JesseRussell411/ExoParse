@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ExoParseV2.elements;
+using IntegerFloatingPoint;
 
 namespace ExoParseV2
 {
@@ -18,6 +19,14 @@ namespace ExoParseV2
             return new Literal(self);
         }
         public static IElement ToElement(this double self)
+        {
+            return new Literal(self);
+        }
+        public static IElement ToElement(this IntFloat? self)
+        {
+            return new Literal(self);
+        }
+        public static IElement ToElement(this IntFloat self)
         {
             return new Literal(self);
         }
@@ -45,12 +54,12 @@ namespace ExoParseV2
         public static IElement ToElement(this bool? self)
         {
             return new Literal(
-                self.ToDouble());
+                self.ToIntFloat());
         }
         public static IElement ToElement(this bool self)
         {
             return new Literal(
-                self.ToDouble());
+                self.ToIntFloat());
         }
         
         #endregion
@@ -108,7 +117,7 @@ namespace ExoParseV2
         {
             return self.ToString(si, null);
         }
-        public static string ElementExecuteToString(this double? self)
+        public static string ElementExecuteToString(this IntFloat? self)
         {
             return self.NullableToString(StringProps.NullLabel);
         }

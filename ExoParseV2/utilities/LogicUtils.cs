@@ -1,40 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using IntegerFloatingPoint;
 
 namespace ExoParseV2
 {
     public static class LogicUtils
     {
-        public static readonly double True_double = 1.0;
-        public static  readonly double False_double = 0.0;
-        public static double? Not(double? num)
+        public static readonly IntFloat True_IntFloat = 1.0;
+        public static  readonly IntFloat False_IntFloat = 0.0;
+        public static IntFloat? Not(IntFloat? num)
         {
-            return (!num.ToBool()).ToDouble();
+            return (!num.ToBool()).ToIntFloat();
         }
-        public static double? And(double? a, double? b)
+        public static IntFloat? And(IntFloat? a, IntFloat? b)
         {
-            return (a.ToBool() & b.ToBool()).ToDouble();
+            return (a.ToBool() & b.ToBool()).ToIntFloat();
         }
-        public static double? Or(double? a, double? b)
+        public static IntFloat? Or(IntFloat? a, IntFloat? b)
         {
-            return (a.ToBool() | b.ToBool()).ToDouble();
+            return (a.ToBool() | b.ToBool()).ToIntFloat();
         }
-        public static double? Xor(double? a, double? b)
+        public static IntFloat? Xor(IntFloat? a, IntFloat? b)
         {
-            return (a.ToBool() ^ b.ToBool()).ToDouble();
+            return (a.ToBool() ^ b.ToBool()).ToIntFloat();
         }
-        public static double? Buffer(double? num)
+        public static IntFloat? Buffer(IntFloat? num)
         {
-            return num.ToBool().ToDouble();
+            return num.ToBool().ToIntFloat();
         }
-        public static bool? ToBool(this double? self)
+        public static bool? ToBool(this IntFloat? self)
         {
-            if (self == True_double)
+            if (self == True_IntFloat)
             {
                 return true;
             }
-            else if (self == False_double)
+            else if (self == False_IntFloat)
             {
                 return false;
             }
@@ -43,28 +44,28 @@ namespace ExoParseV2
                 return null;
             }
         }
-        public static bool? ToBool(this double self)
+        public static bool? ToBool(this IntFloat self)
         {
-            return ((double?)self).ToBool();
+            return ((IntFloat?)self).ToBool();
         }
-        public static double? ToDouble(this bool? self)
+        public static IntFloat? ToIntFloat(this bool? self)
         {
             if (self == true)
             {
-                return True_double;
+                return True_IntFloat;
             }
             else if (self == false)
             {
-                return False_double;
+                return False_IntFloat;
             }
             else
             {
                 return null;
             }
         }
-        public static double ToDouble(this bool self)
+        public static IntFloat ToIntFloat(this bool self)
         {
-            return (double)((bool?)self).ToDouble();
+            return (IntFloat)((bool?)self).ToIntFloat();
         }
     }
 }

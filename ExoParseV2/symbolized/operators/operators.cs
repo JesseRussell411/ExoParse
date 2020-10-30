@@ -3,6 +3,7 @@ using ExoParseV2.elements;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using IntegerFloatingPoint;
 
 namespace ExoParseV2
 {
@@ -307,7 +308,7 @@ namespace ExoParseV2
         {
             return a.TrySetDefinition(b);
         }
-        protected override double? execute(IElement a, IElement b, Operation parent)
+        protected override IntFloat? execute(IElement a, IElement b, Operation parent)
         {
             calc(a, b);
             return null;
@@ -337,7 +338,7 @@ namespace ExoParseV2
         public override string Symbol { get; } = "??";
         protected override IElement calc(IElement a, IElement b)
         {
-            double? a_Execute = a.Execute();
+            IntFloat? a_Execute = a.Execute();
             if (a_Execute == null)
             {
                 return b;
@@ -361,12 +362,12 @@ namespace ExoParseV2
         {
             if (b is TernaryMessenger tm)
             {
-                double? a_Execute = a.Execute();
-                if (a_Execute == LogicUtils.True_double)
+                IntFloat? a_Execute = a.Execute();
+                if (a_Execute == LogicUtils.True_IntFloat)
                 {
                     return tm.A;
                 }
-                else if (a_Execute == LogicUtils.False_double)
+                else if (a_Execute == LogicUtils.False_IntFloat)
                 {
                     return tm.B;
                 }
@@ -377,8 +378,8 @@ namespace ExoParseV2
             }
             else
             {
-                double? a_Execute = a.Execute();
-                if (a_Execute == LogicUtils.True_double)
+                IntFloat? a_Execute = a.Execute();
+                if (a_Execute == LogicUtils.True_IntFloat)
                 {
                     return b;
                 }

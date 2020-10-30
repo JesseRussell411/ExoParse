@@ -66,8 +66,8 @@ namespace ExoParseV2
 
             constants.Add(new BuiltInConstant("pi", Math.PI));
             constants.Add(new BuiltInConstant("e", Math.E));
-            constants.Add(new BuiltInConstant("true", LogicUtils.True_double));
-            constants.Add(new BuiltInConstant("false", LogicUtils.False_double));
+            constants.Add(new BuiltInConstant("true", LogicUtils.True_IntFloat));
+            constants.Add(new BuiltInConstant("false", LogicUtils.False_IntFloat));
             constants.Add(new BuiltInConstant(StringProps.NullLabel, ElementUtils.NullElement));
             constants.Add(new BuiltInConstant(StringProps.VoidLabel, ElementUtils.VoidElement));
             constants.Add(new BuiltInConstant("theMeaningOfLife", new Literal(42)));
@@ -135,7 +135,7 @@ namespace ExoParseV2
             funcs.Add(new While_func());
             funcs.Add(new DoWhile_func());
             funcs.Add(new For_func());
-            funcs.Add(new RandRange_func());
+            //funcs.Add(new RandRange_func());
             funcs.Add(new Print_func() { Universe = universe});
             funcs.Add(new Exit_func());
             funcs.Add(new ExitWithCode_func());

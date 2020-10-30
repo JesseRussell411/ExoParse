@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
 using ExoParseV2.elements;
+using IntegerFloatingPoint;
 
 namespace ExoParseV2
 {
@@ -58,7 +59,7 @@ namespace ExoParseV2
         {
             return item.Definition;
         }
-        protected override double? execute(IElement item, Modification parent)
+        protected override IntFloat? execute(IElement item, Modification parent)
         {
             return null;
         }
@@ -70,7 +71,7 @@ namespace ExoParseV2
         {
             if (item is IRedefinable)
             {
-                double? item_Execute = item.Execute();
+                IntFloat? item_Execute = item.Execute();
                 ((IRedefinable)item).Definition = (item_Execute + 1).ToElement();
                 return item_Execute.ToElement();
             }
@@ -103,7 +104,7 @@ namespace ExoParseV2
         {
             if (item is IRedefinable)
             {
-                double? item_Execute = item.Execute();
+                IntFloat? item_Execute = item.Execute();
                 ((IRedefinable)item).Definition = (item_Execute - 1).ToElement();
                 return item_Execute.ToElement();
             }
