@@ -275,36 +275,44 @@ namespace ExoParseV2.theUniverse
                     return $"{StringProps.VoidLabel}\n";
                 }
                 //
-
-                // Pass the expression but don't execute it yet.
-                IElement p = e.Pass(out bool dontExecute);
-                IntFloat? ex = null;
-
-
-                // Start building result string;
-                StringBuilder result = new StringBuilder();
-
-                // Append the parsed expression to show the user what was interpreted by the parser.
-                result.Append($"{e.ToString(SymbolizedIndex)}\n");
-
-                // Append the expression after it has been ran.
-                result.Append($"{p.ToString(SymbolizedIndex)}\n");
-
-                // Execute the expression unless the don't-execute flag was true.
-                if (!dontExecute)
+                try
                 {
-                    // Execute
-                    ex = p?.Execute();
 
-                    // Append the value from the execution
-                    result.Append($"\t{ex.ElementExecuteToString()}\n");
 
-                    // Set the previous answer variable to the new previous answer.
-                    PreviousAnswer = ex;
+                    // Pass the expression but don't execute it yet.
+                    IElement p = e.Pass(out bool dontExecute);
+                    IntFloat? ex = null;
+
+
+                    // Start building result string;
+                    StringBuilder result = new StringBuilder();
+
+                    // Append the parsed expression to show the user what was interpreted by the parser.
+                    result.Append($"{e.ToString(SymbolizedIndex)}\n");
+
+                    // Append the expression after it has been ran.
+                    result.Append($"{p.ToString(SymbolizedIndex)}\n");
+
+                    // Execute the expression unless the don't-execute flag was true.
+                    if (!dontExecute)
+                    {
+                        // Execute
+                        ex = p?.Execute();
+
+                        // Append the value from the execution
+                        result.Append($"\t{ex.ElementExecuteToString()}\n");
+
+                        // Set the previous answer variable to the new previous answer.
+                        PreviousAnswer = ex;
+                    }
+
+                    // Return the result string.
+                    return result.ToString();
                 }
-
-                // Return the result string.
-                return result.ToString();
+                catch (OverflowException ofe)
+                {
+                    throw new ExecutionException(ofe.Message);
+                }
             }
         }
         #endregion

@@ -44,16 +44,16 @@ namespace ExoParseV2
             if (n == null) { return null; }
             if (n == 0.0) { return 1.0; }
 
-            if (n < 0 || n % 1 != 0)
+            if (n < 0 || n != IntFloat.Floor((IntFloat)n))
             {
                 throw new ExecutionException($"Factorial can only be performed on positive integers and 0.");
             }
 
             BigInteger n_BigInteger = n?.Int ?? 0;
-            if (n_BigInteger > 170)
-            {
-                return IntFloat.PositiveInfinity;
-            }
+            //if (n_BigInteger > 170)
+            //{
+            //    return IntFloat.PositiveInfinity;
+            //}
 
             BigInteger fact = n_BigInteger;
             n_BigInteger--;

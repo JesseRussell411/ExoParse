@@ -205,7 +205,24 @@ namespace IntegerFloatingPoint
         #region Interface compliance
         public bool Equals(IntFloat other)
         {
-            return CompareTo(other) == 0;
+            try
+            {
+                if (!floatNotInt)
+                {
+                    return integer == other.Int;
+                }
+
+                if (!other.floatNotInt)
+                {
+                    return Int == other.integer;
+                }
+            }
+            catch (OverflowException e)
+            {
+                return false;
+            }
+
+            return floating == other.floating;
         }
 
         public int CompareTo(IntFloat other)
@@ -410,11 +427,11 @@ namespace IntegerFloatingPoint
         public static IntFloat operator --(IntFloat self) => self.Decrement();
 
         public static bool operator >(IntFloat self, IntFloat other) => self.CompareTo(other) > 0;
-        public static bool operator >=(IntFloat self, IntFloat other) => self.CompareTo(other) >= 0;
+        public static bool operator >=(IntFloat self, IntFloat other) => self > other || self == other;
         public static bool operator <(IntFloat self, IntFloat other) => self.CompareTo(other) < 0;
-        public static bool operator <=(IntFloat self, IntFloat other) => self.CompareTo(other) <= 0;
-        public static bool operator ==(IntFloat self, IntFloat other) => self.CompareTo(other) == 0;
-        public static bool operator !=(IntFloat self, IntFloat other) => self.CompareTo(other) != 0;
+        public static bool operator <=(IntFloat self, IntFloat other) => self < other || self == other;
+        public static bool operator ==(IntFloat self, IntFloat other) => self.Equals(other);
+        public static bool operator !=(IntFloat self, IntFloat other) => !self.Equals(other);
         #endregion
 
         #endregion
