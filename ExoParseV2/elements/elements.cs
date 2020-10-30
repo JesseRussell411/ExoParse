@@ -75,6 +75,7 @@ namespace ExoParseV2.elements
             }
         }
 
+        public static implicit operator Literal(IntFloat value) => new Literal(value);
         #endregion
     }
 
