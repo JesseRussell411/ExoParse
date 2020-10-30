@@ -319,6 +319,31 @@ namespace ExoParseV2.Functions
         }
     }
 
+    public class Exit_func : BuiltInFunction
+    {
+        public override string Name { get; } = "exit";
+        public override string[] Parameters { get; } = { };
+        public Universe Universe { get; set; }
+        protected override IElement calc(IElement[] args)
+        {
+            Environment.Exit(0);
+            return IElement.Void;
+        }
+    }
+
+    public class ExitWithCode_func : BuiltInFunction
+    {
+        public override string Name { get; } = "exit";
+        public override string[] Parameters { get; } = { "exitCode" };
+        public Universe Universe { get; set; }
+        protected override IElement calc(IElement[] args)
+        {
+            int? exitCode = (int?)args[0].Execute();
+            Environment.Exit(exitCode ?? 0);
+            return IElement.Void;
+        }
+    }
+
     public class RandRange_func : BuiltInFunction
     {
         public override string Name { get; } = "randomRange";
