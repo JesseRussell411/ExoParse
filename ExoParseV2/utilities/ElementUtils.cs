@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using ExoParseV2.elements;
 using IntegerFloatingPoint;
+using System.Numerics;
 
 namespace ExoParseV2
 {
@@ -19,6 +20,14 @@ namespace ExoParseV2
             return new Literal(self);
         }
         public static IElement ToElement(this double self)
+        {
+            return new Literal(self);
+        }
+        public static IElement ToElement(this BigInteger? self)
+        {
+            return new Literal(self);
+        }
+        public static IElement ToElement(this BigInteger self)
         {
             return new Literal(self);
         }

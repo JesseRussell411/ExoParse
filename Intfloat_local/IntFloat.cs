@@ -82,11 +82,11 @@ namespace IntegerFloatingPoint
         {
             if (floatNotInt || other.floatNotInt)
             {
-                return new IntFloat(Float + other.Float);
+                return Float + other.Float;
             }
             else
             {
-                return new IntFloat(integer + other.integer);
+                return integer + other.integer;
             }
         }
 
@@ -94,11 +94,11 @@ namespace IntegerFloatingPoint
         {
             if (floatNotInt || other.floatNotInt)
             {
-                return new IntFloat(Float - other.Float);
+                return Float - other.Float;
             }
             else
             {
-                return new IntFloat(integer - other.integer);
+                return integer - other.integer;
             }
         }
 
@@ -106,11 +106,11 @@ namespace IntegerFloatingPoint
         {
             if (floatNotInt || other.floatNotInt)
             {
-                return new IntFloat(Float * other.Float);
+                return Float * other.Float;
             }
             else
             {
-                return new IntFloat(integer * other.integer);
+                return integer * other.integer;
             }
         }
 
@@ -118,18 +118,29 @@ namespace IntegerFloatingPoint
         {
             if (floatNotInt || other.floatNotInt)
             {
-                return new IntFloat(Float / other.Float);
+                return Float / other.Float;
             }
             else
             {
                 if (integer % other.integer == 0)
                 {
-                    return new IntFloat(integer / other.integer);
+                    return integer / other.integer;
                 }
                 else
                 {
-                    return new IntFloat(Float / other.Float);
+                    return Float / other.Float;
                 }
+            }
+        }
+        public IntFloat FloorDivide(IntFloat other)
+        {
+            if (floatNotInt || other.floatNotInt)
+            {
+                return (BigInteger)Math.Floor(Float / other.Float);
+            }
+            else
+            {
+                return BigInteger.Divide(this.integer, other.integer);
             }
         }
 
@@ -201,31 +212,31 @@ namespace IntegerFloatingPoint
         {
             if (floatNotInt)
             {
-                if (other.floatNotInt)
-                {
-                    return floating.CompareTo(other.floating);
-                }
-                else
-                {
-                    return floating.CompareTo(other.integer);
-                }
+                return floating.CompareTo(other.Float);
             }
             else
             {
-                if (other.floatNotInt)
-                {
-                    return integer.CompareTo(other.floating);
-                }
-                else
-                {
-                    return integer.CompareTo(other.integer);
-                }
+                return integer.CompareTo(other.Int);
             }
         }
 
         public int CompareTo(object obj)
         {
-            return floatNotInt ? floating.CompareTo(obj) : integer.CompareTo(obj);
+            if (obj is IntFloat inf) { return CompareTo(inf); }
+
+            if (obj is double d) { return Float.CompareTo(d); }
+            if (obj is BigInteger big) { return Int.CompareTo(big); }
+
+            if (obj is decimal dec) { return Float.CompareTo(dec); }
+            if (obj is float f) { return Float.CompareTo(f); }
+
+            if (obj is ulong ul) { return Int.CompareTo(ul); }
+            if (obj is long l) { return Int.CompareTo(l); }
+            if (obj is uint ui) { return Int.CompareTo(ui); }
+            if (obj is int i) { return Int.CompareTo(i); }
+            if (obj is Int16 i16) { return Int.CompareTo(i16); }
+
+            throw new ArgumentException("The parameter must be a floating point number or integer. (Parameter 'obj')");
         }
         #endregion
         #endregion

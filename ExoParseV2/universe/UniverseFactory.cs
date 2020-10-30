@@ -135,7 +135,11 @@ namespace ExoParseV2
             funcs.Add(new While_func());
             funcs.Add(new DoWhile_func());
             funcs.Add(new For_func());
-            //funcs.Add(new RandRange_func());
+            funcs.Add(new RandomRange_float_func());
+            funcs.Add(new ToFloat_func());
+            funcs.Add(new ToInt_func());
+            funcs.Add(new IsFloat_func());
+            funcs.Add(new IsInt_func());
             funcs.Add(new Print_func() { Universe = universe});
             funcs.Add(new Exit_func());
             funcs.Add(new ExitWithCode_func());

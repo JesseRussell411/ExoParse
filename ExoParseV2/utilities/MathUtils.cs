@@ -19,7 +19,10 @@ namespace ExoParseV2
         }
         public static IntFloat? FloorDiv(IntFloat? a, IntFloat? b)
         {
-            return Floor(Div(a, b));
+            //return Floor(Div(a, b));
+            if (a == null || b == null) { return null; }
+
+            return ((IntFloat)a).FloorDivide((IntFloat)b);
         }
         public static IntFloat? Log(IntFloat? d, IntFloat? newBase)
         {
@@ -230,7 +233,7 @@ namespace ExoParseV2
             }
             else
             {
-                return Math.Round((double)d);
+                return (BigInteger)Math.Round((double)d);
             }
         }
         public static IntFloat? Round(IntFloat? d, IntFloat? decimals)

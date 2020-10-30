@@ -203,6 +203,7 @@ namespace ExoParseV2.Functions
         }
     }
     #endregion
+
     #region misc
     public class Min_func : BuiltInFunction
     {
@@ -345,27 +346,66 @@ namespace ExoParseV2.Functions
         }
     }
 
-    //public class RandRange_func : BuiltInFunction
-    //{
-    //    public override string Name { get; } = "randomRange";
-    //    public override string[] Parameters { get; } = { "minValue", "maxValue" };
-    //    public Universe Universe { get; set; }
-    //    private static Random rand = new Random();
-    //    protected override IElement calc(IElement[] args)
-    //    {
-    //        IntFloat? minValue = args[0].Execute();
-    //        IntFloat? maxValue = args[1].Execute();
-    //        if (minValue != null && maxValue != null)
-    //        {
-    //            if (minValue > maxValue) { throw new ExecutionException("minValue cannot be greater than maxValue."); }
-    //            return ((rand.NextIntFloat() * (maxValue - minValue)) + minValue).ToElement();
-    //        }
-    //        else
-    //        {
-    //            return IElement.Null;
-    //        }
-    //    }
-    //}
+    public class RandomRange_float_func : BuiltInFunction
+    {
+        public override string Name { get; } = "randomRange_float";
+        public override string[] Parameters { get; } = { "minValue", "maxValue" };
+        public Universe Universe { get; set; }
+        private static Random rand = new Random();
+        protected override IElement calc(IElement[] args)
+        {
+            double? minValue = args[0].Execute()?.Float;
+            double? maxValue = args[1].Execute()?.Float;
+            if (minValue != null && maxValue != null)
+            {
+                if (minValue > maxValue) { throw new ExecutionException("minValue cannot be greater than maxValue."); }
+                return ((rand.NextDouble() * (maxValue - minValue)) + minValue).ToElement();
+            }
+            else
+            {
+                return IElement.Null;
+            }
+        }
+    }
+    #endregion
+
+    #region IntFloat
+    public class ToFloat_func : BuiltInFunction
+    {
+        public override string Name { get; } = "float";
+        public override string[] Parameters { get; } = { "value" };
+        protected override IElement calc(IElement[] args)
+        {
+            return args[0].Execute()?.Float.ToElement();
+        }
+    }
+    public class ToInt_func : BuiltInFunction
+    {
+        public override string Name { get; } = "int";
+        public override string[] Parameters { get; } = { "value" };
+        protected override IElement calc(IElement[] args)
+        {
+            return args[0].Execute()?.Int.ToElement();
+        }
+    }
+    public class IsFloat_func : BuiltInFunction
+    {
+        public override string Name { get; } = "isFloat";
+        public override string[] Parameters { get; } = { "value" };
+        protected override IElement calc(IElement[] args)
+        {
+            return args[0].Execute()?.IsFloat.ToElement();
+        }
+    }
+    public class IsInt_func : BuiltInFunction
+    {
+        public override string Name { get; } = "isInt";
+        public override string[] Parameters { get; } = { "value" };
+        protected override IElement calc(IElement[] args)
+        {
+            return args[0].Execute()?.IsInt.ToElement();
+        }
+    }
     #endregion
 
 }
