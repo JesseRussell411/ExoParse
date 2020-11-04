@@ -13,6 +13,7 @@ namespace ExoParseV2
             if (b == 0)
             {
                 throw new ExecutionException("Divide by zero error.");
+
             }
 
             return a / b;
