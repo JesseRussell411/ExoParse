@@ -321,6 +321,18 @@ namespace ExoParseV2.Functions
         }
     }
 
+    public class PrintLine_func : BuiltInFunction
+    {
+        public override string Name { get; } = "print";
+        public override string[] Parameters { get; } = { };
+        public Universe Universe { get; set; }
+        protected override IElement calc(IElement[] args)
+        {
+            Universe.PrintFunction("\n");
+            return IElement.Void;
+        }
+    }
+
     public class Exit_func : BuiltInFunction
     {
         public override string Name { get; } = "exit";

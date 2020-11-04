@@ -144,6 +144,7 @@ namespace ExoParseV2
             funcs.Add(new IsFloat_func());
             funcs.Add(new IsInt_func());
             funcs.Add(new Print_func() { Universe = universe});
+            funcs.Add(new PrintLine_func() { Universe = universe});
             funcs.Add(new Exit_func());
             funcs.Add(new ExitWithCode_func());
             return funcs;
