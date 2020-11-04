@@ -13,13 +13,20 @@ namespace MathTypes
 
             Console.WriteLine(i);
             Console.WriteLine(f);
-            Console.WriteLine(i.Add(9));
-            Console.WriteLine(i.Add(2.5));
+            Console.WriteLine(i + 9);
+            Console.WriteLine(i + 2.5);
             Console.WriteLine(i);
 
             Console.WriteLine(i - ulong.MaxValue);
             Console.WriteLine(8 * 2.5);
-            Console.WriteLine(new IntFloat(2).Raise(-2));
+            Console.WriteLine(IntFloat.Pow(2,-2));
+
+            Console.WriteLine(Fraction.Parse("-1/5") > Fraction.Parse("-1/5"));
+            Console.WriteLine((uBigInteger)(-5));
+
+            BigInteger big = -40;
+            uBigInteger ubig = (uBigInteger)big;
+            Console.WriteLine(ubig);
         }
     }
 }

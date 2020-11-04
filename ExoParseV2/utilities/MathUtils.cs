@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Numerics;
-using IntegerFloatingPoint;
+using MathTypes;
 
 
 namespace ExoParseV2
@@ -22,7 +22,7 @@ namespace ExoParseV2
             //return Floor(Div(a, b));
             if (a == null || b == null) { return null; }
 
-            return ((IntFloat)a).FloorDivide((IntFloat)b);
+            return IntFloat.FloorDivide((IntFloat) a, (IntFloat)b);
         }
         public static IntFloat? Log(IntFloat? d, IntFloat? newBase)
         {

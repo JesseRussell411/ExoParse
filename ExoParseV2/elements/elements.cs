@@ -6,7 +6,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Net.Security;
 using System.Text;
-using IntegerFloatingPoint;
+using MathTypes;
 
 namespace ExoParseV2.elements
 {

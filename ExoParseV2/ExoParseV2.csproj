@@ -7,7 +7,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\convenienceTools_local\convenienceTools_local.csproj" />
-    <ProjectReference Include="..\Intfloat_local\Intfloat_local.csproj" />
+    <ProjectReference Include="..\MathTypes_local\MathTypes_local.csproj" />
     <ProjectReference Include="..\parsingTools_local\parsingTools_local.csproj" />
   </ItemGroup>
 

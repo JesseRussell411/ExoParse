@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using ExoParseV2.elements;
-using IntegerFloatingPoint;
+using MathTypes;
 
 namespace ExoParseV2
 {

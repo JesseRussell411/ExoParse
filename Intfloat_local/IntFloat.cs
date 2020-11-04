@@ -5,7 +5,7 @@ using System.Numerics;
 using System.Reflection;
 using System.Text;
 
-namespace IntegerFloatingPoint
+namespace MathTypes
 {
     /// <summary>
     /// Combination BigInteger and double (like in python). Automatically chooses best way of storing value based on context.

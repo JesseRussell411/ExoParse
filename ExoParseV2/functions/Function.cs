@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using ParsingTools;
 using ExoParseV2.elements;
-using IntegerFloatingPoint;
+using MathTypes;
 
 namespace ExoParseV2
 {

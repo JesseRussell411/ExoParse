@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using ExoParseV2.elements;
 using ExoParseV2.theUniverse;
-using IntegerFloatingPoint;
+using MathTypes;
 
 namespace ExoParseV2.Functions
 {

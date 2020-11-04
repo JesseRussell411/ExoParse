@@ -5,7 +5,7 @@ using ExoParseV2.Functions;
 using ExoParseV2.theUniverse;
 using ExoParseV2.theUniverse.commands;
 using ExoParseV2.elements;
-using IntegerFloatingPoint;
+using MathTypes;
 
 namespace ExoParseV2
 {
@@ -107,7 +107,7 @@ namespace ExoParseV2
                     new ISymbolized[] {new Increment_post_mod(), new Decrement_post_mod()},
                     new ISymbolized[] {new Increment_pre_mod(), new Decrement_pre_mod()},
                     new ISymbolized[] {new Factorial_mod() },
-                    new ISymbolized[] {new Dereference_mod(), new GetValue_mod()},
+                    new ISymbolized[] {new Dereference_mod(), new ForceExecute_mod(), new ForceCalc_mod(), new ForcePass_mod() },
                 }
                 );
 

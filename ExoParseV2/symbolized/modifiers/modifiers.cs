@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
 using ExoParseV2.elements;
-using IntegerFloatingPoint;
+using MathTypes;
 
 namespace ExoParseV2
 {
@@ -30,19 +30,6 @@ namespace ExoParseV2
         {
             return LogicUtils.Not(item.Execute()).ToElement();
         }
-    }
-    public class GetValue_mod : PreModifier
-    {
-        public override string Symbol { get { return "$"; } }
-        protected override IElement calc(IElement item)
-        {
-            return item.Execute().ToElement();
-        }
-        protected override IElement pass(IElement item, Modification parent)
-        {
-            return calc(item);
-        }
-
     }
     public class Dereference_mod : PreModifier
     {
@@ -157,6 +144,43 @@ namespace ExoParseV2
         public override string ToString()
         {
             return $"{Symbol} ";
+        }
+    }
+    public class ForceExecute_mod : PreModifier
+    {
+        public override string Symbol { get { return "$"; } }
+        protected override IElement calc(IElement item)
+        {
+            return item.Execute().ToElement();
+        }
+        protected override IElement pass(IElement item, Modification parent)
+        {
+            return calc(item);
+        }
+
+    }
+    public class ForceCalc_mod : PreModifier
+    {
+        public override string Symbol { get { return "$$"; } }
+        protected override IElement calc(IElement item)
+        {
+            return item.Calc();
+        }
+        protected override IElement pass(IElement item, Modification parent)
+        {
+            return calc(item);
+        }
+    }
+    public class ForcePass_mod : PreModifier
+    {
+        public override string Symbol { get { return "$$$"; } }
+        protected override IElement calc(IElement item)
+        {
+            return item.Pass();
+        }
+        protected override IElement pass(IElement item, Modification parent)
+        {
+            return calc(item);
         }
     }
 }
