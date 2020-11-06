@@ -73,7 +73,7 @@ namespace ExoParseV2
             constants.Add(new BuiltInConstant(StringProps.NullLabel, ElementUtils.NullElement));
             constants.Add(new BuiltInConstant(StringProps.VoidLabel, ElementUtils.VoidElement));
             //constants.Add(new BuiltInConstant("theMeaningOfLife", new Literal(42)));
-            constants.Add(new BuiltInConstant("infinity", IntFloat.PositiveInfinity));
+            constants.Add(new BuiltInConstant("inf", IntFloat.PositiveInfinity));
 
             return constants;
         }
