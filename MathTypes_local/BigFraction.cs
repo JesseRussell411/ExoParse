@@ -11,13 +11,13 @@ using System.Data.SqlTypes;
 namespace MathTypes
 {
     /// <summary>
-    /// Represents a fraction.
+    /// Represents a fraction of arbitrary size and precision.
     /// </summary>
     /// 
     /// <Author>
     /// Jesse Russell
     /// </Author>
-    public struct Fraction
+    public struct BigFraction
     {
         #region public Properties
         /// <summary>
@@ -35,7 +35,7 @@ namespace MathTypes
         #endregion
 
         #region public Constructors
-        public Fraction(uBigInteger? numerator = null, uBigInteger? denominator = null, bool isNegative = isNegative_default)
+        public BigFraction(uBigInteger? numerator = null, uBigInteger? denominator = null, bool isNegative = isNegative_default)
         {
             Numerator = numerator ?? numerator_default;
             Denominator = denominator ?? denominator_default;
@@ -44,9 +44,9 @@ namespace MathTypes
         #endregion
 
         #region public Methods
-        public int CompareTo(Fraction other)
+        public int CompareTo(BigFraction other)
         {
-            Fraction a = EqualizeDenominators(other, out Fraction b);
+            BigFraction a = EqualizeDenominators(other, out BigFraction b);
 
             if (a.IsNegative ^ b.IsNegative)
             {
@@ -64,21 +64,21 @@ namespace MathTypes
                 return a.Numerator.CompareTo(b.Numerator) * (a.IsNegative ? -1 : 1);
             }
         }
-        public Fraction Clone(uBigInteger? numerator_new = null, uBigInteger? denominator_new = null, bool? isNegative_new = null)
-            => new Fraction(numerator_new ?? Numerator, denominator_new ?? Denominator, isNegative_new ?? IsNegative);
+        public BigFraction Clone(uBigInteger? numerator_new = null, uBigInteger? denominator_new = null, bool? isNegative_new = null)
+            => new BigFraction(numerator_new ?? Numerator, denominator_new ?? Denominator, isNegative_new ?? IsNegative);
         #region Math
         /// <summary>
         /// Efficiently multiplies the calling fraction by -1;
         /// </summary>
         /// <returns></returns>
-        public Fraction Neg() => new Fraction(Numerator, Denominator, !IsNegative);
+        public BigFraction Neg() => new BigFraction(Numerator, Denominator, !IsNegative);
 
         /// <summary>
         /// Adds other to the calling function.
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public Fraction Add(Fraction other)
+        public BigFraction Add(BigFraction other)
         {
             uBigInteger numerator = Numerator;
             uBigInteger denominator = Denominator;
@@ -120,7 +120,7 @@ namespace MathTypes
                 isNegative ^= other.IsNegative;
             }
 
-            return new Fraction(numerator, denominator, isNegative);
+            return new BigFraction(numerator, denominator, isNegative);
         }
 
         /// <summary>
@@ -128,16 +128,16 @@ namespace MathTypes
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public Fraction Subtract(Fraction other) => Add(other.Neg());
+        public BigFraction Subtract(BigFraction other) => Add(other.Neg());
 
         /// <summary>
         /// Multiplies the calling fraction by other.
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public Fraction Multiply(Fraction other)
+        public BigFraction Multiply(BigFraction other)
         {
-            return new Fraction(
+            return new BigFraction(
                 Numerator * other.Numerator,
                 Denominator * other.Denominator,
                 IsNegative ^ other.IsNegative);
@@ -148,13 +148,13 @@ namespace MathTypes
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public Fraction Divide(Fraction other) => Multiply(other.Reciprocate());
+        public BigFraction Divide(BigFraction other) => Multiply(other.Reciprocate());
 
         /// <summary>
         /// Replaces the calling fraction with its reciprocal.
         /// </summary>
         /// <returns></returns>
-        public Fraction Reciprocate() => new Fraction(Denominator, Numerator, IsNegative);
+        public BigFraction Reciprocate() => new BigFraction(Denominator, Numerator, IsNegative);
 
         /// <summary>
         /// Raises the calling fraction to p.
@@ -166,7 +166,7 @@ namespace MathTypes
         /// </summary>
         /// <param name="p"></param>
         /// <returns></returns>
-        public Fraction Power(BigInteger p)
+        public BigFraction Power(BigInteger p)
         {
             uBigInteger numerator = Numerator;
             uBigInteger denominator = Denominator;
@@ -181,11 +181,11 @@ namespace MathTypes
             // Deal with negative powers:
             if (p < 0)
             {
-                return new Fraction(denominator, numerator, IsNegative);
+                return new BigFraction(denominator, numerator, IsNegative);
             }
             else
             {
-                return new Fraction(numerator, denominator, IsNegative);
+                return new BigFraction(numerator, denominator, IsNegative);
             }
             //
         }
@@ -194,7 +194,7 @@ namespace MathTypes
         /// Simplifies the calling fraction.
         /// </summary>
         /// <returns></returns>
-        public Fraction Simplify()
+        public BigFraction Simplify()
         {
             uBigInteger numerator = Numerator;
             uBigInteger denominator = Denominator;
@@ -204,7 +204,7 @@ namespace MathTypes
             {
                 denominator = 1;
                 isNegative = false;
-                return new Fraction(numerator, denominator, isNegative);
+                return new BigFraction(numerator, denominator, isNegative);
             }
 
             uBigInteger gcd = findGCD(numerator, denominator);
@@ -228,17 +228,33 @@ namespace MathTypes
                 }
             }
 
-            return new Fraction(numerator, denominator, isNegative);
+            return new BigFraction(numerator, denominator, isNegative);
         }
         #endregion
 
         #region Conversion
+        public IntFloat ToIntFloat()
+        {
+            if (TryToInteger(out BigInteger big))
+            {
+                return big;
+            }
+            else
+            {
+                return ToDouble();
+            }
+        }
         public double ToDouble() => (double)Numerator / (double)Denominator;
         public decimal ToDecimal() => (decimal)Numerator / (decimal)Denominator;
+        public bool TryToInteger(out BigInteger result)
+        {
+            result = BigInteger.DivRem(Numerator, Denominator, out BigInteger remainder);
+            return remainder == 0;
+        }
         #endregion
 
         #region Casts
-        public static implicit operator Fraction(uBigInteger big) => new Fraction(big, 1);
+        public static implicit operator BigFraction(uBigInteger big) => new BigFraction(big, 1);
         #endregion
         public override string ToString()
         {
@@ -253,7 +269,7 @@ namespace MathTypes
         /// <param name="s"></param>
         /// <param name="result"></param>
         /// <returns></returns>
-        public static bool TryParse(string s, out Fraction result)
+        public static bool TryParse(string s, out BigFraction result)
         {
             // Split string on the '/' character.
             string[] s_split = s.Split('/', 2).Select(str => str.Trim()).ToArray();
@@ -280,7 +296,7 @@ namespace MathTypes
             if (uBigInteger.TryParse(s_split[0], out uBigInteger numerator) && uBigInteger.TryParse(s_split[1], out uBigInteger denominator))
             {
                 // if successful set result to the a new fraction and return true
-                result = new Fraction(numerator, denominator, isNeg);
+                result = new BigFraction(numerator, denominator, isNeg);
                 return true;
             }
             else
@@ -291,9 +307,9 @@ namespace MathTypes
             //
         }
 
-        public static Fraction Parse(string s)
+        public static BigFraction Parse(string s)
         {
-            if (TryParse(s, out Fraction result))
+            if (TryParse(s, out BigFraction result))
             {
                 return result;
             }
@@ -305,20 +321,20 @@ namespace MathTypes
         //
 
         #region Operators
-        public static Fraction operator +(Fraction left, Fraction right) => left.Add(right).Simplify();
-        public static Fraction operator -(Fraction left, Fraction right) => left.Add(right).Simplify();
-        public static Fraction operator *(Fraction left, Fraction right) => left.Multiply(right).Simplify();
-        public static Fraction operator /(Fraction left, Fraction right) => left.Divide(right).Simplify();
-        public static bool operator > (Fraction left, Fraction right) => left.CompareTo(right)  > 0;
-        public static bool operator >=(Fraction left, Fraction right) => left.CompareTo(right) >= 0; 
-        public static bool operator < (Fraction left, Fraction right) => left.CompareTo(right)  < 0;
-        public static bool operator <=(Fraction left, Fraction right) => left.CompareTo(right) <= 0;
+        public static BigFraction operator +(BigFraction left, BigFraction right) => left.Add(right).Simplify();
+        public static BigFraction operator -(BigFraction left, BigFraction right) => left.Add(right).Simplify();
+        public static BigFraction operator *(BigFraction left, BigFraction right) => left.Multiply(right).Simplify();
+        public static BigFraction operator /(BigFraction left, BigFraction right) => left.Divide(right).Simplify();
+        public static bool operator >(BigFraction left, BigFraction right) => left.CompareTo(right) > 0;
+        public static bool operator >=(BigFraction left, BigFraction right) => left.CompareTo(right) >= 0;
+        public static bool operator <(BigFraction left, BigFraction right) => left.CompareTo(right) < 0;
+        public static bool operator <=(BigFraction left, BigFraction right) => left.CompareTo(right) <= 0;
         #endregion
         #endregion
 
         #region hidden Methods
-        private Fraction EqualizeDenominators(Fraction other) => Clone(Numerator * other.Denominator, Denominator * other.Denominator);
-        private Fraction EqualizeDenominators(Fraction other, out Fraction other_equalized)
+        private BigFraction EqualizeDenominators(BigFraction other) => Clone(Numerator * other.Denominator, Denominator * other.Denominator);
+        private BigFraction EqualizeDenominators(BigFraction other, out BigFraction other_equalized)
         {
             other_equalized = other.Clone(other.Numerator * other.Denominator, other.Denominator * other.Denominator);
             return EqualizeDenominators(other);
@@ -351,7 +367,7 @@ namespace MathTypes
         #endregion
 
         #region public Defaults
-        public static readonly Fraction Default = new Fraction(numerator_default, denominator_default, isNegative_default);
+        public static readonly BigFraction Default = new BigFraction(numerator_default, denominator_default, isNegative_default);
         #endregion
 
         #region hidden Defaults

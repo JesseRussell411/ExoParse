@@ -258,32 +258,32 @@ namespace ExoParseV2.Functions
         {
             IElement condition = args[0].Definition;
             IElement expression = args[1].Definition;
-            IElement result = IElement.Void;
+            IntFloat? result = null;
 
             while (condition.Execute().ToBool() == true)
             {
-                result = expression.Calc();
+                result = expression.Execute();
             }
 
-            return result;
+            return result.ToElement();
         }
     }
     public class DoWhile_func : BuiltInFunction
     {
         public override string Name { get; } = "doWhile";
-        public override string[] Parameters { get; } = { "condition", "expression" };
+        public override string[] Parameters { get; } = { "expression", "condition" };
         protected override IElement calc(IElement[] args)
         {
-            IElement condition = args[0].Definition;
-            IElement expression = args[1].Definition;
-            IElement result = IElement.Void;
+            IElement expression = args[0].Definition;
+            IElement condition = args[1].Definition;
+            IntFloat? result;
 
             do
             {
-                result = expression.Calc();
+                result = expression.Execute();
             } while (condition.Execute().ToBool() == true);
 
-            return result;
+            return result.ToElement();
         }
     }
     public class For_func : BuiltInFunction
@@ -297,14 +297,14 @@ namespace ExoParseV2.Functions
             IElement iteration  = args[2].Definition;
             IElement expression = args[3].Definition;
 
-            IElement result = IElement.Void;
+            IntFloat? result = null;
 
             for (assignment.Execute(); condition.Execute().ToBool() == true; iteration.Execute())
             {
-                result = expression.Calc();
+                result = expression.Execute();
             }
 
-            return result;
+            return result.ToElement();
         }
     }
 
@@ -419,4 +419,41 @@ namespace ExoParseV2.Functions
         }
     }
     #endregion
+
+    //#region Fraction
+    //public class Frac_func : BuiltInFunction
+    //{
+    //    public override string Name { get; } = "frac";
+    //    public override string[] Parameters { get; } = { "numerator", "denominator" };
+    //    public Universe Universe { get; set; }
+    //    private static Random rand = new Random();
+    //    protected override IElement calc(IElement[] args)
+    //    {
+    //        uBigInteger? numerator = args[0].Execute()?.Int;
+    //        uBigInteger? denominator = args[1].Execute()?.Int;
+    //        if (numerator == null || denominator == null) { return IElement.Void; }
+    //        return new FractionElement(new BigFraction((uBigInteger)numerator, (uBigInteger)denominator));
+    //    }
+    //}
+    //public class Simplify_func : BuiltInFunction
+    //{
+    //    public override string Name { get; } = "simplify";
+    //    public override string[] Parameters { get; } = { "fraction" };
+    //    public Universe Universe { get; set; }
+    //    private static Random rand = new Random();
+    //    protected override IElement calc(IElement[] args)
+    //    {
+    //        IElement arg_0 = args[0].Definition;
+    //        if (arg_0 is Variable) { arg_0 = arg_0.Definition; }
+    //        if (arg_0 is FractionElement frac)
+    //        {
+    //            return frac.Simplify();
+    //        }
+    //        else
+    //        {
+    //            return IElement.Void;
+    //        }
+    //    }
+    //}
+    //#endregion
 }

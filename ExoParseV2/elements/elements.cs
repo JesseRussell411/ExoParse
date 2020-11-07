@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net.Security;
 using System.Text;
 using MathTypes;
+using System.Numerics;
 
 namespace ExoParseV2.elements
 {
@@ -40,6 +41,9 @@ namespace ExoParseV2.elements
         }
 
         #region static
+        public static implicit operator Literal(IntFloat? ift) => new Literal(ift);
+        public static implicit operator Literal(IntFloat ift) => new Literal(ift);
+        public static implicit operator IntFloat?(Literal lit) => lit.Value;
         public static Literal Default { get { return new Literal(null); } }
 
         public static Literal Parse(String s, bool trapNegPos = false)
@@ -74,8 +78,6 @@ namespace ExoParseV2.elements
                 return false; //--(FAIL)--
             }
         }
-
-        public static implicit operator Literal(IntFloat value) => new Literal(value);
         #endregion
     }
 
@@ -384,6 +386,31 @@ namespace ExoParseV2.elements
             return (Item?.ToString(si) ?? StringProps.VoidLabel).Wrap(OpenBracket, CloseBracket);
         }
     }
+
+    //public class FractionElement : IElement
+    //{
+    //    public BigFraction Value { get; set; }
+    //    public FractionElement(BigFraction value)
+    //    {
+    //        Value = value;
+    //    }
+    //    public FractionElement Simplify()
+    //    {
+    //        Value = Value.Simplify();
+    //        return this;
+    //    }
+    //    public IElement Calc() => new FractionElement(Value.Simplify());
+
+    //    public IntFloat? Execute() => Value.ToIntFloat();
+    //    public string ToSiString(SymbolizedIndex si, IExpressionComponent parent)
+    //    {
+    //        return $"frac({Value.Numerator}, {Value.Denominator})";
+    //    }
+    //    public override string ToString()
+    //    {
+    //        return ToSiString(null, null);
+    //    }
+    //}
 
     //public class ArraySelection : IElement
     //{

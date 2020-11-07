@@ -21,7 +21,7 @@ namespace MathTypes
             Console.WriteLine(8 * 2.5);
             Console.WriteLine(IntFloat.Pow(2,-2));
 
-            Console.WriteLine(Fraction.Parse("-1/5") > Fraction.Parse("-1/5"));
+            Console.WriteLine(BigFraction.Parse("-1/5") > BigFraction.Parse("-1/5"));
             Console.WriteLine((uBigInteger)(-5));
 
             BigInteger big = -40;
