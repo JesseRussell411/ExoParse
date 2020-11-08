@@ -11,7 +11,7 @@ using System.Data.SqlTypes;
 namespace MathTypes
 {
     /// <summary>
-    /// Combination BigInteger and double (like in python). Automatically chooses best way of storing value based on context.
+    /// Combination BigInteger and double (a little like python). Automatically chooses best way of storing value based on context.
     /// </summary>
     /// 
     /// <Author>
@@ -24,7 +24,7 @@ namespace MathTypes
         public BigInteger Int { get => !floatNotInt ? integer : (BigInteger)floating; }
         public bool IsFloat { get => floatNotInt; }
         public bool IsInt { get => !floatNotInt; }
-        
+
         public bool IsNegative { get => floatNotInt ? double.IsNegative(floating) : integer < 0; }
         public bool IsPositive { get => !IsNegative; }
 
@@ -35,7 +35,7 @@ namespace MathTypes
         public bool IsNormal { get => floatNotInt && double.IsNormal(floating); }
         public bool IsSubNormal { get => floatNotInt && double.IsSubnormal(floating); }
         #endregion
-        
+
         #region public Constructors
         public IntFloat(BigInteger value)
         {
@@ -72,7 +72,7 @@ namespace MathTypes
         public IntFloat(uint integer) : this((BigInteger)integer) { }
         public IntFloat(ulong integer) : this((BigInteger)integer) { }
         #endregion
-        
+
         #region public Methods
         #region Comparison
         #region Equals
@@ -316,7 +316,7 @@ namespace MathTypes
         {
             if (value.floatNotInt)
             {
-                return Math.Floor(value.floating);
+                return (BigInteger)Math.Floor(value.floating);
             }
             else
             {
@@ -327,7 +327,7 @@ namespace MathTypes
         {
             if (value.floatNotInt)
             {
-                return Math.Ceiling(value.floating);
+                return (BigInteger)Math.Ceiling(value.floating);
             }
             else
             {
@@ -479,21 +479,21 @@ namespace MathTypes
         public static bool operator !=(IntFloat left, IntFloat right) => !left.Equals(right);
         #endregion
         #endregion
-        
+
         #region public static Properties
         public static IntFloat Default { get => floating_default; }
-        public static IntFloat PositiveInfinity { get => double.PositiveInfinity;}
-        public static IntFloat NegativeInfinity { get=> double.NegativeInfinity; }
-        public static IntFloat NaN {get => double.NaN; }
+        public static IntFloat PositiveInfinity { get => double.PositiveInfinity; }
+        public static IntFloat NegativeInfinity { get => double.NegativeInfinity; }
+        public static IntFloat NaN { get => double.NaN; }
         public static IntFloat Epsilon { get => double.Epsilon; }
         #endregion
-        
+
         #region private Fields
         private readonly double floating;
         private readonly BigInteger integer;
         private readonly bool floatNotInt;
         #endregion
-        
+
         #region private Constants
         private const double floating_default = default(double);
         private const int integer_default = default(int);
