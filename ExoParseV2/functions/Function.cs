@@ -57,6 +57,21 @@ namespace ExoParseV2
 
         protected abstract IElement calc(IElement[] args);
 
+        public virtual IElement Calc(Execution parent, IElement[] args)
+        {
+            return Calculate(args);
+        }
+
+        public virtual IElement Pass(Execution parent, IElement[] args)
+        {
+            return parent;
+        }
+
+        public virtual IntFloat? Execute(Execution parent, IElement[] args)
+        {
+            return Calc(parent, args).Execute();
+        }
+
 
         public override string ToString()
         {

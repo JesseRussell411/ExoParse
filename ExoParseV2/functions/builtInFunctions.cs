@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Text;
 using ExoParseV2.elements;
 using ExoParseV2.theUniverse;
+using ExoParseV2.utilities;
 using MathTypes;
 
 namespace ExoParseV2.Functions
@@ -420,40 +422,43 @@ namespace ExoParseV2.Functions
     }
     #endregion
 
-    //#region Fraction
-    //public class Frac_func : BuiltInFunction
-    //{
-    //    public override string Name { get; } = "frac";
-    //    public override string[] Parameters { get; } = { "numerator", "denominator" };
-    //    public Universe Universe { get; set; }
-    //    private static Random rand = new Random();
-    //    protected override IElement calc(IElement[] args)
-    //    {
-    //        uBigInteger? numerator = args[0].Execute()?.Int;
-    //        uBigInteger? denominator = args[1].Execute()?.Int;
-    //        if (numerator == null || denominator == null) { return IElement.Void; }
-    //        return new FractionElement(new BigFraction((uBigInteger)numerator, (uBigInteger)denominator));
-    //    }
-    //}
-    //public class Simplify_func : BuiltInFunction
-    //{
-    //    public override string Name { get; } = "simplify";
-    //    public override string[] Parameters { get; } = { "fraction" };
-    //    public Universe Universe { get; set; }
-    //    private static Random rand = new Random();
-    //    protected override IElement calc(IElement[] args)
-    //    {
-    //        IElement arg_0 = args[0].Definition;
-    //        if (arg_0 is Variable) { arg_0 = arg_0.Definition; }
-    //        if (arg_0 is FractionElement frac)
-    //        {
-    //            return frac.Simplify();
-    //        }
-    //        else
-    //        {
-    //            return IElement.Void;
-    //        }
-    //    }
-    //}
-    //#endregion
+    #region Fraction
+    public class Simplify_func : BuiltInFunction
+    {
+        public override string Name { get; } = "simplify";
+        public override string[] Parameters { get; } = { "fraction" };
+        public Universe Universe { get; set; }
+        public override IElement Pass(Execution parent, IElement[] args)
+        {
+            return Calc(parent, args);
+        }
+        private static Random rand = new Random();
+        protected override IElement calc(IElement[] args)
+        {
+            IntFloat? a_ex;
+            IntFloat? b_ex;
+            if (args[0] is Operation op && op.Operator is Division_op &&
+                op.A != null && op.B != null &&
+                ((a_ex = op.A?.Execute())?.IsInt ?? false) && ((b_ex = op.B?.Execute())?.IsInt ?? false))
+            {
+                BigInteger numerator = a_ex?.Int ?? 0,
+                           denominator = b_ex?.Int ?? 0;
+                Fraction fraction = new Fraction(numerator, denominator);
+                fraction = fraction.Simplify();
+
+                Operation div = 
+                    new Operation(op.Operator,
+                    new IntFloat((BigInteger) fraction.Numerator * (fraction.IsNegative ? -1 : 1)).ToElement(),
+                    fraction.Denominator.ToElement());
+
+
+                return div;
+            }
+            else
+            {
+                throw new ExecutionException("Simplify only works on division operators between two integers like: 2/4.");
+            }
+        }
+    }
+    #endregion
 }

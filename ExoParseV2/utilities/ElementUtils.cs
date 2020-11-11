@@ -70,6 +70,11 @@ namespace ExoParseV2
             return new Literal(
                 self.ToIntFloat());
         }
+
+        public static IElement ToElement(this uBigInteger self)
+        {
+            return new IntFloat(self).ToElement();
+        }
         
         #endregion
 

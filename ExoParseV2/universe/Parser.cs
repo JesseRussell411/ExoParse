@@ -776,9 +776,9 @@ namespace ExoParseV2
             }
         }
 
-        public bool TryParseConstant(String s, out Literal result, bool containNegPos = false)
+        public bool TryParseConstant(String s, out Literal result)
         {
-            return Literal.TryParse(s, out result, containNegPos);
+            return Literal.TryParse(s, out result);
         }
 
         public bool TryParseLabeled(String s, out IReference result, Dictionary<string, IReference> localLabeled)

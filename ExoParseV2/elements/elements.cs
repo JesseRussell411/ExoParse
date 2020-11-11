@@ -46,9 +46,9 @@ namespace ExoParseV2.elements
         public static implicit operator IntFloat?(Literal lit) => lit.Value;
         public static Literal Default { get { return new Literal(null); } }
 
-        public static Literal Parse(String s, bool trapNegPos = false)
+        public static Literal Parse(String s)
         {
-            if (TryParse(s, out Literal result, trapNegPos))
+            if (TryParse(s, out Literal result))
             {
                 return result;
             }
@@ -58,12 +58,9 @@ namespace ExoParseV2.elements
             }
 
         }
-        public static bool TryParse(String s, out Literal result, bool trapNegPos = false)
+        public static bool TryParse(String s, out Literal result)
         {
             if (s.Length == 0) { result = Literal.Default; return false; }//--(FAIL)--
-
-            if (!trapNegPos && !s.Select(c => char.ToLower(c)).Contains('e') && (s[0] == '-' || s[0] == '+'))
-            { result = Literal.Default; return false; }//--(FAIL)--
 
             if (s == StringProps.NullLabel) { result = Literal.Default; return true; }//--(PASS)--
 
@@ -321,15 +318,15 @@ namespace ExoParseV2.elements
         #region methods
         public IElement Pass()
         {
-            return this;
+            return func?.Pass(this, Arguments);
         }
         public IElement Calc()
         {
-            return func?.Calculate(Arguments);
+            return func?.Calc(this, Arguments);
         }
         public IntFloat? Execute()
         {
-            return func?.Calculate(Arguments)?.Execute();
+            return func?.Execute(this, Arguments);
         }
 
         public override string ToString()

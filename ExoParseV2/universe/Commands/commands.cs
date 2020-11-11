@@ -65,6 +65,7 @@ namespace ExoParseV2.theUniverse.commands
                 foreach (Command cmd in universe.Commands.Select(p => p.Value))
                 {
                     result.Append($"{cmd.Name}:");
+                    result.Append("\n");
                     for (int i = 0; i < cmd.Name.Length + 1; i++) { result.Append("-"); }
                     result.Append($"\n{cmd.Definition}\n\n");
                 }

@@ -316,7 +316,7 @@ namespace MathTypes
         {
             if (value.floatNotInt)
             {
-                return (BigInteger)Math.Floor(value.floating);
+                return (BigInteger) Math.Floor(value.floating);
             }
             else
             {
@@ -327,7 +327,7 @@ namespace MathTypes
         {
             if (value.floatNotInt)
             {
-                return (BigInteger)Math.Ceiling(value.floating);
+                return (BigInteger) Math.Ceiling(value.floating);
             }
             else
             {
