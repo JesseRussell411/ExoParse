@@ -100,7 +100,7 @@ namespace ExoParseV2
 
         protected override IElement calc(IElement a, IElement b)
         {
-            return LogicUtils.And(a.Execute(), b.Execute()).ToElement();
+            return LogicUtils.Xor(a.Execute(), b.Execute()).ToElement();
         }
     }
     #region conditional
