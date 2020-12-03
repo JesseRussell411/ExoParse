@@ -13,13 +13,13 @@ namespace MathTypes
         #region public Constructors
         public IntFloatFrac(IntFloat value)
         {
-            ifNotFrac = true;
+            intFloatNotFraction = true;
             frac = default;
             ifloat = value;
         }
         public IntFloatFrac(Fraction value)
         {
-            ifNotFrac = false;
+            intFloatNotFraction = false;
             ifloat = default;
             frac = value;
         }
@@ -38,14 +38,14 @@ namespace MathTypes
         #endregion
 
         #region public Properties { get; }
-        public BigInteger Int => ifNotFrac ? ifloat.Int : frac.ToBigInteger();
-        public Doudec Float => ifNotFrac ? ifloat.Float : frac.ToDoudec();
-        public IntFloat IntFloat => ifNotFrac ? ifloat : (IntFloat)frac;
+        public BigInteger Int => intFloatNotFraction ? ifloat.Int : frac.ToBigInteger();
+        public Doudec Float => intFloatNotFraction ? ifloat.Float : frac.ToDoudec();
+        public IntFloat IntFloat => intFloatNotFraction ? ifloat : (IntFloat)frac;
         public Fraction Fraction
         {
             get
             {
-                if (ifNotFrac)
+                if (intFloatNotFraction)
                 {
                     if (ifloat.IsInt)
                     {
@@ -63,14 +63,14 @@ namespace MathTypes
             }
         }
 
-        public bool IsInt => ifNotFrac && ifloat.IsInt;
-        public bool IsFloat => ifNotFrac && ifloat.IsFloat;
-        public bool IsFraction => !ifNotFrac;
-        public bool IsIntFloat => ifNotFrac;
-        public object Value => ifNotFrac ? ifloat.Value : frac;
+        public bool IsInt => intFloatNotFraction && ifloat.IsInt;
+        public bool IsFloat => intFloatNotFraction && ifloat.IsFloat;
+        public bool IsFraction => !intFloatNotFraction;
+        public bool IsIntFloat => intFloatNotFraction;
+        public object Value => intFloatNotFraction ? ifloat.Value : frac;
 
-        public bool IsNegative => ifNotFrac ? ifloat.IsNegative : frac.IsNegative;
-        public bool IsZero => ifNotFrac ? ifloat.IsZero : frac.IsZero;
+        public bool IsNegative => intFloatNotFraction ? ifloat.IsNegative : frac.IsNegative;
+        public bool IsZero => intFloatNotFraction ? ifloat.IsZero : frac.IsZero;
         #endregion
 
         #region public Methods
@@ -80,23 +80,23 @@ namespace MathTypes
         #endregion
         #region Comparison
         #region CompareTo
-        public int CompareTo(BigInteger bi) => ifNotFrac ? ifloat.CompareTo(bi) : frac.CompareTo(bi);
-        public int CompareTo(double d) => ifNotFrac ? ifloat.CompareTo(d) : frac.CompareTo(d);
-        public int CompareTo(float f) => ifNotFrac ? ifloat.CompareTo(f) : frac.CompareTo(f);
-        public int CompareTo(Doudec dd) => ifNotFrac ? ifloat.CompareTo(dd) : frac.CompareTo(dd);
-        public int CompareTo(IntFloat ift) => ifNotFrac ? ifloat.CompareTo(ift) : frac.CompareTo(ift);
+        public int CompareTo(BigInteger bi) => intFloatNotFraction ? ifloat.CompareTo(bi) : frac.CompareTo(bi);
+        public int CompareTo(double d) => intFloatNotFraction ? ifloat.CompareTo(d) : frac.CompareTo(d);
+        public int CompareTo(float f) => intFloatNotFraction ? ifloat.CompareTo(f) : frac.CompareTo(f);
+        public int CompareTo(Doudec dd) => intFloatNotFraction ? ifloat.CompareTo(dd) : frac.CompareTo(dd);
+        public int CompareTo(IntFloat ift) => intFloatNotFraction ? ifloat.CompareTo(ift) : frac.CompareTo(ift);
         public int CompareTo(Fraction f) => Fraction.CompareTo(f);
-        public int CompareTo(IntFloatFrac other) => other.ifNotFrac ? CompareTo(other.ifloat) : CompareTo(other.frac);
+        public int CompareTo(IntFloatFrac other) => other.intFloatNotFraction ? CompareTo(other.ifloat) : CompareTo(other.frac);
         #endregion
 
         #region Equals
-        public bool Equals(BigInteger bi) => ifNotFrac ? ifloat.Equals(bi) : frac.Equals(bi);
-        public bool Equals(double d) => ifNotFrac ? ifloat.Equals(d) : frac.Equals(d);
-        public bool Equals(float f) => ifNotFrac ? ifloat.Equals(f) : frac.Equals(f);
-        public bool Equals(Doudec dd) => ifNotFrac ? ifloat.Equals(dd) : frac.Equals(dd);
-        public bool Equals(IntFloat ift) => ifNotFrac ? ifloat.Equals(ift) : frac.Equals(ift);
+        public bool Equals(BigInteger bi) => intFloatNotFraction ? ifloat.Equals(bi) : frac.Equals(bi);
+        public bool Equals(double d) => intFloatNotFraction ? ifloat.Equals(d) : frac.Equals(d);
+        public bool Equals(float f) => intFloatNotFraction ? ifloat.Equals(f) : frac.Equals(f);
+        public bool Equals(Doudec dd) => intFloatNotFraction ? ifloat.Equals(dd) : frac.Equals(dd);
+        public bool Equals(IntFloat ift) => intFloatNotFraction ? ifloat.Equals(ift) : frac.Equals(ift);
         public bool Equals(Fraction f) => Fraction.Equals(f);
-        public bool Equals(IntFloatFrac other) => other.ifNotFrac ? Equals(other.ifloat) : Equals(other.frac);
+        public bool Equals(IntFloatFrac other) => other.intFloatNotFraction ? Equals(other.ifloat) : Equals(other.frac);
         public override bool Equals(object obj) => obj switch
         {
             sbyte i => Equals((BigInteger)i),
@@ -120,9 +120,9 @@ namespace MathTypes
             _ => throw new ArgumentException("The parameter must be an integer, floating point number, or fraction")
         };
         #endregion
-        public override int GetHashCode() => ifNotFrac ? ifloat.GetHashCode() : frac.GetHashCode();
+        public override int GetHashCode() => intFloatNotFraction ? ifloat.GetHashCode() : frac.GetHashCode();
         #endregion
-        public override string ToString() => ifNotFrac ? ifloat.ToString() : frac.ToString();
+        public override string ToString() => intFloatNotFraction ? ifloat.ToString() : frac.ToString();
         #endregion
 
         #region public static Methods
@@ -167,19 +167,47 @@ namespace MathTypes
             if (left.IsFraction || right.IsFraction) return left.Fraction % right.Fraction;
             return left.Int % right.Int;
         }
-        public static IntFloatFrac Pow(IntFloatFrac x, int y) => x.ifNotFrac ? (IntFloatFrac)IntFloat.Pow(x.ifloat, y) : Fraction.Pow(x.frac, y);
-        public static IntFloatFrac Pow(IntFloatFrac x, double y) => x.ifNotFrac ? (IntFloatFrac)IntFloat.Pow(x.ifloat, y) : Doudec.Pow(x.frac.ToDoudec(), y);
-        public static IntFloatFrac Pow(IntFloatFrac x, IntFloat y) => x.ifNotFrac ? (IntFloatFrac)IntFloat.Pow(x.ifloat, y) : Doudec.Pow(x.frac.ToDoudec(), y.Float.Double);
-        public static IntFloatFrac Abs(IntFloatFrac x) => x.ifNotFrac ? (IntFloatFrac)IntFloat.Abs(x.ifloat) : Fraction.Abs(x.frac);
-        public static IntFloatFrac Neg(IntFloatFrac x) => x.ifNotFrac ? (IntFloatFrac)IntFloat.Negate(x.ifloat) : x.frac.Negate();
-        public static IntFloatFrac Floor(IntFloatFrac x) => x.ifNotFrac ? (IntFloatFrac)IntFloat.Floor(x.ifloat) : x.frac.Floor();
-        public static IntFloatFrac Ceiling(IntFloatFrac x) => x.ifNotFrac ? (IntFloatFrac)IntFloat.Ceiling(x.ifloat) : x.frac.Ceiling();
-        public static IntFloatFrac Truncate(IntFloatFrac x) => x.ifNotFrac ? (IntFloatFrac)IntFloat.Truncate(x.ifloat) : x.frac.Truncate();
-        public static int Sign(IntFloatFrac iff) => iff.ifNotFrac ? IntFloat.Sign(iff.ifloat) : iff.frac.Sign;
-        public static IntFloatFrac Log(IntFloatFrac iff) => iff.ifNotFrac ? IntFloat.Log(iff.ifloat) : Fraction.Log(iff.frac);
-        public static IntFloatFrac Log(IntFloatFrac iff, double newBase) => iff.ifNotFrac ? IntFloat.Log(iff.ifloat, newBase) : Fraction.Log(iff.frac, newBase);
-        public static IntFloatFrac Log10(IntFloatFrac iff) => iff.ifNotFrac ? IntFloat.Log10(iff.ifloat) : Fraction.Log10(iff.frac);
-        public static IntFloatFrac Log2(IntFloatFrac iff) => iff.ifNotFrac ? IntFloat.Log2(iff.ifloat) : Fraction.Log2(iff.frac);
+        public static IntFloatFrac Pow(IntFloatFrac x, int y)
+        {
+            if (y < 0 && (x.IsInt || x.IsFraction))
+            {
+                return x.Fraction.Power(y);
+            }
+            else if (x.intFloatNotFraction)
+            {
+                return IntFloat.Pow(x.ifloat, y);
+            }
+            else
+            {
+                return x.frac.Power(y);
+            }
+        }
+        public static IntFloatFrac Pow(IntFloatFrac x, double y) => x.intFloatNotFraction ? (IntFloatFrac)IntFloat.Pow(x.ifloat, y) : Doudec.Pow(x.frac.ToDoudec(), y);
+        //public static IntFloatFrac Pow(IntFloatFrac x, IntFloat y) => x.ifNotFrac ? (IntFloatFrac)IntFloat.Pow(x.ifloat, y) : Doudec.Pow(x.frac.ToDoudec(), y.Float.Double);
+
+
+        public static IntFloatFrac Pow(IntFloatFrac x, IntFloat y)
+        {
+            if (y.IsInt)
+            {
+
+            }
+            else
+            {
+
+            }
+        }
+
+        public static IntFloatFrac Abs(IntFloatFrac x) => x.intFloatNotFraction ? (IntFloatFrac)IntFloat.Abs(x.ifloat) : Fraction.Abs(x.frac);
+        public static IntFloatFrac Neg(IntFloatFrac x) => x.intFloatNotFraction ? (IntFloatFrac)IntFloat.Negate(x.ifloat) : x.frac.Negate();
+        public static IntFloatFrac Floor(IntFloatFrac x) => x.intFloatNotFraction ? (IntFloatFrac)IntFloat.Floor(x.ifloat) : x.frac.Floor();
+        public static IntFloatFrac Ceiling(IntFloatFrac x) => x.intFloatNotFraction ? (IntFloatFrac)IntFloat.Ceiling(x.ifloat) : x.frac.Ceiling();
+        public static IntFloatFrac Truncate(IntFloatFrac x) => x.intFloatNotFraction ? (IntFloatFrac)IntFloat.Truncate(x.ifloat) : x.frac.Truncate();
+        public static int Sign(IntFloatFrac iff) => iff.intFloatNotFraction ? IntFloat.Sign(iff.ifloat) : iff.frac.Sign;
+        public static IntFloatFrac Log(IntFloatFrac iff) => iff.intFloatNotFraction ? IntFloat.Log(iff.ifloat) : Fraction.Log(iff.frac);
+        public static IntFloatFrac Log(IntFloatFrac iff, double newBase) => iff.intFloatNotFraction ? IntFloat.Log(iff.ifloat, newBase) : Fraction.Log(iff.frac, newBase);
+        public static IntFloatFrac Log10(IntFloatFrac iff) => iff.intFloatNotFraction ? IntFloat.Log10(iff.ifloat) : Fraction.Log10(iff.frac);
+        public static IntFloatFrac Log2(IntFloatFrac iff) => iff.intFloatNotFraction ? IntFloat.Log2(iff.ifloat) : Fraction.Log2(iff.frac);
         public static IntFloatFrac Min(IntFloatFrac a, IntFloatFrac b) => a < b ? a : b;
         public static IntFloatFrac Max(IntFloatFrac a, IntFloatFrac b) => a > b ? a : b;
         #endregion
@@ -275,7 +303,7 @@ namespace MathTypes
         public static explicit operator decimal(IntFloatFrac iff) => (decimal)iff.Float;
 
         public static implicit operator IntFloatFrac(IntFloat ift) => ift.Value switch { BigInteger bi => bi, Doudec d => d, _ => default };
-        public static explicit operator IntFloat(IntFloatFrac iff) => iff.ifNotFrac ? iff.ifloat : iff.IntFloat;
+        public static explicit operator IntFloat(IntFloatFrac iff) => iff.intFloatNotFraction ? iff.ifloat : iff.IntFloat;
         #endregion
         #endregion
 
@@ -287,7 +315,7 @@ namespace MathTypes
         #endregion
 
         #region private readonly Fields
-        private readonly bool ifNotFrac;
+        private readonly bool intFloatNotFraction;
         private readonly IntFloat ifloat;
         private readonly Fraction frac;
         #endregion

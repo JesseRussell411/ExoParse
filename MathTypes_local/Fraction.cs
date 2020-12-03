@@ -195,7 +195,22 @@ namespace MathTypes
         /// <summary>
         /// Returns the unsimplified exponentiation of the current fraction and other.
         /// </summary>
-        public Fraction Power(int exponent) => new Fraction(BigInteger.Pow(Numerator, exponent), BigInteger.Pow(Denominator, exponent));
+        public Fraction Power(int exponent)
+        {
+            if (exponent < 0)
+            {
+                exponent = Math.Abs(exponent);
+                return new Fraction(
+                    BigInteger.Pow(Denominator, exponent),
+                    BigInteger.Pow(Numerator, exponent));
+            }
+            else
+            {
+                return new Fraction(
+                    BigInteger.Pow(Numerator, exponent),
+                    BigInteger.Pow(Denominator, exponent));
+            }
+        }
 
         /// <summary>
         /// Returns the current fraction plus 1.
