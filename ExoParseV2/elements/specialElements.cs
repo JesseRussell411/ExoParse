@@ -12,7 +12,7 @@ namespace ExoParseV2.elements
         public bool DontExecute_flag { get; } = true;
         public IElement Definition { get { return ElementUtils.NullElement; } }
 
-        public virtual IntFloat? Execute()
+        public virtual IntFloatFrac? Execute()
         {
             return null;
         }

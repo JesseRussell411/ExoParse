@@ -16,14 +16,14 @@ namespace ExoParseV2.Functions
         public override string[] Parameters { get; } = { "x" };
         protected override IElement calc(IElement[] args)
         {
-            IntFloat? arg_execute = args[0].Execute();
+            IntFloatFrac? arg_execute = args[0].Execute();
             if (arg_execute == null)
             {
                 return ElementUtils.NullElement;
             }
             else
             {
-                return ((IntFloat)Math.Sin((double)arg_execute)).ToElement();
+                return ((IntFloatFrac)Math.Sin((double)arg_execute)).ToElement();
             }
         }
     }
@@ -34,7 +34,7 @@ namespace ExoParseV2.Functions
         public override string[] Parameters { get; } = { "x" };
         protected override IElement calc(IElement[] args)
         {
-            IntFloat? arg_execute = args[0].Execute();
+            IntFloatFrac? arg_execute = args[0].Execute();
             if (arg_execute == null)
             {
                 return ElementUtils.NullElement;
@@ -52,7 +52,7 @@ namespace ExoParseV2.Functions
         public override string[] Parameters { get; } = { "x" };
         protected override IElement calc(IElement[] args)
         {
-            IntFloat? arg_execute = args[0].Execute();
+            IntFloatFrac? arg_execute = args[0].Execute();
             if (arg_execute == null)
             {
                 return ElementUtils.NullElement;
@@ -70,7 +70,7 @@ namespace ExoParseV2.Functions
         public override string[] Parameters { get; } = { "x" };
         protected override IElement calc(IElement[] args)
         {
-            IntFloat? arg_execute = args[0].Execute();
+            IntFloatFrac? arg_execute = args[0].Execute();
             if (arg_execute == null)
             {
                 return ElementUtils.NullElement;
@@ -88,7 +88,7 @@ namespace ExoParseV2.Functions
         public override string[] Parameters { get; } = { "x" };
         protected override IElement calc(IElement[] args)
         {
-            IntFloat? arg_execute = args[0].Execute();
+            IntFloatFrac? arg_execute = args[0].Execute();
             if (arg_execute == null)
             {
                 return ElementUtils.NullElement;
@@ -106,7 +106,7 @@ namespace ExoParseV2.Functions
         public override string[] Parameters { get; } = { "x" };
         protected override IElement calc(IElement[] args)
         {
-            IntFloat? arg_execute = args[0].Execute();
+            IntFloatFrac? arg_execute = args[0].Execute();
             if (arg_execute == null)
             {
                 return ElementUtils.NullElement;
@@ -196,7 +196,7 @@ namespace ExoParseV2.Functions
         public override string[] Parameters { get; } = { "x", "decimals" };
         protected override IElement calc(IElement[] args)
         {
-            IntFloat? args1_execute = args[1].Execute();
+            IntFloatFrac? args1_execute = args[1].Execute();
             if (args1_execute != MathUtils.Floor(args1_execute))
             {
                 throw new MessageException($"Incorrect ussage of {this}. Decimals must be an integer");
@@ -260,7 +260,7 @@ namespace ExoParseV2.Functions
         {
             IElement condition = args[0].Definition;
             IElement expression = args[1].Definition;
-            IntFloat? result = null;
+            IntFloatFrac? result = null;
 
             while (condition.Execute().ToBool() == true)
             {
@@ -278,7 +278,7 @@ namespace ExoParseV2.Functions
         {
             IElement expression = args[0].Definition;
             IElement condition = args[1].Definition;
-            IntFloat? result;
+            IntFloatFrac? result;
 
             do
             {
@@ -299,7 +299,7 @@ namespace ExoParseV2.Functions
             IElement iteration  = args[2].Definition;
             IElement expression = args[3].Definition;
 
-            IntFloat? result = null;
+            IntFloatFrac? result = null;
 
             for (assignment.Execute(); condition.Execute().ToBool() == true; iteration.Execute())
             {
@@ -383,7 +383,7 @@ namespace ExoParseV2.Functions
     }
     #endregion
 
-    #region IntFloat
+    #region IntFloatFrac
     public class ToFloat_func : BuiltInFunction
     {
         public override string Name { get; } = "float";
@@ -402,7 +402,16 @@ namespace ExoParseV2.Functions
             return args[0].Execute()?.Int.ToElement();
         }
     }
-    public class IsFloat_func : BuiltInFunction
+    public class ToFraction_func : BuiltInFunction
+    {
+        public override string Name => "fraction";
+        public override string[] Parameters { get; } = { "value" };
+        protected override IElement calc(IElement[] args)
+        {
+            return args[0].Execute()?.Fraction.ToElement();
+        }
+    }
+        public class IsFloat_func : BuiltInFunction
     {
         public override string Name { get; } = "isFloat";
         public override string[] Parameters { get; } = { "value" };
@@ -420,6 +429,15 @@ namespace ExoParseV2.Functions
             return args[0].Execute()?.IsInt.ToElement();
         }
     }
+    public class IsFraction_func : BuiltInFunction
+    {
+        public override string Name { get; } = "isFraction";
+        public override string[] Parameters { get; } = { "value" };
+        protected override IElement calc(IElement[] args)
+        {
+            return args[0].Execute()?.IsFraction.ToElement();
+        }
+    }
     #endregion
 
     #region Fraction
@@ -435,29 +453,10 @@ namespace ExoParseV2.Functions
         private static Random rand = new Random();
         protected override IElement calc(IElement[] args)
         {
-            IntFloat? a_ex;
-            IntFloat? b_ex;
-            if (args[0] is Operation op && op.Operator is Division_op &&
-                op.A != null && op.B != null &&
-                ((a_ex = op.A?.Execute())?.IsInt ?? false) && ((b_ex = op.B?.Execute())?.IsInt ?? false))
-            {
-                BigInteger numerator = a_ex?.Int ?? 0,
-                           denominator = b_ex?.Int ?? 0;
-                Fraction fraction = new Fraction(numerator, denominator);
-                fraction = fraction.Simplify();
+            IntFloatFrac? arg0_ex = args[0].Execute();
+            if (arg0_ex == null) return null;
 
-                Operation div = 
-                    new Operation(op.Operator,
-                    new IntFloat((BigInteger) fraction.Numerator * (fraction.Negative ? -1 : 1)).ToElement(),
-                    fraction.Denominator.ToElement());
-
-
-                return div;
-            }
-            else
-            {
-                throw new ExecutionException("Simplify only works on division operators between two integers like: 2/4.");
-            }
+            return arg0_ex?.Fraction.Simplify().ToElement();
         }
     }
     #endregion

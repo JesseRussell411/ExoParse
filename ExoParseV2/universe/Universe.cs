@@ -104,7 +104,7 @@ namespace ExoParseV2.theUniverse
         #region ans
         public Variable ans_var { get; } = new Variable("previousAnswer");
         public BuiltInConstant Ans { get; }
-        public IntFloat? PreviousAnswer
+        public IntFloatFrac? PreviousAnswer
         {
             get
             {
@@ -281,7 +281,7 @@ namespace ExoParseV2.theUniverse
 
                     // Pass the expression but don't execute it yet.
                     IElement p = e.Pass(out bool dontExecute);
-                    IntFloat? ex = null;
+                    IntFloatFrac? ex = null;
 
 
                     // Start building result string;

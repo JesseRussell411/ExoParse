@@ -12,19 +12,19 @@ using System.Numerics;
 namespace ExoParseV2.elements
 {
     /// <summary>
-    /// The simplest element. Contains a read-only property for a IntFloat? value and nothing else.
+    /// The simplest element. Contains a read-only property for a IntFloatFrac? value and nothing else.
     /// </summary>
     public struct Literal : IElement
     {
-        public Literal(IntFloat? value)
+        public Literal(IntFloatFrac? value)
         {
             Value = value;
         }
-        public readonly IntFloat? Value;
+        public readonly IntFloatFrac? Value;
 
         public IElement Pass() { return this; }
         public IElement Calc() { return this; }
-        public IntFloat? Execute() { return Value; }
+        public IntFloatFrac? Execute() { return Value; }
 
         public bool DontExecute_flag { get { return false; } }
         public override string ToString()
@@ -41,9 +41,9 @@ namespace ExoParseV2.elements
         }
 
         #region static
-        public static implicit operator Literal(IntFloat? ift) => new Literal(ift);
-        public static implicit operator Literal(IntFloat ift) => new Literal(ift);
-        public static implicit operator IntFloat?(Literal lit) => lit.Value;
+        public static implicit operator Literal(IntFloatFrac? ift) => new Literal(ift);
+        public static implicit operator Literal(IntFloatFrac ift) => new Literal(ift);
+        public static implicit operator IntFloatFrac?(Literal lit) => lit.Value;
         public static Literal Default { get { return new Literal(null); } }
 
         public static Literal Parse(String s)
@@ -64,7 +64,7 @@ namespace ExoParseV2.elements
 
             if (s == StringProps.NullLabel) { result = Literal.Default; return true; }//--(PASS)--
 
-            if (IntFloat.TryParse(s, out IntFloat d))
+            if (IntFloatFrac.TryParse(s, out IntFloatFrac d))
             {
                 result = new Literal(d);
                 return true;//--(PASS)--
@@ -85,7 +85,7 @@ namespace ExoParseV2.elements
             Definition = definition;
             Name = name;
         }
-        public Constant(string name, IntFloat? value)
+        public Constant(string name, IntFloatFrac? value)
         {
             Definition = value.ToElement();
             Name = name;
@@ -96,7 +96,7 @@ namespace ExoParseV2.elements
 
         public IElement Pass() { return this; }
         public IElement Calc() { return Definition; }
-        public IntFloat? Execute() { return Definition?.Execute(); }
+        public IntFloatFrac? Execute() { return Definition?.Execute(); }
 
         public override string ToString()
         {
@@ -111,7 +111,7 @@ namespace ExoParseV2.elements
     {
         public BuiltInConstant(string name, IElement definition)
             : base(name, definition) { }
-        public BuiltInConstant(string name, IntFloat? value)
+        public BuiltInConstant(string name, IntFloatFrac? value)
             : base(name, value) { }
     }
 
@@ -126,7 +126,7 @@ namespace ExoParseV2.elements
 
         public IElement Pass() { return this; }
         public IElement Calc() { return this; }
-        public IntFloat? Execute() { return Definition?.Execute(); }
+        public IntFloatFrac? Execute() { return Definition?.Execute(); }
 
         public bool DontExecute_flag { get; } = false;
         public override string ToString()
@@ -147,7 +147,7 @@ namespace ExoParseV2.elements
             A = a;
             B = b;
         }
-        public Operation(Operator op, IntFloat? a, IntFloat? b)
+        public Operation(Operator op, IntFloatFrac? a, IntFloatFrac? b)
             : this(op, a.ToElement(), b.ToElement()) { }
 
         public Operation(Operator op, long? a, long? b)
@@ -173,7 +173,7 @@ namespace ExoParseV2.elements
         {
             return Operator?.Calc(A?.Pass(), B?.Pass());
         }
-        public IntFloat? Execute()
+        public IntFloatFrac? Execute()
         {
             return Operator?.Execute(A?.Pass(), B?.Pass(), this);
             //return Pass()?.Execute();
@@ -242,7 +242,7 @@ namespace ExoParseV2.elements
         {
             return Modifier?.Calc(Item?.Pass());
         }
-        public IntFloat? Execute()
+        public IntFloatFrac? Execute()
         {
             return Modifier?.Execute(Item?.Pass(), this);
             //return Modifier?.Calc(Item?.Pass())?.Execute();
@@ -324,7 +324,7 @@ namespace ExoParseV2.elements
         {
             return func?.Calc(this, Arguments);
         }
-        public IntFloat? Execute()
+        public IntFloatFrac? Execute()
         {
             return func?.Execute(this, Arguments);
         }
@@ -369,7 +369,7 @@ namespace ExoParseV2.elements
         {
             return Definition?.Calc();
         }
-        public IntFloat? Execute()
+        public IntFloatFrac? Execute()
         {
             return Definition?.Execute();
         }
@@ -398,7 +398,7 @@ namespace ExoParseV2.elements
     //    }
     //    public IElement Calc() => new FractionElement(Value.Simplify());
 
-    //    public IntFloat? Execute() => Value.ToIntFloat();
+    //    public IntFloatFrac? Execute() => Value.ToIntFloat();
     //    public string ToSiString(SymbolizedIndex si, IExpressionComponent parent)
     //    {
     //        return $"frac({Value.Numerator}, {Value.Denominator})";

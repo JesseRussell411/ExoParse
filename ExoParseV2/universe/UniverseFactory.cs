@@ -73,7 +73,7 @@ namespace ExoParseV2
             constants.Add(new BuiltInConstant(StringProps.NullLabel, ElementUtils.NullElement));
             constants.Add(new BuiltInConstant(StringProps.VoidLabel, ElementUtils.VoidElement));
             //constants.Add(new BuiltInConstant("theMeaningOfLife", new Literal(42)));
-            constants.Add(new BuiltInConstant("inf", IntFloat.PositiveInfinity));
+            constants.Add(new BuiltInConstant("inf", IntFloatFrac.PositiveInfinity));
 
             return constants;
         }
@@ -99,7 +99,7 @@ namespace ExoParseV2
                     new ISymbolized[] {new PlusEqual_op(), new MinusEqual_op()},
                     new ISymbolized[] {new TimesEqual_op(), new DivEqual_op(), new FloorDivsEqual_op(), new ModEqual_op(), new PowerEqual_op(), new XorEqual_op()},
                     new ISymbolized[] {new Addition_op(), new Subtraction_op() },
-                    new ISymbolized[] {multiplication, new Division_op(), new FloorDivision_op(), new Modulus_op()},
+                    new ISymbolized[] {multiplication, new Division_op(), new FloorDivision_op(), new FloatDivision_op(), new Modulus_op()},
                     new ISymbolized[] {new Negative_mod(), new Positive_mod()},
                     new ISymbolized[] {new Exponentiation_op()},
                     new ISymbolized[] {new Factorial_mod()},
@@ -141,8 +141,10 @@ namespace ExoParseV2
             funcs.Add(new RandomRange_float_func());
             funcs.Add(new ToFloat_func());
             funcs.Add(new ToInt_func());
+            funcs.Add(new ToFraction_func());
             funcs.Add(new IsFloat_func());
             funcs.Add(new IsInt_func());
+            funcs.Add(new IsFraction_func());
             funcs.Add(new Print_func() { Universe = universe});
             funcs.Add(new PrintLine_func() { Universe = universe});
             funcs.Add(new Exit_func());

@@ -31,11 +31,15 @@ namespace ExoParseV2
         {
             return new Literal(self);
         }
-        public static IElement ToElement(this IntFloat? self)
+        public static IElement ToElement(this Fraction self)
         {
             return new Literal(self);
         }
-        public static IElement ToElement(this IntFloat self)
+        public static IElement ToElement(this IntFloatFrac? self)
+        {
+            return new Literal(self);
+        }
+        public static IElement ToElement(this IntFloatFrac self)
         {
             return new Literal(self);
         }
@@ -71,9 +75,9 @@ namespace ExoParseV2
                 self.ToIntFloat());
         }
 
-        public static IElement ToElement(this uBigInteger self)
+        public static IElement ToElement(this UBigInteger self)
         {
-            return new IntFloat(self).ToElement();
+            return new IntFloatFrac(self).ToElement();
         }
         
         #endregion
@@ -131,7 +135,7 @@ namespace ExoParseV2
         {
             return self.ToString(si, null);
         }
-        public static string ElementExecuteToString(this IntFloat? self)
+        public static string ElementExecuteToString(this IntFloatFrac? self)
         {
             return self.NullableToString(StringProps.NullLabel);
         }

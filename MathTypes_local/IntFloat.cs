@@ -25,6 +25,8 @@ namespace MathTypes
         public bool IsFloat { get => floatNotInt; }
         public bool IsInt { get => !floatNotInt; }
 
+        public object Value => floatNotInt ? (object)floating : (object)integer;
+
         public bool IsNegative { get => floatNotInt ? double.IsNegative(floating) : integer < 0; }
         public bool IsPositive { get => !IsNegative; }
 
@@ -40,13 +42,13 @@ namespace MathTypes
         public IntFloat(BigInteger value)
         {
             integer = value;
-            floating = floating_default;
+            floating = default;
             floatNotInt = false;
         }
 
         public IntFloat(double value)
         {
-            integer = integer_default;
+            integer = default;
             floating = value;
             floatNotInt = true;
         }
@@ -56,21 +58,32 @@ namespace MathTypes
             if (dec == Math.Floor(dec))
             {
                 integer = new BigInteger(dec);
-                floating = floating_default;
+                floating = default;
                 floatNotInt = false;
             }
             else
             {
-                integer = integer_default;
+                integer = default;
                 floating = (double)dec;
                 floatNotInt = true;
             }
         }
 
-        public IntFloat(int integer) : this((BigInteger)integer) { }
-        public IntFloat(long integer) : this((BigInteger)integer) { }
-        public IntFloat(uint integer) : this((BigInteger)integer) { }
-        public IntFloat(ulong integer) : this((BigInteger)integer) { }
+        public IntFloat(float f)
+        {
+            integer = default;
+            floating = f;
+            floatNotInt = true;
+        }
+
+        public IntFloat(sbyte sb) : this((BigInteger)sb) { }
+        public IntFloat(short s) : this((BigInteger)s) { }
+        public IntFloat(int i) : this((BigInteger)i) { }
+        public IntFloat(long l) : this((BigInteger)l) { }
+        public IntFloat(byte b) : this((BigInteger)b) { }
+        public IntFloat(ushort us) : this((BigInteger) us) { }
+        public IntFloat(uint ui) : this((BigInteger)ui) { }
+        public IntFloat(ulong ul) : this((BigInteger)ul) { }
         #endregion
 
         #region public Methods
@@ -153,7 +166,7 @@ namespace MathTypes
             }
             else
             {
-                return 0;
+                return 1;
             }
         }
 
@@ -171,18 +184,49 @@ namespace MathTypes
 
         public int CompareTo(object obj)
         {
-            if (obj is IntFloat inf) { return CompareTo(inf); }
+            switch (obj)
+            {
+                case IntFloat inf:
+                    return CompareTo(inf);
+                case double d:
+                    return CompareTo(d);
+                case float f:
+                    return CompareTo(f);
+                case BigInteger bi:
+                    return CompareTo(bi);
+                case long l:
+                    return CompareTo((BigInteger)l);
+                case int i:
+                    return CompareTo((BigInteger)i);
+                case short s:
+                    return CompareTo((BigInteger)s);
+                case sbyte sb:
+                    return CompareTo((BigInteger)sb);
+                case UBigInteger ubi:
+                    return CompareTo((BigInteger)ubi);
+                case byte b:
+                    return CompareTo((BigInteger)b);
+                case ushort us:
+                    return CompareTo((BigInteger)us);
+                case uint ui:
+                    return CompareTo((BigInteger)ui);
+                case ulong ul:
+                    return CompareTo((BigInteger)ul);
+                default:
+                    throw new ArgumentException("The parameter must be a float or integer");
+            }
+            //if (obj is IntFloat inf) { return CompareTo(inf); }
 
-            if (obj is double d) { return CompareTo(d); }
-            if (obj is BigInteger big) { return CompareTo(big); }
-            //if (obj is decimal dec) { return CompareTo((double)dec); } *could lead to problems
-            if (obj is float f) { return CompareTo((double)f); }
+            //if (obj is double d) { return CompareTo(d); }
+            //if (obj is BigInteger big) { return CompareTo(big); }
+            ////if (obj is decimal dec) { return CompareTo((double)dec); } *could lead to problems
+            //if (obj is float f) { return CompareTo((double)f); }
 
-            if (obj is ulong ul) { return CompareTo((BigInteger)ul); }
-            if (obj is long l) { return CompareTo((BigInteger)l); }
-            if (obj is uint ui) { return CompareTo((BigInteger)ui); }
-            if (obj is int i) { return CompareTo((BigInteger)i); }
-            if (obj is Int16 i16) { return CompareTo((BigInteger)i16); }
+            //if (obj is ulong ul) { return CompareTo((BigInteger)ul); }
+            //if (obj is long l) { return CompareTo((BigInteger)l); }
+            //if (obj is uint ui) { return CompareTo((BigInteger)ui); }
+            //if (obj is int i) { return CompareTo((BigInteger)i); }
+            //if (obj is Int16 i16) { return CompareTo((BigInteger)i16); }
 
             throw new ArgumentException("The parameter must be a float, double, or integer type. (Parameter 'obj')");
         }
@@ -437,14 +481,18 @@ namespace MathTypes
         }
         #endregion
         #region Casts
-        public static implicit operator IntFloat(BigInteger big) => new IntFloat(big);
         public static implicit operator IntFloat(double d) => new IntFloat(d);
+        public static implicit operator IntFloat(BigInteger big) => new IntFloat(big);
 
-        public static implicit operator IntFloat(long i) => new IntFloat(i);
-        public static implicit operator IntFloat(ulong i) => new IntFloat(i);
+        public static implicit operator IntFloat(sbyte i) => new IntFloat(i);
+        public static implicit operator IntFloat(short i) => new IntFloat(i);
         public static implicit operator IntFloat(int i) => new IntFloat(i);
+        public static implicit operator IntFloat(long i) => new IntFloat(i);
+
+        public static implicit operator IntFloat(byte i) => new IntFloat(i);
+        public static implicit operator IntFloat(ushort i) => new IntFloat(i);
         public static implicit operator IntFloat(uint i) => new IntFloat(i);
-        public static implicit operator IntFloat(Int16 i) => new IntFloat(i);
+        public static implicit operator IntFloat(ulong i) => new IntFloat(i);
 
         public static explicit operator IntFloat(decimal d) => new IntFloat(d);
 
@@ -453,11 +501,15 @@ namespace MathTypes
         public static explicit operator double(IntFloat iflt) => iflt.Float;
         public static explicit operator float(IntFloat i) => (float)i.Float;
 
-        public static explicit operator long(IntFloat iflt) => (long)iflt.Int;
-        public static explicit operator ulong(IntFloat iflt) => (ulong)iflt.Int;
+        public static explicit operator sbyte(IntFloat iflt) => (sbyte)iflt.Int;
+        public static explicit operator short(IntFloat iflt) => (short)iflt.Int;
         public static explicit operator int(IntFloat iflt) => (int)iflt.Int;
+        public static explicit operator long(IntFloat iflt) => (long)iflt.Int;
+
+        public static explicit operator byte(IntFloat iflt) => (byte)iflt.Int;
+        public static explicit operator ushort(IntFloat iflt) => (ushort)iflt.Int;
         public static explicit operator uint(IntFloat iflt) => (uint)iflt.Int;
-        public static explicit operator Int16(IntFloat iflt) => (Int16)iflt.Int;
+        public static explicit operator ulong(IntFloat iflt) => (ulong)iflt.Int;
 
         #endregion
         #region Operators
@@ -481,22 +533,16 @@ namespace MathTypes
         #endregion
 
         #region public static Properties
-        public static IntFloat Default { get => floating_default; }
+        public static IntFloat Default { get => new IntFloat(); }
         public static IntFloat PositiveInfinity { get => double.PositiveInfinity; }
         public static IntFloat NegativeInfinity { get => double.NegativeInfinity; }
         public static IntFloat NaN { get => double.NaN; }
-        public static IntFloat Epsilon { get => double.Epsilon; }
         #endregion
 
         #region private Fields
+        private readonly bool floatNotInt;
         private readonly double floating;
         private readonly BigInteger integer;
-        private readonly bool floatNotInt;
-        #endregion
-
-        #region private Constants
-        private const double floating_default = default(double);
-        private const int integer_default = default(int);
         #endregion
     }
 }

@@ -27,7 +27,7 @@ namespace ExoParseV2
         /// </summary>
         public (string name, int paramCount) Id { get { return (name: Name, paramCount: ParamCount); } }
 
-        public IElement Calculate(params IntFloat?[] args)
+        public IElement Calculate(params IntFloatFrac?[] args)
         {
             return Calculate(args.Select(a => a.ToElement()).ToArray());
         }
@@ -67,7 +67,7 @@ namespace ExoParseV2
             return parent;
         }
 
-        public virtual IntFloat? Execute(Execution parent, IElement[] args)
+        public virtual IntFloatFrac? Execute(Execution parent, IElement[] args)
         {
             return Calc(parent, args).Execute();
         }
@@ -131,7 +131,7 @@ namespace ExoParseV2
             }
             //
 
-            IntFloat? result = Behavior?.Execute();
+            IntFloatFrac? result = Behavior?.Execute();
 
             // Return what the vars where.
             for(int i = 0; i < LocalVars.Length; i++)

@@ -7,29 +7,29 @@ namespace ExoParseV2
 {
     public static class LogicUtils
     {
-        public static readonly IntFloat True_IntFloat  = 1;
-        public static readonly IntFloat False_IntFloat = 0;
-        public static IntFloat? Not(IntFloat? num)
+        public static readonly IntFloatFrac True_IntFloat  = 1;
+        public static readonly IntFloatFrac False_IntFloat = 0;
+        public static IntFloatFrac? Not(IntFloatFrac? num)
         {
             return (!num.ToBool()).ToIntFloat();
         }
-        public static IntFloat? And(IntFloat? a, IntFloat? b)
+        public static IntFloatFrac? And(IntFloatFrac? a, IntFloatFrac? b)
         {
             return (a.ToBool() & b.ToBool()).ToIntFloat();
         }
-        public static IntFloat? Or(IntFloat? a, IntFloat? b)
+        public static IntFloatFrac? Or(IntFloatFrac? a, IntFloatFrac? b)
         {
             return (a.ToBool() | b.ToBool()).ToIntFloat();
         }
-        public static IntFloat? Xor(IntFloat? a, IntFloat? b)
+        public static IntFloatFrac? Xor(IntFloatFrac? a, IntFloatFrac? b)
         {
             return (a.ToBool() ^ b.ToBool()).ToIntFloat();
         }
-        public static IntFloat? Buffer(IntFloat? num)
+        public static IntFloatFrac? Buffer(IntFloatFrac? num)
         {
             return num.ToBool().ToIntFloat();
         }
-        public static bool? ToBool(this IntFloat? self)
+        public static bool? ToBool(this IntFloatFrac? self)
         {
             if (self == True_IntFloat)
             {
@@ -44,11 +44,11 @@ namespace ExoParseV2
                 return null;
             }
         }
-        public static bool? ToBool(this IntFloat self)
+        public static bool? ToBool(this IntFloatFrac self)
         {
-            return ((IntFloat?)self).ToBool();
+            return ((IntFloatFrac?)self).ToBool();
         }
-        public static IntFloat? ToIntFloat(this bool? self)
+        public static IntFloatFrac? ToIntFloat(this bool? self)
         {
             if (self == true)
             {
@@ -63,9 +63,9 @@ namespace ExoParseV2
                 return null;
             }
         }
-        public static IntFloat ToIntFloat(this bool self)
+        public static IntFloatFrac ToIntFloat(this bool self)
         {
-            return (IntFloat)((bool?)self).ToIntFloat();
+            return (IntFloatFrac)((bool?)self).ToIntFloat();
         }
     }
 }

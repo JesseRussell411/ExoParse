@@ -51,6 +51,14 @@ namespace ExoParseV2
             return MathUtils.FloorDiv(a.Execute(), b.Execute()).ToElement();
         }
     }
+    public class FloatDivision_op : LeftToRightOperator
+    {
+        public override string Symbol { get; } = "///";
+        protected override IElement calc(IElement a, IElement b)
+        {
+            return MathUtils.FloatDiv(a.Execute(), b.Execute()).ToElement();
+        }
+    }
 
     public class Modulus_op : LeftToRightOperator
     {
@@ -308,7 +316,7 @@ namespace ExoParseV2
         {
             return a.TrySetDefinition(b);
         }
-        protected override IntFloat? execute(IElement a, IElement b, Operation parent)
+        protected override IntFloatFrac? execute(IElement a, IElement b, Operation parent)
         {
             calc(a, b);
             return null;
@@ -338,7 +346,7 @@ namespace ExoParseV2
         public override string Symbol { get; } = "??";
         protected override IElement calc(IElement a, IElement b)
         {
-            IntFloat? a_Execute = a.Execute();
+            IntFloatFrac? a_Execute = a.Execute();
             if (a_Execute == null)
             {
                 return b;
@@ -362,7 +370,7 @@ namespace ExoParseV2
         {
             if (b is TernaryMessenger tm)
             {
-                IntFloat? a_Execute = a.Execute();
+                IntFloatFrac? a_Execute = a.Execute();
                 if (a_Execute == LogicUtils.True_IntFloat)
                 {
                     return tm.A;
@@ -378,7 +386,7 @@ namespace ExoParseV2
             }
             else
             {
-                IntFloat? a_Execute = a.Execute();
+                IntFloatFrac? a_Execute = a.Execute();
                 if (a_Execute == LogicUtils.True_IntFloat)
                 {
                     return b;
