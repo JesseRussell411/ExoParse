@@ -614,8 +614,6 @@ namespace MathTypes
         #region private const Fields
         private const int FROM_DOUBLE_PRECISION_LIMIT = 326;
         private const int FROM_DECIMAL_PRECISION_LIMIT = 31;
-        private const double DECIMAL_EPSILON = 1e-28; // *from https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/floating-point-numeric-types
-        private const double DECIMAL_MAXVALUE = 7.922816251426433E+28; // *from Console.WriteLine(Convert.ToDouble(decimal.MaxValue)); *actual result was 7.922816251426434E+28 (4 vs 3 at end); however, this caused an overflow when converting to decimal, so I reduced it slightly.
         #endregion
     }
 
@@ -658,6 +656,11 @@ namespace MathTypes
         public int CompareTo(BigInteger big) => Unsimplified.CompareTo(big);
         public int CompareTo(FractionOperation other) => Unsimplified.CompareTo(other);
         public int CompareTo(object obj) => Unsimplified.CompareTo(obj);
+        #endregion
+        #region Math
+        public FractionOperation Floor() => Unsimplified.Floor();
+        public FractionOperation Ceiling() => Unsimplified.Ceiling();
+        public FractionOperation Truncate() => Unsimplified.Truncate();
         #endregion
         #endregion
 

@@ -297,7 +297,7 @@ namespace MathTypes
                 }
             }
         }
-        public static Doudec Pow(Doudec x, Doudec y) => Math.Pow(x.Double, y.Double);
+        public static Doudec Pow(Doudec x, double y) => Math.Pow(x.Double, y);
         public static Doudec Floor(Doudec dd) => dd.doubleNotDecimal ? (Doudec) Math.Floor(dd.Double) : Math.Floor(dd.Decimal);
         public static Doudec Ceiling(Doudec dd) => dd.doubleNotDecimal ? (Doudec) Math.Ceiling(dd.Double) : Math.Ceiling(dd.Decimal);
         public static Doudec Truncate(Doudec dd) => dd.doubleNotDecimal ? (Doudec) Math.Truncate(dd.Double) : Math.Truncate(dd.Decimal);

@@ -148,11 +148,16 @@ namespace MathTypes
         public static IntFloatFrac Divide(IntFloatFrac left, IntFloatFrac right)
         {
             if (left.IsFloat || right.IsFloat) return left.Float / right.Float;
+            if (left.IsFraction || right.IsFraction) return left.Fraction / right.Fraction;
+            BigInteger l_i = left.Int;
+            BigInteger r_i = right.Int;
+            if (l_i % r_i == 0) return l_i / r_i;
             return left.Fraction / right.Fraction;
         }
         public static IntFloatFrac FloorDivide(IntFloatFrac left, IntFloatFrac right)
         {
             if (left.IsFloat || right.IsFloat) return Doudec.Floor(left.Float / right.Float);
+            if (left.IsFraction || right.IsFraction) return (left.Fraction / right.Fraction).Floor();
             return left.Int / right.Int;
         }
 
