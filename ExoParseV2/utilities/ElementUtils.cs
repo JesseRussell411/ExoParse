@@ -43,6 +43,10 @@ namespace ExoParseV2
         {
             return new Literal(self);
         }
+        public static IElement ToElement(this Doudec self)
+        {
+            return new Literal(self);
+        }
 
         public static IElement ToElement(this int self)
         {

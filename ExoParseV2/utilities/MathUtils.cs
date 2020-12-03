@@ -156,7 +156,7 @@ namespace ExoParseV2
             }
             else
             {
-                return IntFloatFrac.Pow((IntFloatFrac)x, (int)(IntFloatFrac)y);
+                return IntFloatFrac.Pow((IntFloatFrac)x, y.Value.Float.Double);
             }
         }
         public static IntFloatFrac? Floor(IntFloatFrac? d)
@@ -197,7 +197,11 @@ namespace ExoParseV2
                 return IntFloatFrac.Abs((IntFloatFrac)d);
             }
         }
-        public static IntFloatFrac? Sign(IntFloatFrac? d) => d?.Sign;
+        public static IntFloatFrac? Sign(IntFloatFrac? d)
+        {
+            if (d == null) return null;
+            return IntFloatFrac.Sign((IntFloatFrac)d);
+        }
 
         public static IntFloatFrac? Min(IntFloatFrac? a, IntFloatFrac? b)
         {

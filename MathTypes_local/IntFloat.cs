@@ -11,7 +11,7 @@ using System.Data.SqlTypes;
 namespace MathTypes
 {
     /// <summary>
-    /// Combination BigInteger and double (a little like python). Automatically chooses best way of storing value based on context.
+    /// Combination BigInteger and Doudec (a little like python). Automatically chooses best way of storing value based on context.
     /// </summary>
     /// 
     /// <Author>
@@ -20,22 +20,24 @@ namespace MathTypes
     public struct IntFloat : IComparable, IComparable<IntFloat>, IEquatable<IntFloat>
     {
         #region public Properties
-        public double Float { get => floatNotInt ? floating : (double)integer; }
+        public Doudec Float { get => floatNotInt ? floating : (Doudec)integer; }
         public BigInteger Int { get => !floatNotInt ? integer : (BigInteger)floating; }
         public bool IsFloat { get => floatNotInt; }
         public bool IsInt { get => !floatNotInt; }
 
-        public object Value => floatNotInt ? (object)floating : (object)integer;
+        public object Value => floatNotInt ? (object)floating : integer;
 
-        public bool IsNegative { get => floatNotInt ? double.IsNegative(floating) : integer < 0; }
+        public bool IsNegative { get => floatNotInt ? Doudec.IsNegative(floating) : integer < 0; }
         public bool IsPositive { get => !IsNegative; }
 
-        public bool IsFinite { get => !floatNotInt || double.IsFinite(floating); }
-        public bool IsPositiveInfinity { get => floatNotInt && double.IsPositiveInfinity(floating); }
-        public bool IsNegativeInfinity { get => floatNotInt && double.IsNegativeInfinity(floating); }
-        public bool IsNaN { get => floatNotInt && double.IsNaN(floating); }
-        public bool IsNormal { get => floatNotInt && double.IsNormal(floating); }
-        public bool IsSubNormal { get => floatNotInt && double.IsSubnormal(floating); }
+        public bool IsFinite { get => !floatNotInt || Doudec.IsFinite(floating); }
+        public bool IsPositiveInfinity { get => floatNotInt && Doudec.IsPositiveInfinity(floating); }
+        public bool IsNegativeInfinity { get => floatNotInt && Doudec.IsNegativeInfinity(floating); }
+        public bool IsNaN { get => floatNotInt && Doudec.IsNaN(floating); }
+        public bool IsNormal { get => floatNotInt && Doudec.IsNormal(floating); }
+        public bool IsSubNormal { get => floatNotInt && Doudec.IsSubnormal(floating); }
+
+        public bool IsZero => floatNotInt ? floating == 0 : integer.IsZero;
         #endregion
 
         #region public Constructors
@@ -46,7 +48,7 @@ namespace MathTypes
             floatNotInt = false;
         }
 
-        public IntFloat(double value)
+        public IntFloat(Doudec value)
         {
             integer = default;
             floating = value;
@@ -64,7 +66,7 @@ namespace MathTypes
             else
             {
                 integer = default;
-                floating = (double)dec;
+                floating = (Doudec)dec;
                 floatNotInt = true;
             }
         }
@@ -97,7 +99,7 @@ namespace MathTypes
             }
             else if (floatNotInt && !other.floatNotInt)
             {
-                if (double.IsFinite(floating))
+                if (Doudec.IsFinite(floating))
                 {
                     return floating == other.Float;
                 }
@@ -108,7 +110,7 @@ namespace MathTypes
             }
             else if (!floatNotInt && other.floatNotInt)
             {
-                if (double.IsFinite(other.floating))
+                if (Doudec.IsFinite(other.floating))
                 {
                     return Float == other.floating;
                 }
@@ -142,25 +144,25 @@ namespace MathTypes
         }
 
 
-        public int CompareTo(double d)
+        public int CompareTo(Doudec d)
         {
             if (floatNotInt)
             {
                 return floating.CompareTo(d);
             }
-            else if (double.IsFinite(d))
+            else if (Doudec.IsFinite(d))
             {
-                return ((double)integer).CompareTo(d);
+                return ((Doudec)integer).CompareTo(d);
             }
-            else if (double.IsPositiveInfinity(d))
+            else if (Doudec.IsPositiveInfinity(d))
             {
                 return -1;
             }
-            else if (double.IsNegativeInfinity(d))
+            else if (Doudec.IsNegativeInfinity(d))
             {
                 return 1;
             }
-            else if (double.IsNaN(d))
+            else if (Doudec.IsNaN(d))
             {
                 return 1;
             }
@@ -174,7 +176,7 @@ namespace MathTypes
         {
             if (floatNotInt)
             {
-                return floating.CompareTo((double)i);
+                return floating.CompareTo((Doudec)i);
             }
             else
             {
@@ -188,7 +190,7 @@ namespace MathTypes
             {
                 case IntFloat inf:
                     return CompareTo(inf);
-                case double d:
+                case Doudec d:
                     return CompareTo(d);
                 case float f:
                     return CompareTo(f);
@@ -217,10 +219,10 @@ namespace MathTypes
             }
             //if (obj is IntFloat inf) { return CompareTo(inf); }
 
-            //if (obj is double d) { return CompareTo(d); }
+            //if (obj is Doudec d) { return CompareTo(d); }
             //if (obj is BigInteger big) { return CompareTo(big); }
-            ////if (obj is decimal dec) { return CompareTo((double)dec); } *could lead to problems
-            //if (obj is float f) { return CompareTo((double)f); }
+            ////if (obj is decimal dec) { return CompareTo((Doudec)dec); } *could lead to problems
+            //if (obj is float f) { return CompareTo((Doudec)f); }
 
             //if (obj is ulong ul) { return CompareTo((BigInteger)ul); }
             //if (obj is long l) { return CompareTo((BigInteger)l); }
@@ -228,7 +230,7 @@ namespace MathTypes
             //if (obj is int i) { return CompareTo((BigInteger)i); }
             //if (obj is Int16 i16) { return CompareTo((BigInteger)i16); }
 
-            throw new ArgumentException("The parameter must be a float, double, or integer type. (Parameter 'obj')");
+            throw new ArgumentException("The parameter must be a float, Doudec, or integer type. (Parameter 'obj')");
         }
         #endregion
         public override int GetHashCode()
@@ -303,7 +305,7 @@ namespace MathTypes
         {
             if (left.floatNotInt || right.floatNotInt)
             {
-                return (BigInteger)Math.Floor(left.Float / right.Float);
+                return (BigInteger)Doudec.Floor(left.Float / right.Float);
             }
             else
             {
@@ -327,7 +329,7 @@ namespace MathTypes
         {
             if (expnent < 0 || value.floatNotInt || expnent.floatNotInt)
             {
-                return Math.Pow(value.Float, expnent.Float);
+                return Doudec.Pow(value.Float, expnent.Float);
             }
             else
             {
@@ -337,11 +339,11 @@ namespace MathTypes
 
                     if (expnent.integer.IsEven)
                     {
-                        return double.PositiveInfinity;
+                        return Doudec.PositiveInfinity;
                     }
                     else
                     {
-                        return value.integer.IsEven ? double.PositiveInfinity : double.NegativeInfinity;
+                        return value.integer.IsEven ? Doudec.PositiveInfinity : Doudec.NegativeInfinity;
                     }
                 }
                 else
@@ -360,7 +362,7 @@ namespace MathTypes
         {
             if (value.floatNotInt)
             {
-                return (BigInteger) Math.Floor(value.floating);
+                return (BigInteger) Doudec.Floor(value.floating);
             }
             else
             {
@@ -371,7 +373,18 @@ namespace MathTypes
         {
             if (value.floatNotInt)
             {
-                return (BigInteger) Math.Ceiling(value.floating);
+                return (BigInteger) Doudec.Ceiling(value.floating);
+            }
+            else
+            {
+                return value;
+            }
+        }
+        public static IntFloat Truncate(IntFloat value)
+        {
+            if (value.floatNotInt)
+            {
+                return (BigInteger)Doudec.Truncate(value.floating);
             }
             else
             {
@@ -382,22 +395,29 @@ namespace MathTypes
         {
             if (value.floatNotInt)
             {
-                return Math.Abs(value.floating);
+                return Doudec.Abs(value.floating);
             }
             else
             {
                 return BigInteger.Abs(value.integer);
             }
         }
-        public static IntFloat Log(IntFloat value, IntFloat baseValue)
+        public static IntFloat Log(IntFloat value)
         {
-            return IntFloat.Log(value, baseValue.Float);
+            if (value.floatNotInt)
+            {
+                return Doudec.Log(value.floating);
+            }
+            else
+            {
+                return BigInteger.Log(value.integer);
+            }
         }
         public static IntFloat Log(IntFloat value, double baseValue)
         {
             if (value.floatNotInt)
             {
-                return Math.Log(value.floating, baseValue);
+                return Doudec.Log(value.floating, baseValue);
             }
             else
             {
@@ -408,18 +428,29 @@ namespace MathTypes
         {
             if (value.floatNotInt)
             {
-                return Math.Log10(value.floating);
+                return Doudec.Log10(value.floating);
             }
             else
             {
                 return BigInteger.Log10(value.integer);
             }
         }
-        public static IntFloat Sign(IntFloat value)
+        public static IntFloat Log2(IntFloat value)
         {
             if (value.floatNotInt)
             {
-                return Math.Sign(value.floating);
+                return Doudec.Log2(value.floating);
+            }
+            else
+            {
+                return BigInteger.Log(value.integer, 2);
+            }
+        }
+        public static int Sign(IntFloat value)
+        {
+            if (value.floatNotInt)
+            {
+                return Doudec.Sign(value.floating);
             }
             else
             {
@@ -458,7 +489,7 @@ namespace MathTypes
                 return true;
             }
 
-            if (double.TryParse(s, out double d))
+            if (Doudec.TryParse(s, out Doudec d))
             {
                 result = new IntFloat(d);
                 return true;
@@ -476,13 +507,16 @@ namespace MathTypes
             }
             else
             {
-                throw new FormatException($"{s} is not a valid double or BigInteger");
+                throw new FormatException($"{s} is not a valid Doudec or BigInteger");
             }
         }
         #endregion
         #region Casts
-        public static implicit operator IntFloat(double d) => new IntFloat(d);
+        public static implicit operator IntFloat(Doudec dd) => new IntFloat(dd);
         public static implicit operator IntFloat(BigInteger big) => new IntFloat(big);
+
+        public static implicit operator IntFloat(double d) => new IntFloat(d);
+        public static implicit operator IntFloat(float f) => new IntFloat(f);
 
         public static implicit operator IntFloat(sbyte i) => new IntFloat(i);
         public static implicit operator IntFloat(short i) => new IntFloat(i);
@@ -498,7 +532,10 @@ namespace MathTypes
 
 
         public static explicit operator BigInteger(IntFloat iflt) => iflt.Int;
-        public static explicit operator double(IntFloat iflt) => iflt.Float;
+        public static explicit operator Doudec(IntFloat iflt) => iflt.Float;
+
+        public static explicit operator decimal(IntFloat iflt) => (decimal)iflt.Float;
+        public static explicit operator double(IntFloat iflt) => (double)iflt.Float;
         public static explicit operator float(IntFloat i) => (float)i.Float;
 
         public static explicit operator sbyte(IntFloat iflt) => (sbyte)iflt.Int;
@@ -534,14 +571,14 @@ namespace MathTypes
 
         #region public static Properties
         public static IntFloat Default { get => new IntFloat(); }
-        public static IntFloat PositiveInfinity { get => double.PositiveInfinity; }
-        public static IntFloat NegativeInfinity { get => double.NegativeInfinity; }
-        public static IntFloat NaN { get => double.NaN; }
+        public static IntFloat PositiveInfinity { get => Doudec.PositiveInfinity; }
+        public static IntFloat NegativeInfinity { get => Doudec.NegativeInfinity; }
+        public static IntFloat NaN { get => Doudec.NaN; }
         #endregion
 
         #region private Fields
         private readonly bool floatNotInt;
-        private readonly double floating;
+        private readonly Doudec floating;
         private readonly BigInteger integer;
         #endregion
     }

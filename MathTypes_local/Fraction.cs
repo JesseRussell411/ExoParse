@@ -274,6 +274,15 @@ namespace MathTypes
             Fraction simplified = Simplify();
             return simplified.Denominator == 1 && simplified.Numerator == bi;
         }
+        public bool Equals(double d) => Equals(FromDouble(d));
+        public bool Equals(float f) => Equals(FromDouble(f));
+        public bool Equals(decimal dec) => Equals(FromDecimal(dec));
+        public bool Equals(Doudec dd) => Equals(FromDoudec(dd));
+
+        /// <summary>
+        /// Returns whether ift is equal to the current fraction.
+        /// </summary>
+        public bool Equals(IntFloat ift) => ift.IsInt ? Equals(ift.Int) : Equals(ift.Float);
 
         /// <summary>
         /// Returns whether fo is equal to the current fraction.
@@ -307,7 +316,11 @@ namespace MathTypes
                 uint ui => Equals((BigInteger)ui),
                 ulong ul => Equals((BigInteger)ul),
                 UBigInteger ubi => Equals((BigInteger)ubi),
-                _ => false,
+                double d => Equals(d),
+                float f => Equals(f),
+                Doudec dd => Equals(dd),
+                IntFloat ift => Equals(ift),
+                _ => throw new ArgumentException("The parameter must be a fraction, integer, or floating point number.")
             };
         }
         public int CompareTo(Fraction other)
@@ -321,6 +334,7 @@ namespace MathTypes
         public int CompareTo(FractionOperation fo) => CompareTo((Fraction)fo);
         public int CompareTo(double d) => CompareTo((Fraction)d);
         public int CompareTo(decimal d) => CompareTo((Fraction)d);
+        public int CompareTo(IntFloat ift) => ift.IsInt ? CompareTo(ift.Int) : CompareTo(ift.Float);
         public int CompareTo(object obj)
         {
             return obj switch
@@ -340,7 +354,8 @@ namespace MathTypes
                 double d => CompareTo(d),
                 decimal d => CompareTo(d),
                 float f => CompareTo(f),
-                _ => throw new ArgumentException("Parameter must be a fraction, integer, double, float, or decimal."),
+                IntFloat ift => CompareTo(ift),
+                _ => throw new ArgumentException("Parameter must be a fraction, integer, double, float, IntFloat, or decimal."),
             };
         }
         #endregion
@@ -352,6 +367,8 @@ namespace MathTypes
         public double ToDouble() => (double)Numerator / (double)Denominator;
         public float ToFloat() => (float)Numerator / (float)Denominator;
         public decimal ToDecimal() => (decimal)Numerator / (decimal)Denominator;
+        public Doudec ToDoudec() => (Doudec)Numerator / (Doudec)Denominator;
+        public IntFloat ToIntFloat() => IsWhole ? (IntFloat)ToBigInteger() : ToDoudec();
         #endregion
         /// <summary>
         /// Returns a string representation of the current fraction.
@@ -500,17 +517,19 @@ namespace MathTypes
         #endregion
 
         #region Conversion
+        public static Fraction FromDoudec(Doudec dd) => dd.Value switch
+        {
+            double d => FromDouble(d),
+            decimal dec => FromDecimal(dec),
+            _ => FromDouble(dd.Double)
+        };
+
         public static Fraction FromDouble(double d)
         {
-            double d_abs = Math.Abs(d);
             // Trying to convert to decimal first...
-            if (DECIMAL_EPSILON < d_abs && d_abs < DECIMAL_MAXVALUE)
+            if (MathUtils.TryToDecimal(d, out decimal dec))
             {
-                try
-                {
-                    return FromDecimal(Convert.ToDecimal(d));
-                }
-                finally { }
+                return FromDecimal(dec);
             }
 
             // Can't use decimal, will have to fall back on double instead.
@@ -576,10 +595,14 @@ namespace MathTypes
         public static explicit operator double(Fraction f) => f.ToDouble();
         public static explicit operator float(Fraction f) => f.ToFloat();
         public static explicit operator decimal(Fraction f) => f.ToDecimal();
+        public static explicit operator Doudec(Fraction f) => f.ToDoudec();
+
+        public static explicit operator IntFloat(Fraction f) => f.ToIntFloat();
 
         public static explicit operator Fraction(double d) => FromDouble(d);
         public static explicit operator Fraction(float f) => FromDouble(f);
         public static explicit operator Fraction(decimal dec) => FromDecimal(dec);
+        public static explicit operator Fraction(Doudec dd) => FromDoudec(dd);
         #endregion
         #endregion
 
