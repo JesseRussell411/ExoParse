@@ -7,8 +7,12 @@ using System.Numerics;
 namespace MathTypes
 {
     /// <summary>
-    /// Combination of decimal and double. This is a method for reducing the impact of floating point rounding errors; as such, it prioritizes decimal whenever possible.
+    /// Combination of decimal and double. This is a method for reducing the impact of floating point rounding errors, with a large trade-off in performance (unfortunately); It generally tries to store the number as a decimal for as long as possible, only switching to double on an overflow of either size or precision.
     /// </summary>
+    /// 
+    /// <author>
+    /// Jesse Russell
+    /// </author>
     [StructLayout(LayoutKind.Explicit)]
     public struct Doudec : IComparable<Doudec>, IComparable<double>, IComparable<decimal>, IEquatable<Doudec>, IEquatable<double>, IEquatable<decimal>
     {
@@ -96,8 +100,9 @@ namespace MathTypes
             }
         }
 
-        public override string ToString() => doubleNotDecimal ? doub.ToString() : decim.ToString();
         #endregion
+        public override string ToString() => doubleNotDecimal ? doub.ToString() : decim.ToString();
+        
         public bool TryToDecimal(out decimal result)
         {
             if (!doubleNotDecimal)
@@ -314,7 +319,7 @@ namespace MathTypes
         public static Doudec FromDouble(double d) => MathUtils.TryToDecimalStrictly(d, out decimal dec) ? new Doudec(dec) : new Doudec(d);
         public static Doudec FromDecimal(decimal dec)
         {
-            if (dec == 0) return new Doudec(0M);
+            if (dec == 0) return new Doudec(decimal.Zero);
             return new Doudec(dec);
         }
         public static Doudec FromBigInteger(BigInteger bi)
