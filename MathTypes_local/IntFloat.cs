@@ -325,33 +325,41 @@ namespace MathTypes
             }
         }
 
-        public static IntFloat Pow(IntFloat value, IntFloat expnent)
+        public static IntFloat Pow(IntFloat x, IntFloat y)
         {
-            if (expnent < 0 || value.floatNotInt || expnent.floatNotInt)
+            if (y < 0 || x.floatNotInt || y.floatNotInt)
             {
-                return Doudec.Pow(value.Float, expnent.Float);
+                return Doudec.Pow(x.Float, y.Float.Double);
             }
             else
             {
-                if (expnent.integer > int.MaxValue)
+                if (y.integer > int.MaxValue)
                 {
                     // Exponent is too big
 
-                    if (expnent.integer.IsEven)
+                    if (y.integer.IsEven)
                     {
                         return Doudec.PositiveInfinity;
                     }
                     else
                     {
-                        return value.integer.IsEven ? Doudec.PositiveInfinity : Doudec.NegativeInfinity;
+                        return x.integer.IsEven ? Doudec.PositiveInfinity : Doudec.NegativeInfinity;
                     }
                 }
                 else
                 {
-                    return BigInteger.Pow(value.integer, (int)expnent.integer);
+                    return BigInteger.Pow(x.integer, (int)y.integer);
                 }
             }
         }
+
+        public static IntFloat Pow(IntFloat x, Doudec y) => Doudec.Pow(x.Float, y.Double);
+        public static IntFloat Pow(IntFloat x, double y) => Doudec.Pow(x.Float, y);
+        public static IntFloat Pow(IntFloat x, int y) => x.floatNotInt switch
+        {
+            true => Doudec.Pow(x.floating, y),
+            false => BigInteger.Pow(x.integer, y)
+        };
 
         public static IntFloat Negate(IntFloat value)
         {
