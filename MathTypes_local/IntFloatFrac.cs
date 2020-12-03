@@ -190,11 +190,11 @@ namespace MathTypes
         {
             if (y.IsInt)
             {
-
+                return Pow(x, (int)y);
             }
             else
             {
-
+                return Pow(x, (double)y);
             }
         }
 
