@@ -54,7 +54,7 @@ namespace MathTypes
         #endregion
         #endregion
 
-        #region Extension Constructor. These Constructors MUST extend another constructor
+        #region Extension Constructors. These Constructors MUST extend another constructor
         public uBigInteger(float f) : this(new BigInteger(f)) { }
         public uBigInteger(double d) : this(new BigInteger(d)) { }
         public uBigInteger(decimal dec) : this(new BigInteger(dec)) { }

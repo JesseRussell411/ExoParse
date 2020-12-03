@@ -448,7 +448,7 @@ namespace ExoParseV2.Functions
 
                 Operation div = 
                     new Operation(op.Operator,
-                    new IntFloat((BigInteger) fraction.Numerator * (fraction.IsNegative ? -1 : 1)).ToElement(),
+                    new IntFloat((BigInteger) fraction.Numerator * (fraction.Negative ? -1 : 1)).ToElement(),
                     fraction.Denominator.ToElement());
 
 

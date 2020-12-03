@@ -1,4 +1,6 @@
-﻿using System;
+﻿#define USE_OP
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
@@ -11,13 +13,13 @@ using System.Data.SqlTypes;
 namespace MathTypes
 {
     /// <summary>
-    /// Represents a fraction of arbitrary size and precision.
+    /// Represents a fraction of arbitrary size.
     /// </summary>
     /// 
     /// <Author>
     /// Jesse Russell
     /// </Author>
-    public struct Fraction
+    public struct Fraction : IComparable<Fraction>
     {
         #region public Properties
         /// <summary>
@@ -31,47 +33,78 @@ namespace MathTypes
         /// <summary>
         /// Stores the sign of the fraction. True for negative. False for positive.
         /// </summary>
-        public bool IsNegative { get; }
+        public bool Negative { get; }
+
+        #region Derived Properties
+        /// <summary>
+        /// Returns Numerator as positive or negative depending on the value of the Negative property. Numerator * -1 if Negative; Numerator * 1 if not Negative.
+        /// </summary>
+        public BigInteger SignedNumerator => Numerator.Value * (Negative ? -1 : 1);
+        #endregion
         #endregion
 
         #region public Constructors
-        public Fraction(BigInteger? numerator = null, BigInteger? denominator = null, bool? isNegative = null)
+        public Fraction(BigInteger? numerator = null, BigInteger? denominator = null, bool? negative = null)
         {
             Numerator = (uBigInteger?) numerator ?? numerator_default;
             Denominator = (uBigInteger?) denominator ?? denominator_default;
-            IsNegative = isNegative ?? (numerator < 0) ^ (denominator < 0);
+            Negative = negative ?? (numerator < 0) ^ (denominator < 0);
         }
         #endregion
 
         #region public Methods
+        public Fraction Clone(uBigInteger? numerator_new = null, uBigInteger? denominator_new = null, bool? isNegative_new = null)
+            => new Fraction(numerator_new ?? Numerator, denominator_new ?? Denominator, isNegative_new ?? Negative);
+        public override string ToString()
+        {
+            return $"{(Negative ? "-" : "")}{Numerator}/{Denominator}";
+        }
+        #region Comparison
         public int CompareTo(Fraction other)
         {
             Fraction a = EqualizeDenominators(other, out Fraction b);
 
-            if (a.IsNegative ^ b.IsNegative)
-            {
-                if (b.IsNegative)
-                {
-                    return 1;
-                }
-                else
-                {
-                    return -1;
-                }
-            }
-            else
-            {
-                return a.Numerator.CompareTo(b.Numerator) * (a.IsNegative ? -1 : 1);
-            }
+            return (a.Numerator.Value * (a.Negative ? -1 : 1)).CompareTo(b.Numerator.Value * (a.Negative ? -1 : 1));
+            
         }
-        public Fraction Clone(uBigInteger? numerator_new = null, uBigInteger? denominator_new = null, bool? isNegative_new = null)
-            => new Fraction(numerator_new ?? Numerator, denominator_new ?? Denominator, isNegative_new ?? IsNegative);
+        #endregion
+        #region Equality
+        public override int GetHashCode()
+        {
+            Fraction this_simp = Simplify();
+            return HashCode.Combine(this_simp.Numerator, this_simp.Denominator, this_simp.Negative);
+        }
+        public override bool Equals(object obj)
+        {
+            Fraction? nfrac = obj as Fraction?;
+            return nfrac != null && SoftEquals((Fraction)nfrac);
+        }
+
+        /// <summary>
+        /// Returns true if and only if all parameters of other match all parameters of this Fraction.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public bool HardEquals(Fraction other)
+        {
+            return Negative == other.Negative &&
+                   Numerator == other.Numerator &&
+                   Denominator == other.Denominator;
+        }
+
+        /// <summary>
+        /// Simplifies both fractions before calling HardEquals. Determines whether the this Fraction is mathematically equal to other.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public bool SoftEquals(Fraction other) => Simplify().HardEquals(other.Simplify());
+        #endregion
         #region Math
         /// <summary>
         /// Efficiently multiplies the calling fraction by -1;
         /// </summary>
         /// <returns></returns>
-        public Fraction Neg() => new Fraction(Numerator, Denominator, !IsNegative);
+        public Fraction Neg() => new Fraction(Numerator, Denominator, !Negative);
 
         /// <summary>
         /// Adds other to the calling function.
@@ -82,7 +115,7 @@ namespace MathTypes
         {
             uBigInteger numerator = Numerator;
             uBigInteger denominator = Denominator;
-            bool isNegative = IsNegative;
+            bool isNegative = Negative;
 
             uBigInteger other_num = other.Numerator;
 
@@ -96,7 +129,7 @@ namespace MathTypes
             //
 
 
-            if (isNegative ^ other.IsNegative)
+            if (isNegative ^ other.Negative)
             {
                 if (numerator > other_num)
                 {
@@ -105,7 +138,7 @@ namespace MathTypes
                 }
                 else if (Numerator < other_num)
                 {
-                    isNegative = other.IsNegative;
+                    isNegative = other.Negative;
                     numerator = other_num - numerator;
                 }
                 else // ==
@@ -117,7 +150,7 @@ namespace MathTypes
             else
             {
                 numerator += other_num;
-                isNegative ^= other.IsNegative;
+                isNegative ^= other.Negative;
             }
 
             return new Fraction(numerator, denominator, isNegative);
@@ -140,7 +173,7 @@ namespace MathTypes
             return new Fraction(
                 Numerator * other.Numerator,
                 Denominator * other.Denominator,
-                IsNegative ^ other.IsNegative);
+                Negative ^ other.Negative);
         }
 
         /// <summary>
@@ -154,7 +187,7 @@ namespace MathTypes
         /// Replaces the calling fraction with its reciprocal.
         /// </summary>
         /// <returns></returns>
-        public Fraction Reciprocate() => new Fraction(Denominator, Numerator, IsNegative);
+        public Fraction Reciprocate() => new Fraction(Denominator, Numerator, Negative);
 
         /// <summary>
         /// Raises the calling fraction to p.
@@ -181,11 +214,11 @@ namespace MathTypes
             // Deal with negative powers:
             if (p < 0)
             {
-                return new Fraction(denominator, numerator, IsNegative);
+                return new Fraction(denominator, numerator, Negative);
             }
             else
             {
-                return new Fraction(numerator, denominator, IsNegative);
+                return new Fraction(numerator, denominator, Negative);
             }
             //
         }
@@ -198,40 +231,45 @@ namespace MathTypes
         {
             uBigInteger numerator = Numerator;
             uBigInteger denominator = Denominator;
-            bool isNegative = IsNegative;
+            bool negative = Negative;
 
             if (numerator == 0)
             {
                 denominator = 1;
-                isNegative = false;
-                return new Fraction(numerator, denominator, isNegative);
+                negative = false;
+                return new Fraction(numerator, denominator, negative);
             }
 
-            uBigInteger gcd = findGCD(numerator, denominator);
-
-            for (uBigInteger i = 2; i <= gcd; i++)
+            uBigInteger gcd;
+            while ((gcd = findGCD(numerator, denominator)) != 1)
             {
-                if (numerator % i == 0 && denominator % i == 0)
-                {
-                    do
-                    {
-                        // Apply the common denominator
-                        numerator /= i;
-                        denominator /= i;
-                        //
-                    } while (numerator % i == 0 && denominator % i == 0);
-
-                    // Update scd.
-                    gcd = uBigInteger.Min(numerator, denominator);
-                    //gcd = findGCD(Numerator, Denominator);
-                    //
-                }
+                numerator /= gcd;
+                denominator /= gcd;
             }
 
-            return new Fraction(numerator, denominator, isNegative);
+
+            //for (uBigInteger i = 2; i <= gcd; i++)
+            //{
+            //    if (numerator % i == 0 && denominator % i == 0)
+            //    {
+            //        do
+            //        {
+            //            // Apply the common denominator
+            //            numerator /= i;
+            //            denominator /= i;
+            //            //
+            //        } while (numerator % i == 0 && denominator % i == 0);
+
+            //        // Update scd.
+            //        gcd = uBigInteger.Min(numerator, denominator);
+            //        //gcd = findGCD(Numerator, Denominator);
+            //        //
+            //    }
+            //}
+
+            return new Fraction(numerator, denominator, negative);
         }
         #endregion
-
         #region Conversion
         public IntFloat ToIntFloat()
         {
@@ -252,21 +290,11 @@ namespace MathTypes
             return remainder == 0;
         }
         #endregion
-
-        #region Casts
-        public static implicit operator Fraction(uBigInteger big) => new Fraction(big, 1);
-
-        public static explicit operator double(Fraction f) => f.ToDouble();
-        public static explicit operator decimal(Fraction f) => f.ToDecimal();
-        #endregion
-        public override string ToString()
-        {
-            return $"{(IsNegative ? "-" : "")}{Numerator}/{Denominator}";
-        }
         #endregion
 
         #region public static Methods
-        // Parse:
+        #region Parsing
+        /// <summary>
         /// Tries to convert the string s to a fraction.
         /// </summary>
         /// <param name="s"></param>
@@ -277,37 +305,35 @@ namespace MathTypes
             // Split string on the '/' character.
             string[] s_split = s.Split('/', 2).Select(str => str.Trim()).ToArray();
 
-            bool isNeg = false;
-
-            // Remove '-' from numerator string:
-            if (s_split[0].FirstOrDefault() == '-')
+            // Try to parse the split string...
+            if (s_split.Length == 2)
             {
-                s_split[0] = s_split[0].Substring(1).Trim();
-                isNeg = true;
-            }
-            //
-
-            // Remove '-' from denominator string:
-            if (s_split[1].FirstOrDefault() == '-')
-            {
-                s_split[1] = s_split[1].Substring(1).Trim();
-                isNeg ^= true;
-            }
-            //
-
-            // Try to parse numerator and denominator:
-            if (uBigInteger.TryParse(s_split[0], out uBigInteger numerator) && uBigInteger.TryParse(s_split[1], out uBigInteger denominator))
-            {
-                // if successful set result to the a new fraction and return true
-                result = new Fraction(numerator, denominator, isNeg);
-                return true;
+                // Try to parse numerator and denominator...
+                if (BigInteger.TryParse(s_split[0], out BigInteger numerator) && BigInteger.TryParse(s_split[1], out BigInteger denominator))
+                {
+                    result = new Fraction(numerator, denominator);
+                    return true;
+                }
+                else
+                {
+                    result = new Fraction();
+                    return false;
+                }
             }
             else
             {
-                result = Default;
-                return false;
+                // Try to parse just the numerator...
+                if (BigInteger.TryParse(s_split.FirstOrDefault(), out BigInteger big))
+                {
+                    result = big;
+                    return true;
+                }
+                else
+                {
+                    result = new Fraction();
+                    return false;
+                }
             }
-            //
         }
 
         public static Fraction Parse(string s)
@@ -318,26 +344,49 @@ namespace MathTypes
             }
             else
             {
-                throw new FormatException($"{s} is not a valid fraction.");
+                throw new FormatException($"{s} could not be parsed.");
             }
         }
-        //
+        #endregion
+
+        #region Casts
+        public static implicit operator Fraction(BigInteger big) => new Fraction(big);
+        public static implicit operator Fraction(uBigInteger big) => new Fraction(big);
+        public static implicit operator Fraction(long l) => new Fraction(l);
+
+        public static explicit operator double(Fraction f) => f.ToDouble();
+        public static explicit operator decimal(Fraction f) => f.ToDecimal();
+        #endregion
 
         #region Operators
+
+#if USE_OP
+        public static FractionOperation operator +(Fraction left, Fraction right) => left.Add(right);
+        public static FractionOperation operator -(Fraction left, Fraction right) => left.Add(right);
+
+        public static FractionOperation operator *(Fraction left, Fraction right) => left.Multiply(right);
+        public static FractionOperation operator /(Fraction left, Fraction right) => left.Divide(right);
+#else
         public static Fraction operator +(Fraction left, Fraction right) => left.Add(right).Simplify();
         public static Fraction operator -(Fraction left, Fraction right) => left.Add(right).Simplify();
+
         public static Fraction operator *(Fraction left, Fraction right) => left.Multiply(right).Simplify();
         public static Fraction operator /(Fraction left, Fraction right) => left.Divide(right).Simplify();
+#endif
+
         public static bool operator >(Fraction left, Fraction right) => left.CompareTo(right) > 0;
         public static bool operator >=(Fraction left, Fraction right) => left.CompareTo(right) >= 0;
         public static bool operator <(Fraction left, Fraction right) => left.CompareTo(right) < 0;
         public static bool operator <=(Fraction left, Fraction right) => left.CompareTo(right) <= 0;
+
+        public static bool operator ==(Fraction left, Fraction right) => left.SoftEquals(right);
+        public static bool operator !=(Fraction left, Fraction right) => !left.SoftEquals(right);
         #endregion
         #endregion
 
         #region hidden Methods
-        private Fraction EqualizeDenominators(Fraction other) => Clone(Numerator * other.Denominator, Denominator * other.Denominator);
-        private Fraction EqualizeDenominators(Fraction other, out Fraction other_equalized)
+        internal Fraction EqualizeDenominators(Fraction other) => Clone(Numerator * other.Denominator, Denominator * other.Denominator);
+        internal Fraction EqualizeDenominators(Fraction other, out Fraction other_equalized)
         {
             other_equalized = other.Clone(other.Numerator * other.Denominator, other.Denominator * other.Denominator);
             return EqualizeDenominators(other);
@@ -347,7 +396,7 @@ namespace MathTypes
         #region hidden static Methods
         private static uBigInteger findGCD(uBigInteger a, uBigInteger b)
         {
-            // Make sure b is smaller than a:
+            // Make sure b is smaller than a...
             if (b > a)
             {
                 // Swap a and b:
@@ -356,16 +405,20 @@ namespace MathTypes
                 b = temp;
                 //
             }
-            //
 
-            if (a % b == 0)
+            // Special case: b is zero.
+            if (b == 0) { return a; }
+
+            // Main loop...
+            while (a % b != 0)
             {
-                return b;
+                var temp = b;
+                b = a % b;
+                a = temp;
             }
-            else
-            {
-                return findGCD(a % b, a);
-            }
+
+            // Finished.
+            return b;
         }
         #endregion
 
@@ -378,5 +431,59 @@ namespace MathTypes
         private static readonly uBigInteger denominator_default = 1;
         private const bool isNegative_default = false;
         #endregion
+    }
+
+    /// <summary>
+    /// Represents a Fraction that does not auto-simplify between operations such as: +, -, *, /, and %. Simplifies when cast to Fraction, and on call of ToString().
+    /// </summary>
+    public struct FractionOperation
+    {
+        /// <summary>
+        /// The Fraction represented.
+        /// </summary>
+        public Fraction Value { get; }
+        //public UInt16 OpCount { get; }
+        //public static UInt16 Trigger = 5;
+        public FractionOperation(Fraction value)
+        {
+            Value = value;
+        }
+
+        public override string ToString()
+        {
+            return Value.Simplify().ToString();
+        }
+
+        #region Operators
+        public static FractionOperation operator +(FractionOperation a, Fraction b) => a.Value + b;
+        public static FractionOperation operator +(Fraction a, FractionOperation b) => a + b.Value;
+
+        public static FractionOperation operator -(FractionOperation a, Fraction b) => a.Value - b;
+        public static FractionOperation operator -(Fraction a, FractionOperation b) => a - b.Value;
+
+        public static FractionOperation operator *(FractionOperation a, Fraction b) => a.Value * b;
+        public static FractionOperation operator *(Fraction a, FractionOperation b) => a * b.Value;
+
+        public static FractionOperation operator /(FractionOperation a, Fraction b) => a.Value / b;
+        public static FractionOperation operator /(Fraction a, FractionOperation b) => a / b.Value;
+        #endregion
+
+        #region Casts
+        public static implicit operator Fraction(FractionOperation fo) => fo.Value.Simplify();
+        public static implicit operator FractionOperation(Fraction f) => new FractionOperation(f);
+        #endregion
+    }
+
+    public static class FractionUtils
+    {
+        public static Fraction NextFraction(this Random rand)
+        {
+            return new Fraction(rand.Next(int.MinValue, int.MaxValue), rand.Next(int.MinValue, int.MaxValue));
+        }
+
+        public static Fraction NextFraction(this Random rand, int minNumerator, int maxNumerator, int minDenominator, int maxDenominator)
+        {
+            return new Fraction(rand.Next(minNumerator, maxNumerator), rand.Next(minDenominator, maxDenominator));
+        }
     }
 }
