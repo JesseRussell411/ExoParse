@@ -7,8 +7,49 @@ namespace MathTypes
 {
     public static class MathUtils
     {
+        /// <summary>
+        /// Tries to convert the double to a decimal (result) in a controlled manor.
+        /// </summary>
+        /// <param name="d">The double to be converted.</param>
+        /// <param name="result">The result of the conversion.</param>
+        /// <returns>If the conversion was successful.</returns>
         public static bool TryToDecimal(double d, out decimal result)
         {
+            // Simplest and quickest check first for efficiency...
+            if (d > DecimalMaxValue_double || d < DecimalMinValue_double)
+            {
+                result = default;
+                return false;
+            }
+
+            // Then actually try the conversion...
+            try
+            {
+                result = Convert.ToDecimal(d);
+                return true;
+            }
+            catch (OverflowException e)
+            {
+                result = default;
+                return false;
+            }
+        }
+        /// <summary>
+        /// Tries to convert the double to a decimal (result) in a controlled manor. In this case, the end result is converted back to a double and checked against the original. If they do not match, the conversion fails. This conversion guaranties that the original and the result are considered equal.
+        /// </summary>
+        /// <param name="d">The double to be converted.</param>
+        /// <param name="result">The result of the conversion.</param>
+        /// <returns>If the conversion was successful.</returns>
+        public static bool TryToDecimalStrictly(double d, out decimal result)
+        {
+            // Simplest and quickest check first for efficiency...
+            if (d > DecimalMaxValue_double || d < DecimalMinValue_double)
+            {
+                result = default;
+                return false;
+            }
+
+            // Then actually try the conversion...
             try
             {
                 result = Convert.ToDecimal(d);
@@ -19,6 +60,8 @@ namespace MathTypes
                 return false;
             }
 
+            // This is the part that makes this strict. The end result must be equal to the original double value.
+            // If the conversion was successful, make sure that it still equals the original...
             if (Convert.ToDouble(result) == d)
             {
                 return true;
@@ -28,34 +71,10 @@ namespace MathTypes
                 result = default;
                 return false;
             }
-            //double d_abs = Math.Abs(d);
-            //double d_abs_right = d_abs - Math.Truncate(d_abs);
-
-            //double precTest = d_abs_right;
-            //for(int i = 0; i < 28; ++i) { precTest *= 10; }
-            //if (precTest - Math.Truncate(precTest) != 0)
-            //{
-            //    result = default;
-            //    return false;
-            //}
-
-            //if (d_abs_right >= DecimalEpsilon_double && d_abs <= DecimalMaxValue_double)
-            //{
-            //    try
-            //    {
-            //        result = Convert.ToDecimal(d);
-            //        if (((double)result) != d)
-            //        return true;
-            //    }
-            //    finally { }
-            //}
-
-            //result = default;
-            //return false;
         }
         public static bool TryToDecimal(BigInteger bi, out decimal result)
         {
-            if (DecimalMinValue_bigint <= bi && bi <= DecimalMaxValue_bigint)
+            if (DecimalMinValue_BigInteger <= bi && bi <= DecimalMaxValue_BigInteger)
             {
                 try
                 {
@@ -69,10 +88,10 @@ namespace MathTypes
             return false;
         }
 
-        private const decimal DecimalEpsilon = 1e-28M;
-        private const double DecimalEpsilon_double = 1e-28; // *from https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/floating-point-numeric-types
-        private const double DecimalMaxValue_double = 7.922816251426433E+28; // *from Console.WriteLine(Convert.ToDouble(decimal.MaxValue)); *actual result was 7.922816251426434E+28 (4 vs 3 at end); however, this caused an overflow when converting to decimal, so I reduced it slightly.
-        private static readonly BigInteger DecimalMaxValue_bigint = (BigInteger)decimal.MaxValue;
-        private static readonly BigInteger DecimalMinValue_bigint = (BigInteger)decimal.MinValue;
+        private const decimal DecimalEpsilon = 1e-28M; // *from https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/floating-point-numeric-types
+        private const double DecimalMaxValue_double = 7.922816251426433E+28; // *from Console.WriteLine(Convert.ToDouble(decimal.MaxValue)); *actual result was 7.922816251426434E+28 (4 vs 3 at end), but that 4 at the end was rounded up, so I floored it back down to 3. This is the actual largest double, which can be cast to decimal.
+        private const double DecimalMinValue_double = -7.922816251426433E+28;
+        private static readonly BigInteger DecimalMaxValue_BigInteger = (BigInteger)decimal.MaxValue;
+        private static readonly BigInteger DecimalMinValue_BigInteger = (BigInteger)decimal.MinValue;
     }
 }

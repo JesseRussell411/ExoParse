@@ -11,7 +11,7 @@ using System.Data.SqlTypes;
 namespace MathTypes
 {
     /// <summary>
-    /// Combination BigInteger and Doudec (a little like python). Automatically chooses best way of storing value based on context.
+    /// Combination BigInteger and Doudec. Automatically chooses best way of storing value based on context.
     /// </summary>
     /// 
     /// <Author>

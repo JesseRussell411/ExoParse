@@ -527,7 +527,7 @@ namespace MathTypes
         public static Fraction FromDouble(double d)
         {
             // Trying to convert to decimal first...
-            if (MathUtils.TryToDecimal(d, out decimal dec))
+            if (MathUtils.TryToDecimalStrictly(d, out decimal dec))
             {
                 return FromDecimal(dec);
             }

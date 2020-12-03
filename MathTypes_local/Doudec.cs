@@ -6,6 +6,9 @@ using System.Numerics;
 
 namespace MathTypes
 {
+    /// <summary>
+    /// Combination of decimal and double. This is a method for reducing the impact of floating point rounding errors; as such, it prioritizes decimal whenever possible.
+    /// </summary>
     [StructLayout(LayoutKind.Explicit)]
     public struct Doudec : IComparable<Doudec>, IComparable<double>, IComparable<decimal>, IEquatable<Doudec>, IEquatable<double>, IEquatable<decimal>
     {
@@ -76,8 +79,9 @@ namespace MathTypes
         {
             Doudec dd => Equals(dd),
             double d => Equals(d),
+            float f => Equals(f),
             decimal dec => Equals(dec),
-            _ => throw new ArgumentException("Argument must be a Doudec, double, or decimal")
+            _ => throw new ArgumentException("Argument must be a Doudec, double, float, or decimal")
         };
 
         public override int GetHashCode()
@@ -103,7 +107,7 @@ namespace MathTypes
             }
             else
             {
-                return MathUtils.TryToDecimal(doub, out result);
+                return MathUtils.TryToDecimalStrictly(doub, out result);
             }
         }
         #endregion
@@ -307,7 +311,7 @@ namespace MathTypes
         #endregion
 
         #region Factories
-        public static Doudec FromDouble(double d) => MathUtils.TryToDecimal(d, out decimal dec) ? new Doudec(dec) : new Doudec(d);
+        public static Doudec FromDouble(double d) => MathUtils.TryToDecimalStrictly(d, out decimal dec) ? new Doudec(dec) : new Doudec(d);
         public static Doudec FromDecimal(decimal dec)
         {
             if (dec == 0) return new Doudec(0M);
