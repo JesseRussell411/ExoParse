@@ -155,7 +155,7 @@ namespace ExoParseV2
             }
             else
             {
-                return IntFloatFrac.Pow((IntFloatFrac)x, y.Value.Float.Double);
+                return IntFloatFrac.Pow((IntFloatFrac)x, (IntFloat)y);
             }
         }
         public static IntFloatFrac? Floor(IntFloatFrac? d)

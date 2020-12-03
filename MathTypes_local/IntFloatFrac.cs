@@ -169,6 +169,7 @@ namespace MathTypes
         }
         public static IntFloatFrac Pow(IntFloatFrac x, int y) => x.ifNotFrac ? (IntFloatFrac)IntFloat.Pow(x.ifloat, y) : Fraction.Pow(x.frac, y);
         public static IntFloatFrac Pow(IntFloatFrac x, double y) => x.ifNotFrac ? (IntFloatFrac)IntFloat.Pow(x.ifloat, y) : Doudec.Pow(x.frac.ToDoudec(), y);
+        public static IntFloatFrac Pow(IntFloatFrac x, IntFloat y) => x.ifNotFrac ? (IntFloatFrac)IntFloat.Pow(x.ifloat, y) : Doudec.Pow(x.frac.ToDoudec(), y.Float.Double);
         public static IntFloatFrac Abs(IntFloatFrac x) => x.ifNotFrac ? (IntFloatFrac)IntFloat.Abs(x.ifloat) : Fraction.Abs(x.frac);
         public static IntFloatFrac Neg(IntFloatFrac x) => x.ifNotFrac ? (IntFloatFrac)IntFloat.Negate(x.ifloat) : x.frac.Negate();
         public static IntFloatFrac Floor(IntFloatFrac x) => x.ifNotFrac ? (IntFloatFrac)IntFloat.Floor(x.ifloat) : x.frac.Floor();
