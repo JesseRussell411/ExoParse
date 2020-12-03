@@ -9,20 +9,49 @@ namespace MathTypes
     {
         public static bool TryToDecimal(double d, out decimal result)
         {
-            double d_abs = Math.Abs(d);
-            double d_abs_right = d_abs - Math.Truncate(d_abs);
-            if (d_abs_right >= DecimalEpsilon_double && d_abs <= DecimalMaxValue_double)
+            try
             {
-                try
-                {
-                    result = Convert.ToDecimal(d);
-                    return true;
-                }
-                finally { }
+                result = Convert.ToDecimal(d);
+            }
+            catch (OverflowException e)
+            {
+                result = default;
+                return false;
             }
 
-            result = default;
-            return false;
+            if (Convert.ToDouble(result) == d)
+            {
+                return true;
+            }
+            else
+            {
+                result = default;
+                return false;
+            }
+            //double d_abs = Math.Abs(d);
+            //double d_abs_right = d_abs - Math.Truncate(d_abs);
+
+            //double precTest = d_abs_right;
+            //for(int i = 0; i < 28; ++i) { precTest *= 10; }
+            //if (precTest - Math.Truncate(precTest) != 0)
+            //{
+            //    result = default;
+            //    return false;
+            //}
+
+            //if (d_abs_right >= DecimalEpsilon_double && d_abs <= DecimalMaxValue_double)
+            //{
+            //    try
+            //    {
+            //        result = Convert.ToDecimal(d);
+            //        if (((double)result) != d)
+            //        return true;
+            //    }
+            //    finally { }
+            //}
+
+            //result = default;
+            //return false;
         }
         public static bool TryToDecimal(BigInteger bi, out decimal result)
         {

@@ -378,8 +378,8 @@ namespace ExoParseV2.Functions
         private static Random rand = new Random();
         protected override IElement calc(IElement[] args)
         {
-            double? minValue = args[0].Execute()?.Float;
-            double? maxValue = args[1].Execute()?.Float;
+            double? minValue = (double?)args[0].Execute();
+            double? maxValue = (double?)args[1].Execute();
             if (minValue != null && maxValue != null)
             {
                 if (minValue > maxValue) { throw new ExecutionException("minValue cannot be greater than maxValue."); }

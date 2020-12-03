@@ -111,7 +111,7 @@ namespace MathTypes
         #region public static Methods
         #region Casts
         public static implicit operator Doudec(double d) => FromDouble(d);
-        public static implicit operator Doudec(decimal dec) => new Doudec(dec);
+        public static implicit operator Doudec(decimal dec) => FromDecimal(dec);
         public static implicit operator Doudec(float f) => FromDouble(f);
 
         public static implicit operator Doudec(sbyte i) => new Doudec((decimal)i);
@@ -127,7 +127,7 @@ namespace MathTypes
         public static explicit operator Doudec(BigInteger bi) => FromBigInteger(bi);
         public static explicit operator Doudec(UBigInteger bi) => FromBigInteger(bi);
 
-        public static implicit operator double(Doudec dd) => dd.Double;
+        public static explicit operator double(Doudec dd) => dd.Double;
         public static explicit operator decimal(Doudec dd) => dd.Decimal;
         public static explicit operator float(Doudec dd) => (float)dd.Double;
 
@@ -149,14 +149,14 @@ namespace MathTypes
         #region Parse
         public static bool TryParse(string s, out Doudec result)
         {
-            if (decimal.TryParse(s, out decimal dec))
-            {
-                result = dec;
-                return true;
-            }
-            else if (double.TryParse(s, out double d))
+            if (double.TryParse(s, out double d))
             {
                 result = d;
+                return true;
+            }
+            else if (decimal.TryParse(s, out decimal dec))
+            {
+                result = dec;
                 return true;
             }
             else
@@ -205,7 +205,9 @@ namespace MathTypes
         {
             if(left.doubleNotDecimal || right.doubleNotDecimal)
             {
-                return left.Double + right.Double;
+                double r =  left.Double + right.Double;
+                return r;
+                //return left.Double + right.Double;
             }
             else
             {
@@ -306,6 +308,11 @@ namespace MathTypes
 
         #region Factories
         public static Doudec FromDouble(double d) => MathUtils.TryToDecimal(d, out decimal dec) ? new Doudec(dec) : new Doudec(d);
+        public static Doudec FromDecimal(decimal dec)
+        {
+            if (dec == 0) return new Doudec(0M);
+            return new Doudec(dec);
+        }
         public static Doudec FromBigInteger(BigInteger bi)
         {
             if (MathUtils.TryToDecimal(bi, out decimal dec))

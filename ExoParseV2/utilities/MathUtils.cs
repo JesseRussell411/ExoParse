@@ -13,7 +13,6 @@ namespace ExoParseV2
             if (b == 0)
             {
                 throw new ExecutionException("Divide by zero error.");
-
             }
 
             return a / b;
@@ -33,7 +32,7 @@ namespace ExoParseV2
         public static IntFloatFrac? Log(IntFloatFrac? d, IntFloatFrac? newBase)
         {
             if (d == null || newBase == null) { return null; }
-            return IntFloatFrac.Log((IntFloatFrac)d, ((IntFloatFrac)newBase).Float);
+            return IntFloatFrac.Log((IntFloatFrac)d, ((double)newBase));
         }
         public static IntFloatFrac? Log10(IntFloatFrac? d)
         {
@@ -76,7 +75,7 @@ namespace ExoParseV2
             }
             else
             {
-                return Math.Sin(x?.Float ?? 0);
+                return Math.Sin((double)x);
             }
         }
 
@@ -88,7 +87,7 @@ namespace ExoParseV2
             }
             else
             {
-                return Math.Cos(x?.Float ?? 0);
+                return Math.Cos((double)x);
             }
         }
         public static IntFloatFrac? Tan(IntFloatFrac? x)
@@ -99,7 +98,7 @@ namespace ExoParseV2
             }
             else
             {
-                return Math.Tan(x?.Float ?? 0);
+                return Math.Tan((double)x);
             }
         }
         public static IntFloatFrac? Asin(IntFloatFrac? x)
@@ -110,7 +109,7 @@ namespace ExoParseV2
             }
             else
             {
-                return Math.Asin(x?.Float ?? 0);
+                return Math.Asin((double)x);
             }
         }
 
@@ -122,7 +121,7 @@ namespace ExoParseV2
             }
             else
             {
-                return Math.Acos(x?.Float ?? 0);
+                return Math.Acos((double)x);
             }
         }
 
@@ -134,7 +133,7 @@ namespace ExoParseV2
             }
             else
             {
-                return Math.Atan(x?.Float ?? 0);
+                return Math.Atan((double)x);
             }
         }
 
