@@ -181,6 +181,11 @@ namespace ExoParseV2
                 return IntFloatFrac.Ceiling((IntFloatFrac)d);
             }
         }
+        public static IntFloatFrac? Truncate(IntFloatFrac? iff)
+        {
+            if (iff == null) return null;
+            return IntFloatFrac.Truncate((IntFloatFrac)iff);
+        }
         public static IntFloatFrac? Abs(IntFloatFrac? d)
         {
             if (d == null)

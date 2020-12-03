@@ -253,14 +253,21 @@ namespace MathTypes
         {
             BigInteger bi => bi,
             double d => Math.Floor(d),
-            Fraction f => f.Floor(),
+            Fraction f => f.Floor().ToBigInteger(),
             _ => throw NotValid
         };
         public static IntFloatFrac Ceiling(IntFloatFrac iff) => iff.Value switch
         {
             BigInteger bi => bi,
             double d => Math.Ceiling(d),
-            Fraction f => f.Ceiling(),
+            Fraction f => f.Ceiling().ToBigInteger(),
+            _ => throw NotValid
+        };
+        public static IntFloatFrac Truncate(IntFloatFrac iff) => iff.Value switch
+        {
+            BigInteger bi => bi,
+            double d => Math.Truncate(d),
+            Fraction f => f.ToBigInteger(),
             _ => throw NotValid
         };
 

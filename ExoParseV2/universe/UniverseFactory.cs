@@ -128,6 +128,7 @@ namespace ExoParseV2
             funcs.Add(new AbsoluteValue_func());
             funcs.Add(new Floor_func());
             funcs.Add(new Ceiling_func());
+            funcs.Add(new Truncate_func());
             funcs.Add(new Min_func());
             funcs.Add(new Max_func());
             funcs.Add(new Log_func());

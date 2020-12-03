@@ -180,6 +180,16 @@ namespace ExoParseV2.Functions
         }
     }
 
+    public class Truncate_func : BuiltInFunction
+    {
+        public override string Name { get; } = "truncate";
+        public override string[] Parameters { get; } = { "x" };
+        protected override IElement calc(IElement[] args)
+        {
+            return MathUtils.Truncate(args[0].Execute()).ToElement();
+        }
+    }
+
     public class Round_func : BuiltInFunction
     {
         public override string Name { get; } = "round";

@@ -33,6 +33,8 @@ namespace MathTypes
         /// </summary>
         public bool IsNegative => (!IsUndefined) && (Numerator.Sign == -1) ^ (Denominator.Sign == -1);
 
+        public bool IsWhole => Numerator % Denominator == 0;
+
         /// <summary>
         /// True if numerator is zero, false otherwise.
         /// </summary>
@@ -209,16 +211,19 @@ namespace MathTypes
         /// Returns the whole portion of the fraction. Example: 5/2 equals 2 + 1/2, so the Floor of 5/2 would return 2.
         /// </summary>
         /// <returns>The whole portion of the fraction.</returns>
-        public Fraction Floor() => ToBigInteger();
+        public Fraction Truncate() => ToBigInteger();
 
-        /// <summary>
-        /// Returns the whole portion of the fraction. Example: 5/2 equals 2 + 1/2, so the Floor of 5/2 would return 2.
-        /// </summary>
-        /// <returns>The whole portion of the fraction.</returns>
+        public Fraction Floor()
+        {
+            if (IsWhole) return this;
+            else if (IsNegative) return ToBigInteger() - 1;
+            else return ToBigInteger();
+        }
         public Fraction Ceiling()
         {
-            if (BigInteger.Abs(Numerator) % BigInteger.Abs(Denominator) == 0) return this;
-            else return ToBigInteger() + Sign;
+            if (IsWhole) return this;
+            else if (IsNegative) return ToBigInteger();
+            else return ToBigInteger() + 1;
         }
 
         /// <summary>
@@ -497,19 +502,49 @@ namespace MathTypes
         #region Conversion
         public static Fraction FromDouble(double d)
         {
-            double left = Math.Floor(d);
-            double right = d - left;
+            double d_abs = Math.Abs(d);
+            // Trying to convert to decimal first...
+            if (DECIMAL_EPSILON < d_abs && d_abs < DECIMAL_MAXVALUE)
+            {
+                try
+                {
+                    return FromDecimal(Convert.ToDecimal(d));
+                }
+                finally { }
+            }
 
-            return new Fraction(new BigInteger(left)) +
-                new Fraction(1, new BigInteger(Math.Round(1 / right)));
+            // Can't use decimal, will have to fall back on double instead.
+            double whole = Math.Truncate(d);
+            double numerator = d - whole;
+
+            #region Copied to FromDecimal(decimal d) with mods
+            int i = 0;
+            while (i < FROM_DOUBLE_PRECISION_LIMIT && numerator % 1 != 0)
+            {
+                numerator *= 10;
+                ++i;
+            }
+
+
+            return new Fraction((BigInteger)whole, 1) + new Fraction((BigInteger)numerator, BigInteger.Pow(10, i));
+            #endregion
         }
         public static Fraction FromDecimal(decimal d)
         {
-            decimal left = Math.Floor(d);
-            decimal right = d - left;
+            decimal whole = Math.Truncate(d);
+            decimal numerator = d - whole;
 
-            return new Fraction(new BigInteger(left)) +
-                new Fraction(1, new BigInteger(Math.Round(1 / right)));
+            #region Copied from FromDouble(double d) with mods
+            int i = 0;
+            while (i < FROM_DECIMAL_PRECISION_LIMIT && numerator % 1 != 0)
+            {
+                numerator *= 10;
+                ++i;
+            }
+
+
+            return new Fraction((BigInteger)whole, 1) + new Fraction((BigInteger)numerator, BigInteger.Pow(10, i));
+            #endregion
         }
         #endregion
 
@@ -551,6 +586,13 @@ namespace MathTypes
         #region public static readonly Fields
         public static readonly Fraction Zero = new Fraction(0);
         public static readonly Fraction Undefined = new Fraction(0, 0);
+        #endregion
+
+        #region private const Fields
+        private const int FROM_DOUBLE_PRECISION_LIMIT = 326;
+        private const int FROM_DECIMAL_PRECISION_LIMIT = 31;
+        private const double DECIMAL_EPSILON = 1e-28; // *from https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/floating-point-numeric-types
+        private const double DECIMAL_MAXVALUE = 7.922816251426433E+28; // *from Console.WriteLine(Convert.ToDouble(decimal.MaxValue)); *actual result was 7.922816251426434E+28 (4 vs 3 at end); however, this caused an overflow when converting to decimal, so I reduced it slightly.
         #endregion
     }
 
