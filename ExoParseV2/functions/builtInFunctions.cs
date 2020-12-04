@@ -410,6 +410,10 @@ namespace ExoParseV2.Functions
     {
         public override string Name { get; } = "float";
         public override string[] Parameters { get; } = { "value" };
+        public override IElement Pass(Execution parent, IElement[] args)
+        {
+            return Calculate(args);
+        }
         protected override IElement calc(IElement[] args)
         {
             return args[0].Execute()?.Float.ToElement();
@@ -419,6 +423,10 @@ namespace ExoParseV2.Functions
     {
         public override string Name { get; } = "int";
         public override string[] Parameters { get; } = { "value" };
+        public override IElement Pass(Execution parent, IElement[] args)
+        {
+            return Calculate(args);
+        }
         protected override IElement calc(IElement[] args)
         {
             return args[0].Execute()?.Int.ToElement();
@@ -428,6 +436,10 @@ namespace ExoParseV2.Functions
     {
         public override string Name => "fraction";
         public override string[] Parameters { get; } = { "value" };
+        public override IElement Pass(Execution parent, IElement[] args)
+        {
+            return Calculate(args);
+        }
         protected override IElement calc(IElement[] args)
         {
             return args[0].Execute()?.Fraction.ToElement();
@@ -500,6 +512,10 @@ namespace ExoParseV2.Functions
     {
         public override string Name { get; } = "double";
         public override string[] Parameters { get; } = { "n" };
+        public override IElement Pass(Execution parent, IElement[] args)
+        {
+            return Calculate(args);
+        }
         protected override IElement calc(IElement[] args)
         {
             IntFloatFrac? a0ex = args[0].Execute();
@@ -513,6 +529,10 @@ namespace ExoParseV2.Functions
     {
         public override string Name { get; } = "decimal";
         public override string[] Parameters { get; } = { "n" };
+        public override IElement Pass(Execution parent, IElement[] args)
+        {
+            return Calculate(args);
+        }
         protected override IElement calc(IElement[] args)
         {
             IntFloatFrac? a0ex = args[0].Execute();

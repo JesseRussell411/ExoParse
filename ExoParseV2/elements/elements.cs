@@ -32,9 +32,19 @@ namespace ExoParseV2.elements
         {
             if (Value == null) { return StringProps.NullLabel; }
 
+            IntFloatFrac Value_nn = (IntFloatFrac)Value;
             string s = Value.ToString();
 
-            return s.Contains('E') ? $" {s} " : s; // *add extra padding around scientific notation to make sure the output can be parsed.
+            bool wrap = false;
+            bool ScientificNotation = s.Contains('E');
+
+            if (ScientificNotation) wrap = true;
+            if (Value_nn.IsFraction) wrap = true;
+
+            // Adding .0 to the end if the value is suppose to be a float but doesn't look like a float:
+            if (!ScientificNotation && Value_nn.IsFloat && !s.Contains('.')) s += ".0";
+            
+            return wrap ? $" {s} " : s; // *add extra padding around scientific notation and fractions to make sure the output can be parsed.
         }
         public string ToSiString(SymbolizedIndex si, IExpressionComponent parent)
         {
