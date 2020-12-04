@@ -69,7 +69,7 @@ namespace ExoParseV2
 
         public virtual IntFloatFrac? Execute(Execution parent, IElement[] args)
         {
-            return Calc(parent, args).Execute();
+            return Calc(parent, args)?.Execute();
         }
 
 

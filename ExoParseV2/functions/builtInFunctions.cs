@@ -439,7 +439,7 @@ namespace ExoParseV2.Functions
         public override string[] Parameters { get; } = { "value" };
         protected override IElement calc(IElement[] args)
         {
-            return args[0].Execute()?.IsFloat.ToElement();
+            return (args[0].Execute()?.IsFloat ?? false).ToElement();
         }
     }
     public class IsInt_func : BuiltInFunction
@@ -448,7 +448,7 @@ namespace ExoParseV2.Functions
         public override string[] Parameters { get; } = { "value" };
         protected override IElement calc(IElement[] args)
         {
-            return args[0].Execute()?.IsInt.ToElement();
+            return (args[0].Execute()?.IsInt ?? false).ToElement();
         }
     }
     public class IsFraction_func : BuiltInFunction
@@ -457,7 +457,7 @@ namespace ExoParseV2.Functions
         public override string[] Parameters { get; } = { "value" };
         protected override IElement calc(IElement[] args)
         {
-            return args[0].Execute()?.IsFraction.ToElement();
+            return (args[0].Execute()?.IsFraction ?? false).ToElement();
         }
     }
     #endregion
