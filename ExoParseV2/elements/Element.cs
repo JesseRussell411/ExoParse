@@ -15,7 +15,7 @@ namespace ExoParseV2.elements
         public virtual IElement Pass() { return this; }
 
         public IElement Calc();
-        public IntFloat? Execute();
+        public IntFloatFrac? Execute();
         public virtual IElement Pass(out bool dontExecute_flag)
         {
             dontExecute_flag = DontExecute_flag;

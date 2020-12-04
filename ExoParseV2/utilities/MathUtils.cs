@@ -8,44 +8,48 @@ namespace ExoParseV2
     public static class MathUtils
     {
         private static Random rand = new Random();
-        public static IntFloat? Div(IntFloat? a, IntFloat? b)
+        public static IntFloatFrac? Div(IntFloatFrac? a, IntFloatFrac? b)
         {
             if (b == 0)
             {
                 throw new ExecutionException("Divide by zero error.");
-
             }
 
             return a / b;
         }
-        public static IntFloat? FloorDiv(IntFloat? a, IntFloat? b)
+        public static IntFloatFrac? FloorDiv(IntFloatFrac? a, IntFloatFrac? b)
         {
             //return Floor(Div(a, b));
             if (a == null || b == null) { return null; }
 
-            return IntFloat.FloorDivide((IntFloat) a, (IntFloat)b);
+            return IntFloatFrac.FloorDivide((IntFloatFrac) a, (IntFloatFrac)b);
         }
-        public static IntFloat? Log(IntFloat? d, IntFloat? newBase)
+        public static IntFloatFrac? FloatDiv(IntFloatFrac? a, IntFloatFrac? b)
+        {
+            if (a == null || b == null) { return null; }
+            return a?.Float / b?.Float;
+        }
+        public static IntFloatFrac? Log(IntFloatFrac? d, IntFloatFrac? newBase)
         {
             if (d == null || newBase == null) { return null; }
-            return IntFloat.Log((IntFloat)d, (IntFloat)newBase);
+            return IntFloatFrac.Log((IntFloatFrac)d, ((double)newBase));
         }
-        public static IntFloat? Log10(IntFloat? d)
+        public static IntFloatFrac? Log10(IntFloatFrac? d)
         {
             if (d == null) { return null; }
-            return IntFloat.Log10((IntFloat)d);
+            return IntFloatFrac.Log10((IntFloatFrac)d);
         }
-        public static IntFloat? Ln(IntFloat? d)
+        public static IntFloatFrac? Ln(IntFloatFrac? d)
         {
             if (d == null) { return null; }
-            return IntFloat.Log((IntFloat)d, Math.E);
+            return IntFloatFrac.Log((IntFloatFrac)d, Math.E);
         }
-        public static IntFloat? Factorial(IntFloat? n)
+        public static IntFloatFrac? Factorial(IntFloatFrac? n)
         {
             if (n == null) { return null; }
             if (n == 0.0) { return 1.0; }
 
-            if (n < 0 || n != IntFloat.Floor((IntFloat)n))
+            if (n < 0 || n != IntFloatFrac.Floor((IntFloatFrac)n))
             {
                 throw new ExecutionException($"Factorial can only be performed on positive integers and 0.");
             }
@@ -59,11 +63,11 @@ namespace ExoParseV2
                 fact *= n_BigInteger;
             }
 
-            return (IntFloat)fact;
+            return (IntFloatFrac)fact;
         }
 
         #region trigonometry
-        public static IntFloat? Sin(IntFloat? x)
+        public static IntFloatFrac? Sin(IntFloatFrac? x)
         {
             if (x == null)
             {
@@ -71,11 +75,11 @@ namespace ExoParseV2
             }
             else
             {
-                return Math.Sin(x?.Float ?? 0);
+                return Math.Sin((double)x);
             }
         }
 
-        public static IntFloat? Cos(IntFloat? x)
+        public static IntFloatFrac? Cos(IntFloatFrac? x)
         {
             if (x == null)
             {
@@ -83,10 +87,10 @@ namespace ExoParseV2
             }
             else
             {
-                return Math.Cos(x?.Float ?? 0);
+                return Math.Cos((double)x);
             }
         }
-        public static IntFloat? Tan(IntFloat? x)
+        public static IntFloatFrac? Tan(IntFloatFrac? x)
         {
             if (x == null)
             {
@@ -94,10 +98,10 @@ namespace ExoParseV2
             }
             else
             {
-                return Math.Tan(x?.Float ?? 0);
+                return Math.Tan((double)x);
             }
         }
-        public static IntFloat? Asin(IntFloat? x)
+        public static IntFloatFrac? Asin(IntFloatFrac? x)
         {
             if (x == null)
             {
@@ -105,23 +109,11 @@ namespace ExoParseV2
             }
             else
             {
-                return Math.Asin(x?.Float ?? 0);
-            }
-        }
-
-        public static IntFloat? Acos(IntFloat? x)
-        {
-            if (x == null)
-            {
-                return null;
-            }
-            else
-            {
-                return Math.Acos(x?.Float ?? 0);
+                return Math.Asin((double)x);
             }
         }
 
-        public static IntFloat? Atan(IntFloat? x)
+        public static IntFloatFrac? Acos(IntFloatFrac? x)
         {
             if (x == null)
             {
@@ -129,21 +121,33 @@ namespace ExoParseV2
             }
             else
             {
-                return Math.Atan(x?.Float ?? 0);
+                return Math.Acos((double)x);
             }
         }
 
-        public static IntFloat? ToDegrees(IntFloat? radians)
+        public static IntFloatFrac? Atan(IntFloatFrac? x)
+        {
+            if (x == null)
+            {
+                return null;
+            }
+            else
+            {
+                return Math.Atan((double)x);
+            }
+        }
+
+        public static IntFloatFrac? ToDegrees(IntFloatFrac? radians)
         {
             return radians * (180.0 / Math.PI);
         }
-        public static IntFloat? ToRadians(IntFloat? degrees)
+        public static IntFloatFrac? ToRadians(IntFloatFrac? degrees)
         {
             return degrees * (Math.PI / 180.0);
         }
         #endregion
 
-        public static IntFloat? Power(IntFloat? x, IntFloat? y)
+        public static IntFloatFrac? Power(IntFloatFrac? x, IntFloatFrac? y)
         {
             if (x == null || y == null)
             {
@@ -151,10 +155,10 @@ namespace ExoParseV2
             }
             else
             {
-                return IntFloat.Pow((IntFloat)x, (IntFloat)y);
+                return IntFloatFrac.Pow((IntFloatFrac)x, (IntFloat)y);
             }
         }
-        public static IntFloat? Floor(IntFloat? d)
+        public static IntFloatFrac? Floor(IntFloatFrac? d)
         {
             if (d == null)
             {
@@ -162,10 +166,10 @@ namespace ExoParseV2
             }
             else
             {
-                return IntFloat.Floor((IntFloat)d);
+                return IntFloatFrac.Floor((IntFloatFrac)d);
             }
         }
-        public static IntFloat? Ceiling(IntFloat? d)
+        public static IntFloatFrac? Ceiling(IntFloatFrac? d)
         {
             if (d == null)
             {
@@ -173,10 +177,15 @@ namespace ExoParseV2
             }
             else
             {
-                return IntFloat.Ceiling((IntFloat)d);
+                return IntFloatFrac.Ceiling((IntFloatFrac)d);
             }
         }
-        public static IntFloat? Abs(IntFloat? d)
+        public static IntFloatFrac? Truncate(IntFloatFrac? iff)
+        {
+            if (iff == null) return null;
+            return IntFloatFrac.Truncate((IntFloatFrac)iff);
+        }
+        public static IntFloatFrac? Abs(IntFloatFrac? d)
         {
             if (d == null)
             {
@@ -184,22 +193,16 @@ namespace ExoParseV2
             }
             else
             {
-                return IntFloat.Abs((IntFloat)d);
+                return IntFloatFrac.Abs((IntFloatFrac)d);
             }
         }
-        public static IntFloat? Sign(IntFloat? d)
+        public static IntFloatFrac? Sign(IntFloatFrac? d)
         {
-            if (d == null)
-            {
-                return null;
-            }
-            else
-            {
-                return IntFloat.Sign((IntFloat)d);
-            }
+            if (d == null) return null;
+            return IntFloatFrac.Sign((IntFloatFrac)d);
         }
 
-        public static IntFloat? Min(IntFloat? a, IntFloat? b)
+        public static IntFloatFrac? Min(IntFloatFrac? a, IntFloatFrac? b)
         {
             if (a == null || b == null)
             {
@@ -207,11 +210,11 @@ namespace ExoParseV2
             }
             else
             {
-                return IntFloat.Min((IntFloat)a, (IntFloat)b);
+                return IntFloatFrac.Min((IntFloatFrac)a, (IntFloatFrac)b);
             }
         }
 
-        public static IntFloat? Max(IntFloat? a, IntFloat? b)
+        public static IntFloatFrac? Max(IntFloatFrac? a, IntFloatFrac? b)
         {
             if (a == null || b == null)
             {
@@ -219,11 +222,11 @@ namespace ExoParseV2
             }
             else
             {
-                return IntFloat.Max((IntFloat)a, (IntFloat)b);
+                return IntFloatFrac.Max((IntFloatFrac)a, (IntFloatFrac)b);
             }
         }
 
-        public static IntFloat? Round(IntFloat? d)
+        public static IntFloatFrac? Round(IntFloatFrac? d)
         {
             if (d == null)
             {
@@ -234,7 +237,7 @@ namespace ExoParseV2
                 return (BigInteger)Math.Round((double)d);
             }
         }
-        public static IntFloat? Round(IntFloat? d, IntFloat? decimals)
+        public static IntFloatFrac? Round(IntFloatFrac? d, IntFloatFrac? decimals)
         {
             if (d == null || decimals == null || decimals != Floor(decimals))
             {

@@ -46,7 +46,7 @@ namespace ExoParseV2
         {
             return item.Definition;
         }
-        protected override IntFloat? execute(IElement item, Modification parent)
+        protected override IntFloatFrac? execute(IElement item, Modification parent)
         {
             return null;
         }
@@ -58,7 +58,7 @@ namespace ExoParseV2
         {
             if (item is IRedefinable)
             {
-                IntFloat? item_Execute = item.Execute();
+                IntFloatFrac? item_Execute = item.Execute();
                 ((IRedefinable)item).Definition = (item_Execute + 1).ToElement();
                 return item_Execute.ToElement();
             }
@@ -91,7 +91,7 @@ namespace ExoParseV2
         {
             if (item is IRedefinable)
             {
-                IntFloat? item_Execute = item.Execute();
+                IntFloatFrac? item_Execute = item.Execute();
                 ((IRedefinable)item).Definition = (item_Execute - 1).ToElement();
                 return item_Execute.ToElement();
             }
