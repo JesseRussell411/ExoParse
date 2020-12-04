@@ -124,31 +124,46 @@ namespace ExoParseV2
             funcs.Add(new ArcTan_func());
             funcs.Add(new ToDegrees_func());
             funcs.Add(new ToRadians_func());
+
             funcs.Add(new Sign_func());
             funcs.Add(new AbsoluteValue_func());
             funcs.Add(new Floor_func());
             funcs.Add(new Ceiling_func());
             funcs.Add(new Truncate_func());
+
             funcs.Add(new Min_func());
             funcs.Add(new Max_func());
+
             funcs.Add(new Log_func());
             funcs.Add(new Log10_func());
             funcs.Add(new NaturalLog_func());
+
             funcs.Add(new Round_func());
             funcs.Add(new Round2_func());
+
             funcs.Add(new While_func());
             funcs.Add(new DoWhile_func());
             funcs.Add(new For_func());
+
             funcs.Add(new RandomRange_float_func());
+
             funcs.Add(new ToFloat_func());
             funcs.Add(new ToInt_func());
             funcs.Add(new ToFraction_func());
+
             funcs.Add(new IsFloat_func());
             funcs.Add(new IsInt_func());
             funcs.Add(new IsFraction_func());
+
+            funcs.Add(new IsDouble());
+            funcs.Add(new IsDecimal());
+            funcs.Add(new ToDouble());
+            funcs.Add(new ToDecimal());
+
             funcs.Add(new Print_func() { Universe = universe});
             funcs.Add(new PrintLine_func() { Universe = universe});
             funcs.Add(new PrintValue_func() { Universe = universe});
+
             funcs.Add(new Exit_func());
             funcs.Add(new ExitWithCode_func());
             //funcs.Add(new Frac_func());

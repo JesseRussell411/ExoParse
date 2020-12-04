@@ -467,18 +467,65 @@ namespace ExoParseV2.Functions
     {
         public override string Name { get; } = "simp";
         public override string[] Parameters { get; } = { "fraction" };
-        public Universe Universe { get; set; }
         public override IElement Pass(Execution parent, IElement[] args)
         {
             return Calc(parent, args);
         }
-        private static Random rand = new Random();
         protected override IElement calc(IElement[] args)
         {
             IntFloatFrac? arg0_ex = args[0].Execute();
             if (arg0_ex == null) return null;
 
             return arg0_ex?.Fraction.Simplify().ToElement();
+        }
+    }
+    #endregion
+
+    #region Doudec
+    public class IsDouble : BuiltInFunction
+    {
+        public override string Name { get; } = "isDouble";
+        public override string[] Parameters { get; } = { "n" };
+        protected override IElement calc(IElement[] args) => 
+            (args[0].Execute() is IntFloatFrac iff && iff.IsFloat && iff.Float.IsDouble).ToElement();
+    }
+    public class IsDecimal : BuiltInFunction
+    {
+        public override string Name { get; } = "isDecimal";
+        public override string[] Parameters { get; } = { "n" };
+        protected override IElement calc(IElement[] args) => 
+            (args[0].Execute() is IntFloatFrac iff && iff.IsFloat && iff.Float.IsDecimal).ToElement();
+    }
+    public class ToDouble : BuiltInFunction
+    {
+        public override string Name { get; } = "double";
+        public override string[] Parameters { get; } = { "n" };
+        protected override IElement calc(IElement[] args)
+        {
+            IntFloatFrac? a0ex = args[0].Execute();
+            if (a0ex == null) return new Literal(null);
+
+            // *It's like a Russian nesting doll.
+            return new Literal(new IntFloatFrac(new IntFloat(new Doudec(((IntFloatFrac)a0ex).Float.Double))));
+        }
+    }
+    public class ToDecimal : BuiltInFunction
+    {
+        public override string Name { get; } = "decimal";
+        public override string[] Parameters { get; } = { "n" };
+        protected override IElement calc(IElement[] args)
+        {
+            IntFloatFrac? a0ex = args[0].Execute();
+            if (a0ex == null) return new Literal(null);
+
+            try
+            {
+                return new Literal(new IntFloatFrac(new IntFloat(new Doudec(((IntFloatFrac)a0ex).Float.Decimal))));
+            }
+            catch (OverflowException oe)
+            {
+                throw new ExecutionException($"The number could not be converted to decimal because: {oe.Message}");
+            }
         }
     }
     #endregion

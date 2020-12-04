@@ -46,7 +46,7 @@ namespace ExoParseV2_test
             var b = vers.References["b"];
 
             Assert.AreEqual(a.Execute(), 42);
-            Assert.AreEqual(b.Execute(), LogicUtils.True_double);
+            Assert.AreEqual(b.Execute(), LogicUtils.True_IntFloat);
         }
 
         [TestMethod]
