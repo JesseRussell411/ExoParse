@@ -465,7 +465,7 @@ namespace ExoParseV2.Functions
     #region Fraction
     public class Simplify_func : BuiltInFunction
     {
-        public override string Name { get; } = "simplify";
+        public override string Name { get; } = "simp";
         public override string[] Parameters { get; } = { "fraction" };
         public Universe Universe { get; set; }
         public override IElement Pass(Execution parent, IElement[] args)
