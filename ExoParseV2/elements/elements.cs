@@ -1,4 +1,5 @@
-﻿using ExoParseV2.utilities;
+﻿#define SIMPLIFY_ALL_FRACTIONS
+using ExoParseV2.utilities;
 using ParsingTools;
 using System;
 using System.Collections.Generic;
@@ -66,6 +67,9 @@ namespace ExoParseV2.elements
 
             if (IntFloatFrac.TryParse(s, out IntFloatFrac d))
             {
+#if SIMPLIFY_ALL_FRACTIONS
+                if (d.IsFraction) d = d.Fraction.Simplify();
+#endif
                 result = new Literal(d);
                 return true;//--(PASS)--
             }
@@ -75,7 +79,7 @@ namespace ExoParseV2.elements
                 return false; //--(FAIL)--
             }
         }
-        #endregion
+#endregion
     }
 
     public class Constant : IReference
@@ -140,7 +144,7 @@ namespace ExoParseV2.elements
     }
     public class Operation : IExpressionComponent
     {
-        #region constructors
+#region constructors
         public Operation(Operator op, IElement a, IElement b)
         {
             Operator = op;
@@ -152,19 +156,19 @@ namespace ExoParseV2.elements
 
         public Operation(Operator op, long? a, long? b)
             : this(op, a.ToElement(), b.ToElement()) { }
-        #endregion
+#endregion
 
-        #region Properties
+#region Properties
         public IElement A { get; set; }
         public IElement B { get; set; }
         public Operator Operator { get; set; }
         public IElement Definition { get { return Pass(); } }
         public bool DontExecute_flag
         { get { return Operator?.DontExecute_flag(A, B, this) ?? false; } }
-        #endregion
+#endregion
 
 
-        #region methods
+#region methods
         public IElement Pass()
         {
             return Operator?.Pass(A?.Pass(), B?.Pass(), this);
@@ -212,7 +216,7 @@ namespace ExoParseV2.elements
                 return returnString;
             }
         }
-        #endregion
+#endregion
     }
 
     public class Modification : IExpressionComponent
@@ -278,7 +282,7 @@ namespace ExoParseV2.elements
 
     public class Execution : IElement
     {
-        #region Constructors
+#region Constructors
         public Execution(Function function, params IElement[] arguments)
             : this(function, arguments, null, null) { }
         public Execution(Function function, IElement[] arguments, string openingBracket = null, string closingBracket = null, string delim = null)
@@ -295,7 +299,7 @@ namespace ExoParseV2.elements
                 Arguments[i] = arguments[i];
             }
         }
-        #endregion
+#endregion
 
         public Function Function
         {
@@ -315,7 +319,7 @@ namespace ExoParseV2.elements
         public string Delim { get; set; }
         public bool DontExecute_flag { get; } = false;
 
-        #region methods
+#region methods
         public IElement Pass()
         {
             return func?.Pass(this, Arguments);
@@ -340,7 +344,7 @@ namespace ExoParseV2.elements
             string ds = Arguments.Select(a => a.ToString(si)).ToDelimString($"{Delim} ");
             return $"{func.Name}{ds.Wrap(OpeningBracket, ClosingBracket)}";
         }
-        #endregion
+#endregion
 
         private Function func;
     }
