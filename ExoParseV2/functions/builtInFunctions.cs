@@ -344,6 +344,18 @@ namespace ExoParseV2.Functions
             return IElement.Void;
         }
     }
+    public class PrintValue_func : BuiltInFunction
+    {
+        public override string Name { get; } = "printValue";
+        public override string[] Parameters { get; } = { "n" };
+        public Universe Universe { get; set; }
+        protected override IElement calc(IElement[] args)
+        {
+            IntFloatFrac? arg0_ex = args[0].Execute();
+            Universe.PrintFunction($"{arg0_ex}\n");
+            return arg0_ex.ToElement();
+        }
+    }
 
     public class Exit_func : BuiltInFunction
     {

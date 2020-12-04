@@ -158,21 +158,70 @@ namespace MathTypes
         #region Parse
         public static bool TryParse(string s, out Doudec result)
         {
-            if (double.TryParse(s, out double d))
+            // Try Parsing both double and decimal. Null means failed:
+            decimal? dec = decimal.TryParse(s, out decimal decr) ? (decimal?)decr : null;
+            double? d = double.TryParse(s, out double dr) ? (double?)dr : null;
+            //
+
+            // Base result on that.
+            if (d != null)
             {
-                result = d;
-                return true;
-            }
-            else if (decimal.TryParse(s, out decimal dec))
-            {
-                result = dec;
-                return true;
+                if (dec != null)
+                {
+                    // * d dec
+
+                    if ((double)dec == d)
+                    {
+                        result = (decimal)dec;
+                        return true;
+                    }
+                    else
+                    {
+                        result = (double)d;
+                        return true;
+                    }
+                }
+                else
+                {
+                    // * d !dec
+
+                    result = (double)d;
+                    return true;
+                }
             }
             else
             {
-                result = default;
-                return false;
+                if (dec != null)
+                {
+                    // * !d dec
+
+                    result = (decimal)dec;
+                    return true;
+                }
+                else
+                {
+                    // * !d !dec
+
+                    result = default;
+                    return false;
+                }
             }
+
+            //if (double.TryParse(s, out double d))
+            //{
+            //    result = d;
+            //    return true;
+            //}
+            //else if (decimal.TryParse(s, out decimal dec))
+            //{
+            //    result = dec;
+            //    return true;
+            //}
+            //else
+            //{
+            //    result = default;
+            //    return false;
+            //}
         }
         public Doudec Parse(string s)
         {
@@ -319,7 +368,7 @@ namespace MathTypes
         public static Doudec FromDouble(double d) => MathUtils.TryToDecimalStrictly(d, out decimal dec) ? new Doudec(dec) : new Doudec(d);
         public static Doudec FromDecimal(decimal dec)
         {
-            if (dec == 0) return new Doudec(decimal.Zero);
+            //if (dec == 0) return new Doudec(decimal.Zero);
             return new Doudec(dec);
         }
         public static Doudec FromBigInteger(BigInteger bi)

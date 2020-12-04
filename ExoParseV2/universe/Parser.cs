@@ -867,6 +867,7 @@ namespace ExoParseV2
         }
 
         #region is...
+
         public bool IsLabel(String text)
         {
             //structure of variable: "{a-b,A-B,_, 0-9,.}"
@@ -888,29 +889,18 @@ namespace ExoParseV2
             //}
             #endregion
 
-            string a_b = "abcdefghijklmnopqrstuvwxyz";
-            string A_B = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            string _0_9 = "0123456789";
-            string _ = "_";
-            string space = " ";
-            string dot = ".";
-
             bool contains_non_NumberOrSpace = false;
 
             {
                 //bool first = true;
                 foreach (char c in text)
                 {
-                    bool is_number = _0_9.Contains(c);
-                    bool is_space = space.Contains(c);
-                    if ((a_b.Contains(c))
-                        || (A_B.Contains(c))
-                        || (is_number)
-                        //| (_0_9.Contains(thing) & !first)
-                        || (_.Contains(c))
-                        //|| (is_space)
-                        || (dot.Contains(c)))
-
+                    bool isNumber = char.IsNumber(c);
+                    bool isSpace = char.IsWhiteSpace(c);
+                    if (char.IsLetter(c) ||
+                        isNumber         ||
+                        c == '_'         ||
+                        c == '.')
                     {
                         //test passed, so far --(PASS?)--
                     }
@@ -920,7 +910,7 @@ namespace ExoParseV2
                         return false;
                     }
 
-                    if (!(is_number | is_space)) { contains_non_NumberOrSpace = true; }
+                    if (!(isNumber | isSpace)) { contains_non_NumberOrSpace = true; }
 
                     //first = false;
                 }

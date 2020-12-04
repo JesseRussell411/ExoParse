@@ -182,8 +182,9 @@ namespace MathTypes
                 return x.frac.Power(y);
             }
         }
-        public static IntFloatFrac Pow(IntFloatFrac x, double y) => x.intFloatNotFraction ? (IntFloatFrac)IntFloat.Pow(x.ifloat, y) : Doudec.Pow(x.frac.ToDoudec(), y);
-        //public static IntFloatFrac Pow(IntFloatFrac x, IntFloat y) => x.ifNotFrac ? (IntFloatFrac)IntFloat.Pow(x.ifloat, y) : Doudec.Pow(x.frac.ToDoudec(), y.Float.Double);
+        public static IntFloatFrac Pow(IntFloatFrac x, double y) => x.intFloatNotFraction ? 
+            IntFloat.Pow(x.ifloat, y) : 
+            Doudec.Pow((Doudec)x.frac, y);
 
 
         public static IntFloatFrac Pow(IntFloatFrac x, IntFloat y)

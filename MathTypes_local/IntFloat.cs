@@ -25,6 +25,11 @@ namespace MathTypes
         public bool IsFloat { get => floatNotInt; }
         public bool IsInt { get => !floatNotInt; }
 
+        // Doudec Passthrough:
+        public bool IsDouble => floatNotInt && floating.IsDouble;
+        public bool IsDecimal => floatNotInt && floating.IsDecimal;
+        //
+
         public object Value => floatNotInt ? (object)floating : integer;
 
         public bool IsNegative { get => floatNotInt ? Doudec.IsNegative(floating) : integer < 0; }

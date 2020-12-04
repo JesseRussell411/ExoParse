@@ -88,6 +88,9 @@ namespace MathTypes
             return false;
         }
 
+
+        public static bool NextBool(this Random rand) => rand.NextDouble() >= 0.5;
+
         private const decimal DecimalEpsilon = 1e-28M; // *from https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/floating-point-numeric-types
         private const double DecimalMaxValue_double = 7.922816251426433E+28; // *from Console.WriteLine(Convert.ToDouble(decimal.MaxValue)); *actual result was 7.922816251426434E+28 (4 vs 3 at end), but that 4 at the end was rounded up, so I floored it back down to 3. This is the actual largest double, which can be cast to decimal.
         private const double DecimalMinValue_double = -7.922816251426433E+28;

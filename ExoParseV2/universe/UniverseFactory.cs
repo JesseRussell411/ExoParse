@@ -148,6 +148,7 @@ namespace ExoParseV2
             funcs.Add(new IsFraction_func());
             funcs.Add(new Print_func() { Universe = universe});
             funcs.Add(new PrintLine_func() { Universe = universe});
+            funcs.Add(new PrintValue_func() { Universe = universe});
             funcs.Add(new Exit_func());
             funcs.Add(new ExitWithCode_func());
             //funcs.Add(new Frac_func());
