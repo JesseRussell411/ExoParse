@@ -8,7 +8,7 @@ using ExoParseV2.theUniverse.commands;
 using ExoParseV2.utilities;
 using ExoParseV2.universe;
 using System.Text;
-using MathTypes;
+using JesseRussell.Numerics;
 
 namespace ExoParseV2
 {

@@ -5,7 +5,7 @@ using ExoParseV2.Functions;
 using ExoParseV2.theUniverse;
 using ExoParseV2.theUniverse.commands;
 using ExoParseV2.elements;
-using MathTypes;
+using JesseRussell.Numerics;
 
 namespace ExoParseV2
 {

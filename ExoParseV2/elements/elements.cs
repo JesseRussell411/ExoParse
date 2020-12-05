@@ -7,7 +7,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Net.Security;
 using System.Text;
-using MathTypes;
+using JesseRussell.Numerics;
 using System.Numerics;
 
 namespace ExoParseV2.elements

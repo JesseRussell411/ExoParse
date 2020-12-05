@@ -6,8 +6,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="JesseRussell.Numerics" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\convenienceTools_local\convenienceTools_local.csproj" />
-    <ProjectReference Include="..\MathTypes_local\MathTypes_local.csproj" />
     <ProjectReference Include="..\parsingTools_local\parsingTools_local.csproj" />
   </ItemGroup>
 

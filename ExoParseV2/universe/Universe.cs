@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 using ConvenienceTools;
 using ExoParseV2.elements;
 using ExoParseV2.universe;
-using MathTypes;
+using JesseRussell.Numerics;
 
 namespace ExoParseV2.theUniverse
 {

@@ -20,8 +20,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExoParseV2_test", "ExoParse
 		{FF665955-8ACA-4E7D-95F3-C7E61A64C4E7} = {FF665955-8ACA-4E7D-95F3-C7E61A64C4E7}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathTypes_local", "MathTypes_local\MathTypes_local.csproj", "{70E7C8DB-6D1C-4C24-BB5B-7DB99832B75D}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,10 +46,6 @@ Global
 		{F93BBE2D-5A5E-4C07-82B5-3AD702C2C25A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F93BBE2D-5A5E-4C07-82B5-3AD702C2C25A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F93BBE2D-5A5E-4C07-82B5-3AD702C2C25A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{70E7C8DB-6D1C-4C24-BB5B-7DB99832B75D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{70E7C8DB-6D1C-4C24-BB5B-7DB99832B75D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{70E7C8DB-6D1C-4C24-BB5B-7DB99832B75D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{70E7C8DB-6D1C-4C24-BB5B-7DB99832B75D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

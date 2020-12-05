@@ -3,7 +3,7 @@ using ExoParseV2.elements;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using MathTypes;
+using JesseRussell.Numerics;
 
 namespace ExoParseV2
 {
