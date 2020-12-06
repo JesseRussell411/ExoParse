@@ -1,5 +1,4 @@
-﻿using ConvenienceTools;
-using ExoParseV2.elements;
+﻿using ExoParseV2.elements;
 using System;
 using System.Collections.Generic;
 using System.Text;

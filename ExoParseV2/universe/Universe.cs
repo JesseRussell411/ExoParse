@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using ParsingTools;
 using System.Text;
 using System.Runtime.CompilerServices;
-using ConvenienceTools;
 using ExoParseV2.elements;
 using ExoParseV2.universe;
 using JesseRussell.Numerics;
@@ -155,12 +154,12 @@ namespace ExoParseV2.theUniverse
                     c = statement[i];
                     if (nameEnd == null)
                     {
-                        if (c.IsWhiteSpace())
+                        if (char.IsWhiteSpace(c))
                         {
                             nameEnd = i;
                         }
                     }
-                    else if (argsBegin == null && !c.IsWhiteSpace())
+                    else if (argsBegin == null && !char.IsWhiteSpace(c))
                     {
                         argsBegin = i;
                         break;
@@ -183,7 +182,8 @@ namespace ExoParseV2.theUniverse
 
 
             // Get name.
-            string name = statement.rng(0, (int)nameEnd);
+            string name = statement[..(int)nameEnd];
+            //string name = statement.rng(0, (int)nameEnd);
             //
 
 
@@ -192,7 +192,8 @@ namespace ExoParseV2.theUniverse
             if (Commands.TryGetValue(name.ToLower(), out Command cmd))
             {
                 // Return the result string from execution.
-                return cmd.Execute(statement.rng((int)argsBegin, statement.Length), this);
+                return cmd.Execute(statement[(int)argsBegin..], this);
+                //return cmd.Execute(statement.rng((int)argsBegin, statement.Length), this);
             }
             else
             {
@@ -218,7 +219,8 @@ namespace ExoParseV2.theUniverse
                     if (commentOpFinder.Found(c, next))
                     {
                         //statement = statement.Substring(0, i - commentOperator.Length);// remove comment from statement.
-                        statement = statement.rng(0, (i - CommentOperator.Length) + 1);
+                        statement = statement[..(i - CommentOperator.Length + 1)];
+                        //statement = statement.rng(0, (i - CommentOperator.Length) + 1);
                         commentOpFinder.Reset();// don't forget to reset the opfinder.
                         break;// no point in finishing the loop.
                     }
@@ -259,7 +261,8 @@ namespace ExoParseV2.theUniverse
             if (statement.Length >= CommandOperator.Length && statement.Substring(0, CommandOperator.Length) == CommandOperator)
             {
                 // This is a command.
-                return RunCommand(statement.rng(CommandOperator.Length, -1));
+                return RunCommand(statement[CommandOperator.Length..]);
+                //return RunCommand(statement.rng(CommandOperator.Length, -1));
             }
             else
             {
