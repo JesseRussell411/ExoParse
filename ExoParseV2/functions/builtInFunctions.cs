@@ -5,7 +5,7 @@ using System.Text;
 using ExoParseV2.elements;
 using ExoParseV2.theUniverse;
 using ExoParseV2.utilities;
-using MathTypes;
+using JesseRussell.Numerics;
 
 namespace ExoParseV2.Functions
 {

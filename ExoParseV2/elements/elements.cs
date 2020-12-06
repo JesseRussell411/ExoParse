@@ -1,4 +1,7 @@
 ﻿#define SIMPLIFY_ALL_FRACTIONS
+
+#define DONT_ALLOW_NEGATIVE_AND_POSITIVE_IN_LITERAL_PARSE
+//#define ALLOW_NEGATIVE_AND_POSITIVE_FOR_FRACTION
 using ExoParseV2.utilities;
 using ParsingTools;
 using System;
@@ -7,7 +10,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Net.Security;
 using System.Text;
-using MathTypes;
+using JesseRussell.Numerics;
 using System.Numerics;
 
 namespace ExoParseV2.elements
@@ -65,17 +68,31 @@ namespace ExoParseV2.elements
             }
             else
             {
-                throw new FormatException($"\"{s}\" is not a valid constant.");
+                throw new FormatException($"\"{s}\" is not a valid literal.");
             }
 
         }
         public static bool TryParse(String s, out Literal result)
         {
+            s = s.Trim();
+
             if (s.Length == 0) { result = Literal.Default; return false; }//--(FAIL)--
 
             if (s == StringProps.NullLabel) { result = Literal.Default; return true; }//--(PASS)--
 
-            if (IntFloatFrac.TryParse(s, out IntFloatFrac d))
+#if DONT_ALLOW_NEGATIVE_AND_POSITIVE_IN_LITERAL_PARSE
+            if (s.FirstOrDefault() == '-' || s.FirstOrDefault() == '+')
+            {
+                // !Pay close attention to that if statement and how it relates to the return.
+#if ALLOW_NEGATIVE_AND_POSITIVE_FOR_FRACTION
+                if (!s.Contains('/'))
+#endif
+                { result = null; return false; }
+
+            }
+#endif
+
+                if (IntFloatFrac.TryParse(s, out IntFloatFrac d))
             {
 #if SIMPLIFY_ALL_FRACTIONS
                 if (d.IsFraction) d = d.Fraction.Simplify();

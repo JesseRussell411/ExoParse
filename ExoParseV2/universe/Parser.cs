@@ -1,15 +1,13 @@
 ﻿using ExoParseV2.utilities;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using ParsingTools;
-using ConvenienceTools;
 using System.Linq;
 using System.Collections.Immutable;
-using Microsoft.VisualBasic.CompilerServices;
-using System.Runtime.InteropServices;
 using ExoParseV2.theUniverse;
 using ExoParseV2.elements;
+
+using JesseRussell.LinqExtension;
 
 namespace ExoParseV2
 {
@@ -110,7 +108,11 @@ namespace ExoParseV2
         {
             get
             {
-                return (Operator != null).ToInt() + (PreModifier != null).ToInt() + (PostModifier != null).ToInt() > 1;
+                int count = 0;
+                if (Operator != null) count++;
+                if (PreModifier != null) count++;
+                if (PostModifier != null) count++;
+                return count > 1;
             }
         }
 
@@ -137,6 +139,7 @@ namespace ExoParseV2
     #endregion
     public class Parser
     {
+        public static IEnumerable<string> ems = Enumerable.Empty<string>();
         public Operator DefaultOperator { get; set; }
         public IElement DefaultElement { get; set; } = IElement.Void;
         public SymbolizedIndex SymbolizedIndex { get; set; }
@@ -147,12 +150,12 @@ namespace ExoParseV2
             SymbolizedIndex = si;
             Universe = universe;
 
-            stage1Tokenizer = new Tokenizer(Cools.Ems, Cools.Ems, Cools.Ems, Cools.Ems, StringProps.OpenBrackets, StringProps.CloseBrackets, Cools.Ems, Cools.Ems)
+            stage1Tokenizer = new Tokenizer(ems, ems, ems, ems, StringProps.OpenBrackets, StringProps.CloseBrackets, ems, ems)
             { BreakOnWhiteSpace = true };
 
-            stage2Tokenizer = new Tokenizer(si.AllSymbols, Cools.Ems, Cools.Ems, Cools.Ems, StringProps.OpenBrackets, StringProps.CloseBrackets, Cools.Ems, Cools.Ems);
+            stage2Tokenizer = new Tokenizer(si.AllSymbols, ems, ems, ems, StringProps.OpenBrackets, StringProps.CloseBrackets, ems, ems);
 
-            stage3Tokenizer = new Tokenizer(Cools.Ems, Cools.Ems, Cools.Ems, Cools.Ems, StringProps.OpenBrackets, StringProps.CloseBrackets, Cools.Ems, Cools.Ems, true);
+            stage3Tokenizer = new Tokenizer(ems, ems, ems, ems, StringProps.OpenBrackets, StringProps.CloseBrackets, ems, ems, true);
         }
 
         public bool TryParseBaseElement(String s, out IElement result, Dictionary<string, IReference> localLabeled = null)
@@ -191,7 +194,8 @@ namespace ExoParseV2
         #region parse element/ expression
         public IElement ParseElement(string s, Dictionary<string, IReference> localLabeled = null)
         {
-            bool startsWithWhitespace = s.Length > 0 && s[0].IsWhiteSpace();
+            bool startsWithWhitespace = s.Length > 0 && char.IsWhiteSpace(s[0]);
+            //bool startsWithWhitespace = s.Length > 0 && s[0].IsWhiteSpace();
             s = s.Trim();
             if (s.Length == 0) { return null; } // give up if line is empty
 
@@ -244,7 +248,7 @@ namespace ExoParseV2
             items = items
                 .Select(i =>
                     (tokens: i.Unparsed ? stage2Tokenizer.Tokenize(i.Text) : new List<string>(), item: i)) //   Tokenize each item that hasn't been discovered to be element or operator or modifier
-                .Select(t => t.tokens.Count == 0 ? t.item.Mkarr() : t.tokens.Select(to => new Item(to))) // Itemize the tokens
+                .Select(t => t.tokens.Count == 0 ? t.item.Enumerate() : t.tokens.Select(to => new Item(to))) // Itemize the tokens
                 .SelectMany(m => m).ToList(); // flatten the 2d item list
 
             foreach (Item item in items)
@@ -284,7 +288,7 @@ namespace ExoParseV2
             items = items
                 .Select(i =>
                     (tokens: i.Unparsed ? stage3Tokenizer.Tokenize(i.Text) : new List<string>(), item: i)) //   Tokenize each item that hasn't been discovered to be element or operator or modifier
-                .Select(t => t.tokens.Count == 0 ? t.item.Mkarr() : t.tokens.Select(to => new Item(to))) // Itemize the tokens
+                .Select(t => t.tokens.Count == 0 ? t.item.Enumerate() : t.tokens.Select(to => new Item(to))) // Itemize the tokens
                 .SelectMany(m => m).ToList(); // flatten the 2d item list
 
 
@@ -304,7 +308,7 @@ namespace ExoParseV2
                     item.Element = e;
                 }
 
-                //!\/!\/!\      I'm piggy backing off this loop to fill the new linkedlist with items.
+                //!\/!\/!\      I'm piggy backing off this loop to fill the new linkedlist with items. Hopefully it helps performance
                 items_ll.AddLast(item);
 
             }
@@ -953,8 +957,8 @@ namespace ExoParseV2
             return false; //--(FAIl)--
 
         }
-        public static Tokenizer IsFunction_BracketTokenizer = new Tokenizer(Cools.Ems, Cools.Ems, Cools.Ems, Cools.Ems, StringProps.OpenBrackets, StringProps.CloseBrackets, Cools.Ems, Cools.Ems, true);
-        public static Tokenizer IsFunction_DelimTokenizer = new Tokenizer(Cools.Ems, StringProps.Delims, Cools.Ems, Cools.Ems, StringProps.OpenBrackets, StringProps.CloseBrackets, Cools.Ems, Cools.Ems, false);
+        public static Tokenizer IsFunction_BracketTokenizer = new Tokenizer(ems, ems, ems, ems, StringProps.OpenBrackets, StringProps.CloseBrackets, ems, ems, true);
+        public static Tokenizer IsFunction_DelimTokenizer = new Tokenizer(ems, StringProps.Delims, ems, ems, StringProps.OpenBrackets, StringProps.CloseBrackets, ems, ems, false);
         #endregion
         #endregion
     }

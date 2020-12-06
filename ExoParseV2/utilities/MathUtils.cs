@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Numerics;
-using MathTypes;
+using JesseRussell.Numerics;
 
 
 namespace ExoParseV2
