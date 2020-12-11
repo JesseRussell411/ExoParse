@@ -306,7 +306,7 @@ namespace ExoParseV2.theUniverse
                         result.Append($"\t{ex.ElementExecuteToString()}\n");
 
                         // Set the previous answer variable to the new previous answer.
-                        PreviousAnswer = ex;
+                        if (ex != null) PreviousAnswer = ex;
                     }
 
                     // Return the result string.
