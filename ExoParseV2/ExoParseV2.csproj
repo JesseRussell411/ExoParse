@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="JesseRussell.LinqExtension" Version="1.0.0" />
-    <PackageReference Include="JesseRussell.Numerics" Version="1.0.0" />
+    <PackageReference Include="JesseRussell.Numerics" Version="1.0.2" />
   </ItemGroup>
 
   <ItemGroup>
