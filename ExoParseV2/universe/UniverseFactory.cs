@@ -133,6 +133,7 @@ namespace ExoParseV2
 
             funcs.Add(new Min_func());
             funcs.Add(new Max_func());
+            funcs.Add(new GCD_func());
 
             funcs.Add(new Log_func());
             funcs.Add(new Log10_func());

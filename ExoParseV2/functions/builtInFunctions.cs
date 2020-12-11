@@ -403,6 +403,30 @@ namespace ExoParseV2.Functions
             }
         }
     }
+
+    public class GCD_func: BuiltInFunction
+    {
+        public override string Name { get; } = "gcd";
+        public override string[] Parameters { get; } = { "a", "b" };
+        public Universe Universe { get; set; }
+        private static Random rand = new Random();
+        protected override IElement calc(IElement[] args)
+        {
+            var a_nullable = args[0].Execute();
+            var b_nullable = args[1].Execute();
+
+            if (a_nullable == null) throw new ExecutionException("a was null in the gcd function.");
+            if (b_nullable == null) throw new ExecutionException("b was null in the gcd function.");
+
+            var a = a_nullable.Value;
+            var b = b_nullable.Value;
+
+            if (!a.IsInt) throw new ExecutionException("a was not an int in the gcd function.");
+            if (!b.IsInt) throw new ExecutionException("b was not an int in the gcd function.");
+
+            return BigInteger.GreatestCommonDivisor(a.Int, b.Int).ToElement();
+        }
+    }
     #endregion
 
     #region IntFloatFrac
