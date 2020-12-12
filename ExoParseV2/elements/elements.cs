@@ -2,6 +2,8 @@
 
 #define DONT_ALLOW_NEGATIVE_AND_POSITIVE_IN_LITERAL_PARSE
 //#define ALLOW_NEGATIVE_AND_POSITIVE_FOR_FRACTION
+
+//#define PARSE_FRACTIONS
 using ExoParseV2.utilities;
 using ParsingTools;
 using System;
@@ -92,11 +94,20 @@ namespace ExoParseV2.elements
             }
 #endif
 
-                if (IntFloatFrac.TryParse(s, out IntFloatFrac d))
+            if (IntFloatFrac.TryParse(s, out IntFloatFrac d))
             {
-#if SIMPLIFY_ALL_FRACTIONS
-                if (d.IsFraction) d = d.Fraction.Simplify();
+                if (d.IsFraction)
+                {
+#if PARSE_FRACTIONS
+#else
+                    result = default;
+                    return false;
 #endif
+#if SIMPLIFY_ALL_FRACTIONS
+                    d = d.Fraction.Simplify();
+#endif
+                }
+
                 result = new Literal(d);
                 return true;//--(PASS)--
             }

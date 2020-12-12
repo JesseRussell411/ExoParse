@@ -305,6 +305,20 @@ namespace ExoParseV2.theUniverse
                         // Append the value from the execution
                         result.Append($"\t{ex.ElementExecuteToString()}\n");
 
+                        // Include the float or int version as-well if the answer is a fraction:
+                        if (ex?.IsFraction ?? false)
+                        {
+                            if (ex?.Fraction.IsWhole ?? false)
+                            {
+                                result.Append($"\t{ex?.Int}\n");
+                            }
+                            else
+                            {
+                                result.Append($"\t{ex?.Float}\n");
+                            }
+                        }
+                        //
+
                         // Set the previous answer variable to the new previous answer.
                         if (ex != null) PreviousAnswer = ex;
                     }
