@@ -47,7 +47,7 @@ namespace ExoParseV2.elements
             if (Value_nn.IsFraction) wrap = true;
 
             // Adding .0 to the end if the value is suppose to be a float but doesn't look like a float:
-            if (!ScientificNotation && Value_nn.IsFloat && !s.Contains('.')) s += ".0";
+            if (!ScientificNotation && Value_nn.IsFloat && Doudec.IsFinite(Value_nn.Float) && !Doudec.IsNaN(Value_nn.Float) && !s.Contains('.')) s += ".0";
             
             return wrap ? $" {s} " : s; // *add extra padding around scientific notation and fractions to make sure the output can be parsed.
         }
@@ -57,9 +57,6 @@ namespace ExoParseV2.elements
         }
 
         #region static
-        public static implicit operator Literal(IntFloatFrac? ift) => new Literal(ift);
-        public static implicit operator Literal(IntFloatFrac ift) => new Literal(ift);
-        public static implicit operator IntFloatFrac?(Literal lit) => lit.Value;
         public static Literal Default { get { return new Literal(null); } }
 
         public static Literal Parse(String s)
@@ -117,7 +114,12 @@ namespace ExoParseV2.elements
                 return false; //--(FAIL)--
             }
         }
-#endregion
+
+        #region casts
+        public static implicit operator Literal(IntFloatFrac? iff) => new Literal(iff);
+        public static implicit operator IntFloatFrac?(Literal? l) => new Literal(l?.Value);
+        #endregion
+        #endregion
     }
 
     public class Constant : IReference
