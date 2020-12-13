@@ -440,7 +440,7 @@ namespace ExoParseV2.Functions
         }
         protected override IElement calc(IElement[] args)
         {
-            return args[0].Execute()?.Float.ToElement();
+            return new IntFloatFrac(new IntFloat(args[0].Execute()?.Float ?? default)).ToElement();
         }
     }
     public class ToInt_func : BuiltInFunction
@@ -466,7 +466,7 @@ namespace ExoParseV2.Functions
         }
         protected override IElement calc(IElement[] args)
         {
-            return args[0].Execute()?.Fraction.ToElement();
+            return new IntFloatFrac(args[0].Execute()?.Fraction ?? default).ToElement();
         }
     }
         public class IsFloat_func : BuiltInFunction

@@ -91,35 +91,60 @@ namespace ExoParseV2.elements
             }
 #endif
 
-            if (IntFloatFrac.TryParse(s, out IntFloatFrac d))
-            {
-                if (d.IsFraction)
-                {
 #if PARSE_FRACTIONS
 #else
-                    result = default;
-                    return false;
+            if (s.Contains('/'))
+            {
+                result = default;
+                return false;//--(FAIL)--
+            }
 #endif
-#if SIMPLIFY_ALL_FRACTIONS
-                    d = d.Fraction.Simplify();
-#endif
-                }
 
-                result = new Literal(d);
-                return true;//--(PASS)--
+            if (IntFloatFrac.TryParse(s, out IntFloatFrac iff))
+            {
+
+                #if SIMPLIFY_ALL_FRACTIONS
+                if (iff.IsFraction) iff = iff.Fraction.Simplify();
+                #endif
+
+                result = new Literal(iff);
+                return true; //--(PASS)--
             }
             else
             {
-                result = Literal.Default;
-                return false; //--(FAIL)--
+                result = default;
+                return false;//--(FAIL)--
             }
+
+            //            if (IntFloatFrac.TryParse(s, out IntFloatFrac d))
+            //            {
+            //                if (d.IsFraction)
+            //                {
+            //#if PARSE_FRACTIONS
+            //#else
+            //                    result = default;
+            //                    return false;
+            //#endif
+            //#if SIMPLIFY_ALL_FRACTIONS
+            //                    d = d.Fraction.Simplify();
+            //#endif
+            //                }
+
+            //                result = new Literal(d);
+            //                return true;//--(PASS)--
+            //            }
+            //            else
+            //            {
+            //                result = Literal.Default;
+            //                return false; //--(FAIL)--
+            //            }
         }
 
-        #region casts
+#region casts
         public static implicit operator Literal(IntFloatFrac? iff) => new Literal(iff);
         public static implicit operator IntFloatFrac?(Literal? l) => new Literal(l?.Value);
-        #endregion
-        #endregion
+#endregion
+#endregion
     }
 
     public class Constant : IReference

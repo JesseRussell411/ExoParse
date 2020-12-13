@@ -293,8 +293,12 @@ namespace ExoParseV2.theUniverse
                     // Append the parsed expression to show the user what was interpreted by the parser.
                     result.Append($"{e.ToString(SymbolizedIndex)}\n");
 
+                    result.Append('\n');
+
                     // Append the expression after it has been ran.
                     result.Append($"{p.ToString(SymbolizedIndex)}\n");
+
+                    result.Append('\n');
 
                     // Execute the expression unless the don't-execute flag was true.
                     if (!dontExecute)
@@ -304,6 +308,8 @@ namespace ExoParseV2.theUniverse
 
                         // Append the value from the execution
                         result.Append($"\t{ex.ElementExecuteToString()}\n");
+
+                        result.Append('\n');
 
                         // Include the float or int version as-well if the answer is a fraction:
                         if (ex?.IsFraction ?? false)
