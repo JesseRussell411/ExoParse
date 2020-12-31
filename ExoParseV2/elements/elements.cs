@@ -149,29 +149,6 @@ namespace ExoParseV2.elements
                 result = default;
                 return false;//--(FAIL)--
             }
-
-            //            if (IntFloatFrac.TryParse(s, out IntFloatFrac d))
-            //            {
-            //                if (d.IsFraction)
-            //                {
-            //#if PARSE_FRACTIONS
-            //#else
-            //                    result = default;
-            //                    return false;
-            //#endif
-            //#if SIMPLIFY_ALL_FRACTIONS
-            //                    d = d.Fraction.Simplify();
-            //#endif
-            //                }
-
-            //                result = new Literal(d);
-            //                return true;//--(PASS)--
-            //            }
-            //            else
-            //            {
-            //                result = Literal.Default;
-            //                return false; //--(FAIL)--
-            //            }
         }
 
 #region casts
