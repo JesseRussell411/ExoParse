@@ -73,24 +73,57 @@ namespace ExoParseV2.elements
         }
         public static bool TryParse(String s, out Literal result)
         {
+            // o---------------o
+            // | clean string: |
+            // o---------------o
+
             s = s.Trim();
 
+
+
+
+
+            #region special cases and workarounds:
+
+            // o----------------o
+            // | Special cases: |
+            // o----------------o
+
+            // is it empty?
             if (s.Length == 0) { result = Literal.Default; return false; }//--(FAIL)--
 
+            // is it null?
             if (s == StringProps.NullLabel) { result = Literal.Default; return true; }//--(PASS)--
 
+
+            // o--------------o
+            // | workarounds: |
+            // o--------------o
+
+
+            // ==================================================================================================
 #if DONT_ALLOW_NEGATIVE_AND_POSITIVE_IN_LITERAL_PARSE
+
+
             if (s.FirstOrDefault() == '-' || s.FirstOrDefault() == '+')
             {
-                // !Pay close attention to that if statement and how it relates to the return.
-#if ALLOW_NEGATIVE_AND_POSITIVE_FOR_FRACTION
+                #if ALLOW_NEGATIVE_AND_POSITIVE_FOR_FRACTION
                 if (!s.Contains('/'))
-#endif
+                {
+                    result = null; return false;
+                }
+                #else
                 { result = null; return false; }
-
+                #endif
             }
 #endif
+            
+            // Don't allow + or - at the end of the string (because C# allows this when trying to parse a double)
+            // ==================================================================================================
+            if (s[^1] == '-' || s[^1] == '+') { result = null; return false; }
 
+
+            // ==================================================================================================
 #if PARSE_FRACTIONS
 #else
             if (s.Contains('/'))
@@ -99,6 +132,7 @@ namespace ExoParseV2.elements
                 return false;//--(FAIL)--
             }
 #endif
+            #endregion
 
             if (IntFloatFrac.TryParse(s, out IntFloatFrac iff))
             {

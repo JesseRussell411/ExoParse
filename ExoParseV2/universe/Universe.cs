@@ -290,10 +290,15 @@ namespace ExoParseV2.theUniverse
                     // Start building result string;
                     StringBuilder result = new StringBuilder();
 
+                    #region run-time debug
                     // Append the parsed expression to show the user what was interpreted by the parser.
-                    result.Append($"{e.ToString(SymbolizedIndex)}\n");
+                    if (Debug)
+                    {
+                        result.Append($"{e.ToString(SymbolizedIndex)}\n");
 
-                    result.Append('\n');
+                        result.Append('\n');
+                    }
+                    #endregion
 
                     // Append the expression after it has been ran.
                     result.Append($"{p.ToString(SymbolizedIndex)}\n");

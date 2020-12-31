@@ -534,7 +534,7 @@ namespace ExoParseV2.theUniverse.commands
                 {
                     generate(sw, universe);
                 }
-                return "Script generated at {path}\n";
+                return $"Script generated at {path}\n";
             }
         }
     }
@@ -552,7 +552,7 @@ namespace ExoParseV2.theUniverse.commands
             {
                 generate(sw, universe);
             }
-            return "Script generated at {path}\n";
+            return $"Script generated at {path}\n";
         }
     }
 }
