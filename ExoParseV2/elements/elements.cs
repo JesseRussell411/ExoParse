@@ -4,16 +4,10 @@
 //#define ALLOW_NEGATIVE_AND_POSITIVE_FOR_FRACTION
 
 //#define PARSE_FRACTIONS
-using ExoParseV2.utilities;
 using ParsingTools;
 using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
-using System.Net.Security;
-using System.Text;
 using JesseRussell.Numerics;
-using System.Numerics;
 
 namespace ExoParseV2.elements
 {
@@ -138,6 +132,7 @@ namespace ExoParseV2.elements
 
 
             // Actually try to parse the literal...
+
             if (IntFloatFrac.TryParse(s, out IntFloatFrac iff))
             {
 

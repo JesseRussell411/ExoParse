@@ -3,9 +3,7 @@ using System;
 using System.Collections.Generic;
 using ParsingTools;
 using System.Text;
-using System.Runtime.CompilerServices;
 using ExoParseV2.elements;
-using ExoParseV2.universe;
 using JesseRussell.Numerics;
 
 namespace ExoParseV2.theUniverse

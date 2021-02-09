@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <StartupObject>ExoParseV2.Program</StartupObject>
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>

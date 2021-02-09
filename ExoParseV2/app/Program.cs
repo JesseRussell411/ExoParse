@@ -1,14 +1,5 @@
-﻿using System;
-using ParsingTools;
-using System.Linq;
-using ExoParseV2.Functions;
-using System.Diagnostics;
-using ExoParseV2.theUniverse;
-using ExoParseV2.theUniverse.commands;
-using ExoParseV2.utilities;
+﻿using System.Diagnostics;
 using ExoParseV2.universe;
-using System.Text;
-using JesseRussell.Numerics;
 
 namespace ExoParseV2
 {

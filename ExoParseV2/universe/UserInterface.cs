@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading;
 using ExoParseV2.theUniverse;
-using ExoParseV2.universe;
 
 namespace ExoParseV2.universe
 {

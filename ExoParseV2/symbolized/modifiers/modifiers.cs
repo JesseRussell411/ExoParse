@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Text;
-using ExoParseV2.elements;
+﻿using ExoParseV2.elements;
 using JesseRussell.Numerics;
 
 namespace ExoParseV2

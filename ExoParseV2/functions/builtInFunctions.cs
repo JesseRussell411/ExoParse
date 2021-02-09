@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Numerics;
-using System.Text;
 using ExoParseV2.elements;
 using ExoParseV2.theUniverse;
-using ExoParseV2.utilities;
 using JesseRussell.Numerics;
 
 namespace ExoParseV2.Functions
@@ -316,6 +313,47 @@ namespace ExoParseV2.Functions
                 result = expression.Execute();
             }
 
+            return result.ToElement();
+        }
+    }
+
+    public class If_func : BuiltInFunction
+    {
+        public override string Name { get; } = "if";
+        public override string[] Parameters { get; } = { "condition", "expression" };
+        protected override IElement calc(IElement[] args)
+        {
+            IElement condition = args[0].Definition;
+            IElement expression = args[1].Definition;
+
+            IntFloatFrac? result = null;
+            if (condition.Execute().ToBool() == true)
+            {
+                result = expression.Execute();
+            }
+            return result.ToElement();
+        }
+    }
+    public class IfElse_func : BuiltInFunction
+    {
+        public override string Name { get; } = "if";
+        public override string[] Parameters { get; } = { "condition", "expression", "else_expression" };
+        protected override IElement calc(IElement[] args)
+        {
+            IElement condition = args[0].Definition;
+            IElement expression = args[1].Definition;
+            IElement else_expression = args[2].Definition;
+
+            IntFloatFrac? result = null;
+
+            if (condition.Execute().ToBool() == true)
+            {
+                result = expression.Execute();
+            }
+            else
+            {
+                result = else_expression.Execute();
+            }
             return result.ToElement();
         }
     }

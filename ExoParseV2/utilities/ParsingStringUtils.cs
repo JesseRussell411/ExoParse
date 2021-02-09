@@ -1,8 +1,4 @@
-﻿using ParsingTools;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using ExoParseV2.elements;
+﻿using ExoParseV2.elements;
 
 namespace ExoParseV2.utilities
 {

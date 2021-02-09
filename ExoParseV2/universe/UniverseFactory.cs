@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using ExoParseV2.Functions;
 using ExoParseV2.theUniverse;
 using ExoParseV2.theUniverse.commands;
@@ -141,6 +140,9 @@ namespace ExoParseV2
 
             funcs.Add(new Round_func());
             funcs.Add(new Round2_func());
+
+            funcs.Add(new If_func());
+            funcs.Add(new IfElse_func());
 
             funcs.Add(new While_func());
             funcs.Add(new DoWhile_func());
