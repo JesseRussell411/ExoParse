@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Text;
 using ExoParseV2.elements;
 
@@ -534,7 +533,7 @@ namespace ExoParseV2.theUniverse.commands
                 {
                     generate(sw, universe);
                 }
-                return $"Script generated at {path}\n";
+                return $"Script generated at {Path.GetFullPath(path)}\n";
             }
         }
     }
@@ -552,7 +551,7 @@ namespace ExoParseV2.theUniverse.commands
             {
                 generate(sw, universe);
             }
-            return $"Script generated at {path}\n";
+            return $"Script generated at {Path.GetFullPath(path)}\n";
         }
     }
 }
