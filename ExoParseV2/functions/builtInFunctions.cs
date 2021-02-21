@@ -553,6 +553,61 @@ namespace ExoParseV2.Functions
             return arg0_ex?.Fraction.Simplify().ToElement();
         }
     }
+
+    public class GetNumerator_func : BuiltInFunction
+    {
+        public override string Name { get; } = "getNumerator";
+        public override string[] Parameters { get; } = { "fraction" };
+        public override IElement Pass(Execution parent, IElement[] args)
+        {
+            return Calc(parent, args);
+        }
+        protected override IElement calc(IElement[] args)
+        {
+            IntFloatFrac? arg0_ex = args[0].Execute();
+            if (arg0_ex == null) return null;
+
+            return arg0_ex?.Fraction.Numerator.ToElement();
+        }
+    }
+
+    public class GetDenominator_func : BuiltInFunction
+    {
+        public override string Name { get; } = "getDenominator";
+        public override string[] Parameters { get; } = { "fraction" };
+        public override IElement Pass(Execution parent, IElement[] args)
+        {
+            return Calc(parent, args);
+        }
+        protected override IElement calc(IElement[] args)
+        {
+            IntFloatFrac? arg0_ex = args[0].Execute();
+            if (arg0_ex == null) return null;
+
+            return arg0_ex?.Fraction.Denominator.ToElement();
+        }
+    }
+
+    public class NaiveSum_func : BuiltInFunction
+    {
+        public override string Name { get; } = "naiveSum";
+        public override string[] Parameters { get; } = { "fraction_A", "fraction_B" };
+        public override IElement Pass(Execution parent, IElement[] args)
+        {
+            return Calc(parent, args);
+        }
+        protected override IElement calc(IElement[] args)
+        {
+            IntFloatFrac? arg0_ex = args[0].Execute();
+            if (arg0_ex == null) return null;
+            IntFloatFrac? arg1_ex = args[1].Execute();
+            if (arg1_ex == null) return null;
+            Fraction a = arg0_ex.Value.Fraction;
+            Fraction b = arg1_ex.Value.Fraction;
+
+            return a.NaiveSum(b).ToElement();
+        }
+    }
     #endregion
 
     #region Doudec

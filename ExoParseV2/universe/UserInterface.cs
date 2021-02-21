@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using ExoParseV2.theUniverse;
 
 namespace ExoParseV2.universe
@@ -33,7 +35,6 @@ namespace ExoParseV2.universe
         {
             print("> ");
             string input = readln();
-
             try
             {
                 string result = RunLine(input);
@@ -49,6 +50,20 @@ namespace ExoParseV2.universe
                 println(" *Stack Overflow Error.");
                 println();
             }
+            catch (AggregateException e)
+            {
+                Console.WriteLine("fsajd");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("some e");
+            }
+
+
+
+
+
+
         }
     }
 }

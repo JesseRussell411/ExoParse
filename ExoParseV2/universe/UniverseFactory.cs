@@ -171,6 +171,9 @@ namespace ExoParseV2
             funcs.Add(new ExitWithCode_func());
             //funcs.Add(new Frac_func());
             funcs.Add(new Simplify_func());
+            funcs.Add(new GetNumerator_func());
+            funcs.Add(new GetDenominator_func());
+            funcs.Add(new NaiveSum_func());
             return funcs;
         }
     }
