@@ -43,7 +43,7 @@ namespace ExoParseV2.theUniverse.commands
             if (args.Length > 0) // Is there a command specified?
             {
                 // If so, find that command and list it's manual entry.
-                if (universe.Commands.TryGetValue(args, out Command cmd))
+                if (universe.Commands.TryGetValue(args.ToLower(), out Command cmd))
                 {
                     result.Append($"{cmd.Name}:");
 
