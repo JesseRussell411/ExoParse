@@ -9,6 +9,7 @@ namespace ExoParseV2
     public abstract class Modifier : ISymbolized
     {
         public abstract string Symbol { get; }
+        public abstract string Definition { get; }
         public virtual bool DontExecute_flag(IElement item, Modification parent) { return false; }
         public int GetPriority(SymbolizedIndex si)
         {

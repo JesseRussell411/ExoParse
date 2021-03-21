@@ -6,6 +6,7 @@ namespace ExoParseV2
     public abstract class Operator : ISymbolized
     {
         public abstract string Symbol { get; }
+        public abstract string Definition { get; }
         public virtual bool DontExecute_flag(IElement a, IElement b, Operation parent)
         {
             return false;

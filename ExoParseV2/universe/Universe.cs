@@ -14,7 +14,7 @@ namespace ExoParseV2.theUniverse
         {
             CommentOperator = StringProps.CommentOperator;
             CommandOperator = StringProps.CommandOperator;
-            Commands = new Dictionary<string, Command>();
+            Commands = new Dictionary<Command.CommandName, Command>();
             Ans = new BuiltInConstant("ans", ans_var);
         }
 
@@ -82,11 +82,10 @@ namespace ExoParseV2.theUniverse
             return References.TryAdd(labeled.Name, labeled);
         }
         #endregion
-        public Dictionary<string, Command> Commands { get; }
+        public Dictionary<Command.CommandName, Command> Commands { get; }
         public bool AddCommand(Command cmd)
         {
-            // Command names are non case-sensitive to ToLower().
-            return Commands.TryAdd(cmd.Name.ToLower(), cmd);
+            return Commands.TryAdd(cmd.Name, cmd);
         }
         public bool AddCommands(IEnumerable<Command> commands)
         {
@@ -113,8 +112,6 @@ namespace ExoParseV2.theUniverse
             }
         }
         #endregion
-
-        
 
 
         public IElement ParseLine(string statement)
@@ -278,8 +275,6 @@ namespace ExoParseV2.theUniverse
                 //
                 try
                 {
-
-
                     // Pass the expression but don't execute it yet.
                     IElement p = e.Pass(out bool dontExecute);
                     IntFloatFrac? ex = null;

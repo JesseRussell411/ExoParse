@@ -6,6 +6,7 @@ namespace ExoParseV2
     public class Negative_mod : PreModifier
     {
         public override string Symbol { get { return "-"; } }
+        public override string Definition => "Negates the element";
         protected override IElement calc(IElement item)
         {
             return (-item.Execute()).ToElement();
@@ -14,6 +15,7 @@ namespace ExoParseV2
     public class Positive_mod : PreModifier
     {
         public override string Symbol { get { return "+"; } }
+        public override string Definition => "Returns the element's value unmodified.";
         protected override IElement calc(IElement item)
         {
             return item.Execute().ToElement();
@@ -22,6 +24,7 @@ namespace ExoParseV2
     public class Not_mod : PreModifier
     {
         public override string Symbol { get { return "!"; } }
+        public override string Definition => "Returns the logical inverse of the element if the element is either 0 or 1, null otherwise.";
         protected override IElement calc(IElement item)
         {
             return LogicUtils.Not(item.Execute()).ToElement();
@@ -30,6 +33,7 @@ namespace ExoParseV2
     public class Dereference_mod : PreModifier
     {
         public override string Symbol { get { return "*"; } }
+        public override string Definition => "Returns the definition of the element. If the element is a reference variable, then the definition is whatever the variable is referencing.";
         public override bool DontExecute_flag(IElement item, Modification parent)
         {
             return true;
@@ -50,6 +54,7 @@ namespace ExoParseV2
     public class Increment_post_mod : PostModifier
     {
         public override string Symbol { get { return "++"; } }
+        public override string Definition => "Increments the element by 1 and returns the value of the element from before it was incremented.";
         protected override IElement calc(IElement item)
         {
             if (item is IRedefinable)
@@ -71,6 +76,7 @@ namespace ExoParseV2
     public class Increment_pre_mod : PreModifier
     {
         public override string Symbol { get { return "++"; } }
+        public override string Definition => "Increments the element by 1 and returns the result.";
         protected override IElement calc(IElement item)
         {
             return item.TryChangeDefinition(self => (self.Execute() + 1).ToElement());
@@ -83,6 +89,7 @@ namespace ExoParseV2
     public class Decrement_post_mod : PostModifier
     {
         public override string Symbol { get { return "--"; } }
+        public override string Definition => "Decrements the element by 1 and returns the value of the element from before it was incremented.";
         protected override IElement calc(IElement item)
         {
             if (item is IRedefinable)
@@ -104,6 +111,7 @@ namespace ExoParseV2
     public class Decrement_pre_mod : PreModifier
     {
         public override string Symbol { get { return "--"; } }
+        public override string Definition => "Decrements the element by 1 and returns the result.";
         protected override IElement calc(IElement item)
         {
             return item.TryChangeDefinition(self => (self.Execute() - 1).ToElement());
@@ -117,6 +125,7 @@ namespace ExoParseV2
     public class Factorial_mod : PostModifier
     {
         public override string Symbol { get { return "!"; } }
+        public override string Definition { get; } = "returns the factorial of the element";
         protected override IElement calc(IElement item)
         {
             return MathUtils.Factorial(item.Execute()).ToElement();
@@ -125,6 +134,7 @@ namespace ExoParseV2
     public class Semicolon_post_mod : PostModifier
     {
         public override string Symbol { get { return ";"; } }
+        public override string Definition { get; } = "Does nothing.";
         protected override IElement calc(IElement item)
         {
             return item.Pass();
@@ -133,6 +143,7 @@ namespace ExoParseV2
     public class Semicolon_pre_mod : PreModifier
     {
         public override string Symbol { get { return ";"; } }
+        public override string Definition { get; } = "Does nothing.";
         protected override IElement calc(IElement item)
         {
             return item;
@@ -145,6 +156,7 @@ namespace ExoParseV2
     public class ForceExecute_mod : PreModifier
     {
         public override string Symbol { get { return "$"; } }
+        public override string Definition => "Executes the element and returns the value from the execution.";
         protected override IElement calc(IElement item)
         {
             return item.Execute().ToElement();
@@ -158,6 +170,7 @@ namespace ExoParseV2
     public class ForceCalc_mod : PreModifier
     {
         public override string Symbol { get { return "$$"; } }
+        public override string Definition => "Calculates the element and returns the value from the execution.";
         protected override IElement calc(IElement item)
         {
             return item.Calc();
@@ -169,6 +182,7 @@ namespace ExoParseV2
     }
     public class ForcePass_mod : PreModifier
     {
+        public override string Definition => "Passes the element and returns the value from the execution.";
         public override string Symbol { get { return "$$$"; } }
         protected override IElement calc(IElement item)
         {

@@ -27,7 +27,8 @@ namespace ExoParseV2
         public static IntFloatFrac? FloatDiv(IntFloatFrac? a, IntFloatFrac? b)
         {
             if (a == null || b == null) { return null; }
-            return a?.Float / b?.Float;
+            Doudec? res = a?.Float / b?.Float;
+            return res == null ? null : new IntFloatFrac(res.Value);
         }
         public static IntFloatFrac? Log(IntFloatFrac? d, IntFloatFrac? newBase)
         {
