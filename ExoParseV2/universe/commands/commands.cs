@@ -9,7 +9,7 @@ namespace ExoParseV2.theUniverse.commands
 {
     public class Exit_cmd : Command
     {
-        public override string Name { get; } = "exit";
+        public override CommandName Name { get; } = "exit";
         public override string Definition { get; } = "Terminates the session.";
         
         protected override string exec(string args, Universe universe)
@@ -27,7 +27,7 @@ namespace ExoParseV2.theUniverse.commands
     }
     public class Help_cmd : Command
     {
-        public override string Name { get; } = "help";
+        public override CommandName Name { get; } = "help";
         public override string Definition { get; } = "Lists all commands and their definition. If a specific command is given as an argument, " +
             "then that command's manual is displayed unless the command has no manual, then its definition will be displayed.";
         protected override string exec(string args, Universe universe)
@@ -77,7 +77,7 @@ namespace ExoParseV2.theUniverse.commands
     }
     public class ListVars_cmd : Command
     {
-        public override string Name { get; } = "listVars";
+        public override CommandName Name { get; } = "listVars";
         public override string Definition { get; } = "Lists all of the constants and variables defined in the environment.";
         protected override string exec(string args, Universe universe)
         {
@@ -114,7 +114,7 @@ namespace ExoParseV2.theUniverse.commands
     }
     public class Debug_cmd : Command
     {
-        public override string Name { get; } = "debug";
+        public override CommandName Name { get; } = "debug";
         public override string Definition { get; } = "Toggles debug mode.";
             
         protected override string exec(string args, Universe universe)
@@ -125,7 +125,7 @@ namespace ExoParseV2.theUniverse.commands
     }
     public class ListFuncs_cmd : Command
     {
-        public override string Name { get; } = "listFuncs";
+        public override CommandName Name { get; } = "listFuncs";
         public override string Definition { get; } = "Lists all registered functions.";
 
         protected override string exec(string args, Universe universe)
@@ -166,7 +166,7 @@ namespace ExoParseV2.theUniverse.commands
     }
     public class ListOps_cmd : Command
     {
-        public override string Name { get; } = "listOps";
+        public override CommandName Name { get; } = "listOps";
         public override string Definition { get; } = "List all operators and modifiers";
         protected override string exec(string args, Universe universe)
         {
@@ -177,16 +177,18 @@ namespace ExoParseV2.theUniverse.commands
             {
                 if (g is Operator)
                 {
-                    result.Append($"A{g}B\n");
+                    result.Append($"Left{g}Right\n");
                 }
                 else if (g is PreModifier)
                 {
-                    result.Append($"{g}A\n");
+                    result.Append($"{g}Element\n");
                 }
                 else if (g is PostModifier)
                 {
-                    result.Append($"A{g}\n");
+                    result.Append($"Element{g}\n");
                 }
+                result.Append("--------------------------------\n");
+                result.Append(g.Definition + "\n\n");
                 
             }
 
@@ -195,7 +197,7 @@ namespace ExoParseV2.theUniverse.commands
     }
     public class Def_cmd : Command
     {
-        public override string Name { get; } = "def";
+        public override CommandName Name { get; } = "def";
         public override string Definition { get; } = "Defines a function or constant.";
         public override string Manual { get; } =
             "Defines a new function or constant.\n" +
@@ -337,7 +339,7 @@ namespace ExoParseV2.theUniverse.commands
     }
     public class Redef_cmd : Def_cmd
     {
-        public override string Name { get; } = "redef";
+        public override CommandName Name { get; } = "redef";
         public override string Definition { get; } = "Defines a function or constant. If it already exists, it is redefined unless it's built in.";
         protected override string exec(string args, Universe universe)
         {
@@ -346,7 +348,7 @@ namespace ExoParseV2.theUniverse.commands
     }
     public class Delete_cmd : Command
     {
-        public override string Name { get; } = "delete";
+        public override CommandName Name { get; } = "delete";
         public override string Definition { get; } = "Deletes a function, constant, or variable.";
         public override string Manual { get; } =
             "Deletes a function, constant, or variable.\n" +
@@ -424,7 +426,7 @@ namespace ExoParseV2.theUniverse.commands
     }
     public class Echo_cmd : Command
     {
-        public override string Name { get; } = "echo";
+        public override CommandName Name { get; } = "echo";
         public override string Definition { get; } = "Prints the argument.";
 
         protected override string exec(string args, Universe universe)
@@ -434,7 +436,7 @@ namespace ExoParseV2.theUniverse.commands
     }
     public class Run_cmd : Command
     {
-        public override string Name { get; } = "run";
+        public override CommandName Name { get; } = "run";
         public override string Definition { get; } = "Runs the script at the path specified.";
 
         protected override string exec(string args, Universe universe)
@@ -469,7 +471,7 @@ namespace ExoParseV2.theUniverse.commands
     }
     public class GenerateScript_cmd : Command
     {
-        public override string Name { get; } = "generateScript";
+        public override CommandName Name { get; } = "generateScript";
         public override string Definition { get; } = "At the path specified, generates a script that re-creates the current state of the program when run.";
 
         protected bool generate(StreamWriter sw, Universe universe)
@@ -539,7 +541,7 @@ namespace ExoParseV2.theUniverse.commands
     }
     public class ReGenerateScript_cmd : GenerateScript_cmd
     {
-        public override string Name { get; } = "regenerateScript";
+        public override CommandName Name { get; } = "regenerateScript";
         public override string Definition { get; } =
             "At the path specified, generates a script that re-creates the current state of the program when run." +
             " If the script already exists, it is replaced.";
