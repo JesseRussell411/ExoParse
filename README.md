@@ -14,10 +14,57 @@ I've actually found myself using this tool for homework because I know it better
 
 Some examples of V2:
 # Find and count the primes between two numbers:
-:def isPrime(num) = n = abs(num); if(n <= 2, true, if(n % 2 == 0, false, {sqr = int(ceil(n^0.5)); res = true; for(i = 3, i <= sqr, i += 2, if(n % i == 0, {res = false; i = sqr + 1})); res}))
+> :def isPrime(num) = n = abs(num); if(n <= 2, true, if(n % 2 == 0, false, {sqr = int(ceil(n^0.5)); res = true; for(i = 3, i <= sqr, i += 2, if(n % i == 0, {res = false; i = sqr + 1})); res}))
+isPrime(num) has been created.
 
-:count = 0; for(i = 10000000000, i < 10000001000, ++i, if(isPrime(i), ++count; print(i))); count
+> count = 0; for(i = 10000000000, i < 10000001000, ++i, if(isPrime(i), ++count; print(i))); count
+10000000019
+10000000033
+10000000061
+10000000069
+10000000097
+10000000103
+10000000121
+10000000141
+10000000147
+10000000207
+10000000259
+10000000277
+10000000279
+10000000319
+10000000343
+10000000391
+10000000403
+10000000469
+10000000501
+10000000537
+10000000583
+10000000589
+10000000597
+10000000601
+10000000631
+10000000643
+10000000649
+10000000667
+10000000679
+10000000711
+10000000723
+10000000741
+10000000753
+10000000793
+10000000799
+10000000807
+10000000877
+10000000883
+10000000889
+10000000949
+10000000963
+10000000991
+10000000993
+10000000999
+count = 0; for(i = 10000000000, i < 10000001000, ++i, if(isPrime(i), ++count; print(i))); count
 
+        44
 
 # Factorial and recursion demonstation:
 > :def factorial(n) = if(n > 1, n * factorial(n - 1), 1)
