@@ -62,6 +62,8 @@ isPrime(num) has been created.
 10000000991
 10000000993
 10000000999
+
+
 count = 0; for(i = 10000000000, i < 10000001000, ++i, if(isPrime(i), ++count; print(i))); count
 
         44
