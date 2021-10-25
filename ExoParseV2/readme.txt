@@ -61,7 +61,7 @@ You can take this further by using the dereferenced item in expressions:
 	42
 
 > c := *b
-b
+a
 
 That last line sets c to b's definition.
 
