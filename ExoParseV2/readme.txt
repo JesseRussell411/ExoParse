@@ -56,6 +56,9 @@ You can take this further by using the dereferenced item in expressions:
 
 >  *b = 42
 	42
+	
+> a
+	42
 
 > c := *b
 b
