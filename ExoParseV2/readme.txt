@@ -16,12 +16,10 @@ Operators: 1 + 2   4 * 7
 
 Modifiers: -2   5!
 
-*To find a full list of operators and modifiers, try looking in "/docs/list of operators and modifers.txt" in the source code.
-
 At the moment, ExoParse is set up as a command line tool (found in app.program). However, there's no reason this system couldn't be adapted for back-end use or in other user interface components. Blender has a similar system for instance, which allows the user to enter an expression into text fields expecting numbers.
 
 
-for example your could enter:
+for example you could enter:
 > 2+2
 	4
 
