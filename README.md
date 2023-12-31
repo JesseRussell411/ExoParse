@@ -67,10 +67,10 @@ isPrime(num) has been created.
         44
 
 # Factorial and recursion demonstation:
+```
 > :def factorial(n) = if(n > 1, n * factorial(n - 1), 1)
 
         factorial(n) has been created.
-
 > factorial(5)
 factorial(5)
 
@@ -90,6 +90,6 @@ factorial(170) == 170!
 
 
 >
-
+```
 
 
